@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brandio · Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header with Business Tabs -->
+    <header class="header">
+      <div class="header-left">
+        <a href="/landing" class="logo">
+          <i class="fas fa-bolt"></i>
+          <span>Brandio</span>
+        </a>
+      </div>
+
+      <div class="business-tabs-wrap" id="businessTabsWrap">
+        <button class="tabs-arrow tabs-arrow-l" id="tabsArrowL" aria-label="Scroll left"><i class="fas fa-chevron-left"></i></button>
+        <div class="business-tabs" id="businessTabs">
+          <!-- Business tabs will be rendered here -->
+        </div>
+        <button class="tabs-arrow tabs-arrow-r" id="tabsArrowR" aria-label="Scroll right"><i class="fas fa-chevron-right"></i></button>
+      </div>
+
+      <div class="header-search">
+        <i class="fas fa-search"></i>
+        <input type="text" id="globalSearch" placeholder="Filter current view…  (press ⌘K for commands)" autocomplete="off">
+        <kbd class="kbd">/</kbd>
+      </div>
+
+      <div class="header-right">
+        <button class="btn btn-primary btn-sm" id="addBusinessBtn">
+          <i class="fas fa-plus"></i>
+          <span>New Business</span>
+        </button>
+
+        <!-- Notifications -->
+        <div class="notif" id="notif">
+          <button class="icon-btn" id="notifBtn" aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-bell"></i>
+            <span class="notif-badge" id="notifBadge">3</span>
+          </button>
+          <div class="notif-dropdown" id="notifDropdown" role="menu" aria-hidden="true">
+            <div class="dropdown-header">
+              <span>Notifications</span>
+              <button class="dropdown-link" id="markAllRead">Mark all read</button>
+            </div>
+            <ul class="notif-list">
+              <li class="notif-item unread">
+                <div class="notif-icon publish"><i class="fas fa-paper-plane"></i></div>
+                <div class="notif-body">
+                  <div class="notif-title">Diwali launch teaser published</div>
+                  <div class="notif-meta">Instagram · 2 min ago</div>
+                </div>
+              </li>
+              <li class="notif-item unread">
+                <div class="notif-icon schedule"><i class="fas fa-clock"></i></div>
+                <div class="notif-body">
+                  <div class="notif-title">Campaign scheduled for tomorrow 6 PM</div>
+                  <div class="notif-meta">LinkedIn · 1 h ago</div>
+                </div>
+              </li>
+              <li class="notif-item unread">
+                <div class="notif-icon warn"><i class="fas fa-triangle-exclamation"></i></div>
+                <div class="notif-body">
+                  <div class="notif-title">Twitter token expires in 3 days</div>
+                  <div class="notif-meta">Reconnect to keep posting · 4 h ago</div>
+                </div>
+              </li>
+            </ul>
+            <a href="#" class="dropdown-footer">View all activity</a>
+          </div>
+        </div>
+
+        <!-- User menu -->
+        <div class="user-menu" id="userMenu">
+          <button class="user-menu-toggle" id="userMenuBtn" aria-label="Account menu" aria-haspopup="true" aria-expanded="false">
+            <img src="https://ui-avatars.com/api/?name=Demo+User&background=3B82F6&color=fff" alt="User" class="user-avatar">
+            <i class="fas fa-chevron-down user-menu-caret"></i>
+          </button>
+          <div class="user-dropdown" id="userDropdown" role="menu" aria-hidden="true">
+            <div class="user-dropdown-head">
+              <img src="https://ui-avatars.com/api/?name=Demo+User&background=3B82F6&color=fff" alt="User">
+              <div>
+                <div class="user-name">Demo User</div>
+                <div class="user-email">demo@brandio.app</div>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item" role="menuitem"><i class="fas fa-user"></i> Profile</a>
+            <a href="#" class="dropdown-item" role="menuitem" onclick="app.navigateTo('settings'); return false;"><i class="fas fa-cog"></i> Settings</a>
+            <a href="/landing" class="dropdown-item" role="menuitem"><i class="fas fa-globe"></i> View landing page</a>
+            <div class="dropdown-divider"></div>
+            <button type="button" class="dropdown-item dropdown-toggle" id="themeToggle" role="menuitemcheckbox">
+              <i class="fas fa-moon" id="themeIcon"></i>
+              <span id="themeLabel">Dark mode</span>
+              <span class="dropdown-switch" aria-hidden="true"><span class="dropdown-switch-thumb"></span></span>
+            </button>
+            <a href="#" class="dropdown-item" role="menuitem" onclick="event.preventDefault(); window.openCmdK?.();"><i class="fas fa-bolt"></i> Command palette <kbd class="kbd kbd-r">⌘K</kbd></a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item" role="menuitem" onclick="event.preventDefault(); window.openCheat?.();"><i class="fas fa-circle-question"></i> Keyboard shortcuts <kbd class="kbd kbd-r">?</kbd></a>
+            <a href="#" class="dropdown-item danger" role="menuitem"><i class="fas fa-right-from-bracket"></i> Sign out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sticky subheader / breadcrumbs -->
+    <div class="subheader" id="subheader" aria-label="Breadcrumb">
+      <nav class="crumbs" id="crumbs">
+        <a class="crumb crumb-root" href="/landing"><i class="fas fa-bolt"></i> Brandio</a>
+        <i class="fas fa-chevron-right crumb-sep"></i>
+        <span class="crumb crumb-current" id="crumbBusiness">No business selected</span>
+        <i class="fas fa-chevron-right crumb-sep" id="crumbSep2" style="display:none;"></i>
+        <span class="crumb crumb-page" id="crumbPage" style="display:none;"></span>
+      </nav>
+      <div class="subheader-actions">
+        <button class="icon-btn" id="cmdkLauncher" title="Open command palette (⌘K)" aria-label="Open command palette">
+          <i class="fas fa-bolt"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Sidebar Navigation -->
+      <nav class="sidebar">
+        <ul class="nav-menu">
+          <li class="nav-item active" data-page="dashboard">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+          </li>
+          <li class="nav-item" data-page="posts">
+            <i class="fas fa-images"></i>
+            <span>Posts</span>
+          </li>
+          <li class="nav-item" data-page="templates">
+            <i class="fas fa-layer-group"></i>
+            <span>Templates</span>
+          </li>
+          <li class="nav-item" data-page="schedule">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Schedule</span>
+          </li>
+          <li class="nav-item" data-page="assets">
+            <i class="fas fa-folder-open"></i>
+            <span>Assets</span>
+          </li>
+          <li class="nav-item" data-page="settings">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </li>
+        </ul>
+
+        <div class="service-links pinned-section" id="pinnedSection" hidden>
+          <h4>Pinned <span class="pinned-count" id="pinnedCount">0</span></h4>
+          <div id="pinnedList"></div>
+        </div>
+
+        <div class="service-links">
+          <h4>Quick Links</h4>
+          <a href="http://localhost:3001" target="_blank" class="service-link">
+            <i class="fas fa-image"></i>
+            Background Engine
+          </a>
+          <a href="http://localhost:3002" target="_blank" class="service-link">
+            <i class="fas fa-wand-magic-sparkles"></i>
+            Post Generator
+          </a>
+          <a href="http://localhost:3003" target="_blank" class="service-link">
+            <i class="fas fa-clock"></i>
+            Auto Poster
+          </a>
+        </div>
+      </nav>
+
+      <!-- Content Area -->
+      <div class="content-area" id="contentArea">
+        <!-- Dynamic content will be loaded here -->
+        <div class="loading-state">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Loading...</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Create/Edit Business Modal -->
+    <div class="modal" id="businessModal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-lg">
+        <div class="modal-header">
+          <h3 id="businessModalTitle">Create New Business</h3>
+          <button class="modal-close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <!-- Live brand preview tile -->
+          <div class="brand-preview" id="brandPreview" style="--bp-primary: #3B82F6; --bp-secondary: #1E40AF; --bp-accent: #F59E0B;">
+            <div class="brand-preview-card">
+              <div class="brand-preview-mark" id="brandPreviewMark">
+                <span class="brand-preview-init" id="brandPreviewInit">B</span>
+              </div>
+              <div class="brand-preview-body">
+                <div class="brand-preview-name" id="brandPreviewName">Your business</div>
+                <div class="brand-preview-industry" id="brandPreviewIndustry">Pick an industry</div>
+                <div class="brand-preview-swatches">
+                  <span class="brand-preview-swatch" data-role="primary"></span>
+                  <span class="brand-preview-swatch" data-role="secondary"></span>
+                  <span class="brand-preview-swatch" data-role="accent"></span>
+                </div>
+              </div>
+              <div class="brand-preview-badge">Live preview</div>
+            </div>
+          </div>
+
+          <form id="businessForm">
+            <input type="hidden" id="businessId">
+
+            <div class="form-tabs">
+              <button type="button" class="form-tab active" data-tab="basic">Basic Info</button>
+              <button type="button" class="form-tab" data-tab="contact">Contact</button>
+              <button type="button" class="form-tab" data-tab="brand">Brand</button>
+              <button type="button" class="form-tab" data-tab="social">Social Links</button>
+            </div>
+
+            <!-- Basic Info Tab -->
+            <div class="form-tab-content active" id="tab-basic">
+              <div class="form-group">
+                <label for="businessName">Business Name *</label>
+                <input type="text" id="businessName" name="name" required placeholder="Enter business name">
+              </div>
+
+              <div class="form-group">
+                <label for="businessDescription">Description</label>
+                <textarea id="businessDescription" name="description" rows="3" placeholder="Brief description of your business"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="businessIndustry">Industry</label>
+                <select id="businessIndustry" name="industry">
+                  <option value="">Select Industry</option>
+                  <option value="retail">Retail</option>
+                  <option value="food">Food & Restaurant</option>
+                  <option value="technology">Technology</option>
+                  <option value="healthcare">Healthcare</option>
+                  <option value="education">Education</option>
+                  <option value="finance">Finance</option>
+                  <option value="real_estate">Real Estate</option>
+                  <option value="entertainment">Entertainment</option>
+                  <option value="services">Professional Services</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Business Logo</label>
+                <div class="logo-dropzone" id="logoDropzone" tabindex="0" role="button" aria-label="Upload logo">
+                  <input type="file" id="businessLogo" name="logo" accept="image/*" hidden>
+                  <div class="logo-preview" id="logoPreview">
+                    <i class="fas fa-building"></i>
+                  </div>
+                  <div class="logo-dropzone-body">
+                    <div class="logo-dropzone-title">Drag &amp; drop your logo here</div>
+                    <div class="logo-dropzone-sub">or <button type="button" class="dropdown-link" id="logoBrowseBtn">browse files</button> · PNG, JPG, SVG · max 5 MB</div>
+                  </div>
+                  <button type="button" class="logo-clear" id="logoClearBtn" title="Remove logo" hidden><i class="fas fa-xmark"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact Tab -->
+            <div class="form-tab-content" id="tab-contact">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="businessEmail">Email</label>
+                  <input type="email" id="businessEmail" name="email" placeholder="business@example.com">
+                </div>
+                <div class="form-group">
+                  <label for="businessPhone">Phone</label>
+                  <input type="tel" id="businessPhone" name="phone" placeholder="+1 234 567 8900">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="businessWebsite">Website</label>
+                <input type="url" id="businessWebsite" name="website" placeholder="https://example.com">
+              </div>
+
+              <div class="form-group">
+                <label for="businessAddress">Address</label>
+                <textarea id="businessAddress" name="address" rows="2" placeholder="Full business address"></textarea>
+              </div>
+            </div>
+
+            <!-- Brand Tab -->
+            <div class="form-tab-content" id="tab-brand">
+              <div class="form-group">
+                <label>Color presets</label>
+                <div class="color-presets" id="colorPresets">
+                  <button type="button" class="color-preset" data-primary="#3B82F6" data-secondary="#1E40AF" data-accent="#F59E0B" title="Ocean">
+                    <span style="background:#3B82F6"></span><span style="background:#1E40AF"></span><span style="background:#F59E0B"></span>
+                  </button>
+                  <button type="button" class="color-preset" data-primary="#7C3AED" data-secondary="#5B21B6" data-accent="#F59E0B" title="Royal">
+                    <span style="background:#7C3AED"></span><span style="background:#5B21B6"></span><span style="background:#F59E0B"></span>
+                  </button>
+                  <button type="button" class="color-preset" data-primary="#10B981" data-secondary="#047857" data-accent="#F472B6" title="Forest">
+                    <span style="background:#10B981"></span><span style="background:#047857"></span><span style="background:#F472B6"></span>
+                  </button>
+                  <button type="button" class="color-preset" data-primary="#F43F5E" data-secondary="#9F1239" data-accent="#FBBF24" title="Berry">
+                    <span style="background:#F43F5E"></span><span style="background:#9F1239"></span><span style="background:#FBBF24"></span>
+                  </button>
+                  <button type="button" class="color-preset" data-primary="#F97316" data-secondary="#C2410C" data-accent="#0EA5E9" title="Sunset">
+                    <span style="background:#F97316"></span><span style="background:#C2410C"></span><span style="background:#0EA5E9"></span>
+                  </button>
+                  <button type="button" class="color-preset" data-primary="#0F172A" data-secondary="#334155" data-accent="#FBBF24" title="Mono">
+                    <span style="background:#0F172A"></span><span style="background:#334155"></span><span style="background:#FBBF24"></span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Brand colors</label>
+                <div class="color-inputs">
+                  <div class="color-input">
+                    <label>Primary</label>
+                    <input type="color" id="colorPrimary" value="#3B82F6">
+                    <span class="color-value">#3B82F6</span>
+                  </div>
+                  <div class="color-input">
+                    <label>Secondary</label>
+                    <input type="color" id="colorSecondary" value="#1E40AF">
+                    <span class="color-value">#1E40AF</span>
+                  </div>
+                  <div class="color-input">
+                    <label>Accent</label>
+                    <input type="color" id="colorAccent" value="#F59E0B">
+                    <span class="color-value">#F59E0B</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="fontHeading">Heading Font</label>
+                  <select id="fontHeading">
+                    <option value="Inter">Inter</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Poppins">Poppins</option>
+                    <option value="Playfair Display">Playfair Display</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="fontBody">Body Font</label>
+                  <select id="fontBody">
+                    <option value="Inter">Inter</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Source Sans Pro">Source Sans Pro</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social Links Tab -->
+            <div class="form-tab-content" id="tab-social">
+              <div class="form-group">
+                <label><i class="fab fa-instagram"></i> Instagram</label>
+                <input type="url" id="socialInstagram" placeholder="https://instagram.com/yourbusiness">
+              </div>
+              <div class="form-group">
+                <label><i class="fab fa-facebook"></i> Facebook</label>
+                <input type="url" id="socialFacebook" placeholder="https://facebook.com/yourbusiness">
+              </div>
+              <div class="form-group">
+                <label><i class="fab fa-twitter"></i> Twitter/X</label>
+                <input type="url" id="socialTwitter" placeholder="https://twitter.com/yourbusiness">
+              </div>
+              <div class="form-group">
+                <label><i class="fab fa-linkedin"></i> LinkedIn</label>
+                <input type="url" id="socialLinkedin" placeholder="https://linkedin.com/company/yourbusiness">
+              </div>
+              <div class="form-group">
+                <label><i class="fab fa-whatsapp"></i> WhatsApp</label>
+                <input type="tel" id="socialWhatsapp" placeholder="+1 234 567 8900">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-dismiss="modal">Cancel</button>
+          <button type="submit" form="businessForm" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save Business
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Multi-step coachmark / tour -->
+    <div class="coach" id="coach" aria-hidden="true" role="dialog" aria-labelledby="coachTitle">
+      <div class="coach-arrow"></div>
+      <div class="coach-step">
+        <span id="coachStep">Step 1 of 4</span>
+        <button type="button" class="coach-skip" id="coachSkip">Skip tour</button>
+      </div>
+      <div class="coach-head">
+        <i class="fas" id="coachIcon"></i>
+        <strong id="coachTitle"></strong>
+      </div>
+      <p id="coachBody"></p>
+      <div class="coach-actions">
+        <button type="button" class="btn btn-outline btn-sm" id="coachPrev"><i class="fas fa-chevron-left"></i> Back</button>
+        <button type="button" class="btn btn-primary btn-sm" id="coachNext">Next <i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+
+    <!-- Keyboard Shortcuts cheatsheet -->
+    <div class="cheat" id="cheat" aria-hidden="true">
+      <div class="cheat-backdrop" data-cheat-close></div>
+      <div class="cheat-panel" role="dialog" aria-label="Keyboard shortcuts">
+        <div class="cheat-head">
+          <div>
+            <div class="cheat-eyebrow">Help</div>
+            <div class="cheat-title">Keyboard shortcuts</div>
+          </div>
+          <button class="icon-btn" data-cheat-close aria-label="Close"><i class="fas fa-xmark"></i></button>
+        </div>
+        <div class="cheat-body">
+          <section>
+            <h4>General</h4>
+            <ul>
+              <li><span>Open command palette</span><span class="ks"><kbd class="kbd">⌘</kbd><kbd class="kbd">K</kbd></span></li>
+              <li><span>Focus the filter bar</span><span class="ks"><kbd class="kbd">/</kbd></span></li>
+              <li><span>Show this cheatsheet</span><span class="ks"><kbd class="kbd">?</kbd></span></li>
+              <li><span>Close any overlay</span><span class="ks"><kbd class="kbd">ESC</kbd></span></li>
+            </ul>
+          </section>
+          <section>
+            <h4>Create</h4>
+            <ul>
+              <li><span>New business</span><span class="ks"><kbd class="kbd">⌘</kbd><kbd class="kbd">N</kbd></span></li>
+              <li><span>New post</span><span class="ks"><kbd class="kbd">⌘</kbd><kbd class="kbd">⇧</kbd><kbd class="kbd">P</kbd></span></li>
+            </ul>
+          </section>
+          <section>
+            <h4>Inside the palette</h4>
+            <ul>
+              <li><span>Move selection</span><span class="ks"><kbd class="kbd">↑</kbd><kbd class="kbd">↓</kbd></span></li>
+              <li><span>Run command</span><span class="ks"><kbd class="kbd">↵</kbd></span></li>
+              <li><span>Close</span><span class="ks"><kbd class="kbd">ESC</kbd></span></li>
+            </ul>
+          </section>
+          <section>
+            <h4>Search bar</h4>
+            <ul>
+              <li><span>Clear the filter</span><span class="ks"><kbd class="kbd">ESC</kbd></span></li>
+            </ul>
+          </section>
+        </div>
+        <div class="cheat-foot">
+          <span>Tip: <kbd class="kbd">⌘K</kbd> jumps to any page or runs any command.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Command Palette -->
+    <div class="cmdk" id="cmdk" aria-hidden="true">
+      <div class="cmdk-backdrop" data-cmdk-close></div>
+      <div class="cmdk-panel" role="dialog" aria-label="Command palette">
+        <div class="cmdk-input-wrap">
+          <i class="fas fa-magnifying-glass"></i>
+          <input type="text" id="cmdkInput" placeholder="Jump to a page, run a command…" autocomplete="off">
+          <kbd class="kbd">ESC</kbd>
+        </div>
+        <div class="cmdk-list" id="cmdkList" role="listbox"></div>
+        <div class="cmdk-foot">
+          <span><kbd class="kbd">↑</kbd><kbd class="kbd">↓</kbd> navigate</span>
+          <span><kbd class="kbd">↵</kbd> select</span>
+          <span><kbd class="kbd">ESC</kbd> close</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // Theme (light / dark) — set early to avoid flash
+    // ============================================================
+    (function () {
+      const KEY = 'brandio:theme';
+      const stored = localStorage.getItem(KEY);
+      const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = stored || (sysDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+      window.__brandioTheme = { KEY, get: () => document.documentElement.getAttribute('data-theme') };
+    })();
+  </script>
+  <script>
+    // ============================================================
+    // Header behaviors: search filter, dropdowns, theme, palette
+    // ============================================================
+    (function () {
+      const $ = (sel) => document.querySelector(sel);
+      const search = $('#globalSearch');
+
+      // --- "/" focuses inline search; Esc clears & blurs ---
+      document.addEventListener('keydown', (e) => {
+        if (e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '')) {
+          e.preventDefault();
+          search?.focus();
+          search?.select();
+        }
+        if (e.key === 'Escape' && document.activeElement === search) {
+          search.value = '';
+          search.dispatchEvent(new Event('input'));
+          search.blur();
+        }
+      });
+
+      // --- Live filter for cards/items on the current page ---
+      // Filters anything inside .content-area that has a recognizable title.
+      const SELECTORS = '.post-card, .template-card, .activity-item, .template-select-card';
+      const TITLE_SELECTORS = '.post-card-title, .template-name, .activity-title, .template-select-name';
+
+      // Levenshtein distance (small strings only — fine for short titles)
+      function lev(a, b) {
+        a = a.toLowerCase(); b = b.toLowerCase();
+        const m = a.length, n = b.length;
+        if (!m) return n; if (!n) return m;
+        const row = new Array(n + 1);
+        for (let j = 0; j <= n; j++) row[j] = j;
+        for (let i = 1; i <= m; i++) {
+          let prev = i - 1; row[0] = i;
+          for (let j = 1; j <= n; j++) {
+            const tmp = row[j];
+            row[j] = a[i - 1] === b[j - 1] ? prev : Math.min(prev, row[j], row[j - 1]) + 1;
+            prev = tmp;
+          }
+        }
+        return row[n];
+      }
+
+      // Token-aware similarity: best edit-distance ratio of q vs any whitespace token
+      function similarity(q, text) {
+        if (!text) return 0;
+        const tokens = text.toLowerCase().split(/\s+/).filter(Boolean);
+        let best = 0;
+        for (const t of tokens) {
+          const d = lev(q, t);
+          const r = 1 - d / Math.max(q.length, t.length);
+          if (r > best) best = r;
+        }
+        return best;
+      }
+
+      function applyFilter() {
+        const q = (search?.value || '').trim().toLowerCase();
+        const area = document.querySelector('.content-area');
+        if (!area) return;
+        const items = area.querySelectorAll(SELECTORS);
+        let visible = 0;
+        const allTitles = [];
+        items.forEach((el) => {
+          const titleEl = el.querySelector(TITLE_SELECTORS);
+          const title = (titleEl?.textContent || '').trim();
+          if (title) allTitles.push(title);
+          if (!q) { el.style.display = ''; visible++; return; }
+          const text = (titleEl?.textContent || el.textContent || '').toLowerCase();
+          const match = text.includes(q);
+          el.style.display = match ? '' : 'none';
+          if (match) visible++;
+        });
+
+        // Toggle empty hint with did-you-mean
+        let hint = area.querySelector('.search-empty');
+        if (q && items.length && visible === 0) {
+          // Find best suggestion
+          let best = { title: '', score: 0 };
+          for (const t of allTitles) {
+            const s = similarity(q, t);
+            if (s > best.score) best = { title: t, score: s };
+          }
+          const suggestion = best.score >= 0.55 ? best.title : null;
+          const safeQ = q.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+          const html =
+            '<i class="fas fa-magnifying-glass"></i>' +
+            '<h3>No matches for "' + safeQ + '"</h3>' +
+            '<p>Nothing on this page fits your search.</p>' +
+            (suggestion
+              ? '<div class="empty-actions"><button class="btn btn-outline did-you-mean" data-suggest="' + suggestion.replace(/"/g, '&quot;') + '">Did you mean <strong>' + suggestion + '</strong>?</button></div>'
+              : '') +
+            '<span class="empty-hint">Press <kbd class="kbd">ESC</kbd> to clear · <kbd class="kbd">⌘K</kbd> for commands</span>';
+          if (!hint) {
+            hint = document.createElement('div');
+            hint.className = 'search-empty empty-state';
+            area.appendChild(hint);
+          }
+          hint.innerHTML = html;
+          hint.querySelector('.did-you-mean')?.addEventListener('click', (e) => {
+            search.value = e.currentTarget.dataset.suggest;
+            applyFilter();
+          });
+        } else if (hint) {
+          hint.remove();
+        }
+      }
+      search?.addEventListener('input', applyFilter);
+      // Re-apply after the app re-renders content (mutation observer)
+      const area = document.querySelector('.content-area');
+      if (area) new MutationObserver(() => { if (search?.value) applyFilter(); })
+        .observe(area, { childList: true, subtree: true });
+
+      // --- Generic dropdown toggle ---
+      function makeDropdown(wrapId, btnId, ddId) {
+        const wrap = document.getElementById(wrapId);
+        const btn = document.getElementById(btnId);
+        const dd = document.getElementById(ddId);
+        if (!wrap || !btn || !dd) return;
+        const setOpen = (open) => {
+          wrap.classList.toggle('open', open);
+          btn.setAttribute('aria-expanded', String(open));
+          dd.setAttribute('aria-hidden', String(!open));
+        };
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = wrap.classList.contains('open');
+          // close siblings
+          document.querySelectorAll('.notif.open, .user-menu.open').forEach((w) => {
+            if (w !== wrap) {
+              w.classList.remove('open');
+              w.querySelector('[aria-expanded]')?.setAttribute('aria-expanded', 'false');
+              w.querySelector('[aria-hidden]')?.setAttribute('aria-hidden', 'true');
+            }
+          });
+          setOpen(!isOpen);
+        });
+        document.addEventListener('click', (e) => {
+          if (!wrap.contains(e.target)) setOpen(false);
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') setOpen(false);
+        });
+        return { setOpen };
+      }
+
+      const notif = makeDropdown('notif', 'notifBtn', 'notifDropdown');
+      makeDropdown('userMenu', 'userMenuBtn', 'userDropdown');
+
+      // Mark-all-read demo behavior
+      document.getElementById('markAllRead')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.notif-item.unread').forEach((el) => el.classList.remove('unread'));
+        const badge = document.getElementById('notifBadge');
+        if (badge) badge.style.display = 'none';
+      });
+
+      // ============================================================
+      // Theme toggle (inside user dropdown)
+      // ============================================================
+      const KEY = window.__brandioTheme.KEY;
+      const themeBtn   = document.getElementById('themeToggle');
+      const themeIcon  = document.getElementById('themeIcon');
+      const themeLabel = document.getElementById('themeLabel');
+      function reflectTheme() {
+        const t = document.documentElement.getAttribute('data-theme');
+        const dark = t === 'dark';
+        themeIcon.className = dark ? 'fas fa-sun' : 'fas fa-moon';
+        themeLabel.textContent = dark ? 'Light mode' : 'Dark mode';
+        themeBtn?.setAttribute('aria-checked', String(dark));
+        themeBtn?.classList.toggle('checked', dark);
+      }
+      reflectTheme();
+      themeBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const cur = document.documentElement.getAttribute('data-theme');
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem(KEY, next);
+        reflectTheme();
+      });
+      // Follow system if user hasn't explicitly chosen
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem(KEY)) {
+          document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+          reflectTheme();
+        }
+      });
+
+      // ============================================================
+      // Command Palette (⌘K) — with recents + live API results
+      // ============================================================
+      const cmdk      = document.getElementById('cmdk');
+      const cmdkInput = document.getElementById('cmdkInput');
+      const cmdkList  = document.getElementById('cmdkList');
+
+      const RECENT_KEY = 'brandio:cmdk:recent';
+      const RECENT_BIZ_KEY = 'brandio:cmdk:recent-biz';
+      const PINNED_BIZ_KEY = 'brandio:cmdk:pinned-biz';
+      const RECENT_MAX = 5;
+
+      const STATIC_COMMANDS = [
+        { id: 'nav.dashboard', group: 'Navigation', icon: 'fa-chart-line',       title: 'Dashboard',          subtitle: 'Overview, stats, recent activity', action: () => app.navigateTo('dashboard') },
+        { id: 'nav.posts',     group: 'Navigation', icon: 'fa-images',           title: 'Posts',              subtitle: 'All scheduled & published posts',  action: () => app.navigateTo('posts') },
+        { id: 'nav.templates', group: 'Navigation', icon: 'fa-layer-group',      title: 'Templates',          subtitle: 'Reusable post layouts',            action: () => app.navigateTo('templates') },
+        { id: 'nav.schedule',  group: 'Navigation', icon: 'fa-calendar-alt',     title: 'Schedule',           subtitle: 'Calendar view of upcoming posts',  action: () => app.navigateTo('schedule') },
+        { id: 'nav.assets',    group: 'Navigation', icon: 'fa-folder-open',      title: 'Assets',             subtitle: 'Brand asset library',              action: () => app.navigateTo('assets') },
+        { id: 'nav.settings',  group: 'Navigation', icon: 'fa-cog',              title: 'Settings',           subtitle: 'Business & account settings',      action: () => app.navigateTo('settings') },
+
+        { id: 'new.biz',       group: 'Create',     icon: 'fa-plus',             title: 'New business',       subtitle: 'Add a brand workspace',            shortcut: '⌘N', action: () => document.getElementById('addBusinessBtn')?.click() },
+        { id: 'new.post',      group: 'Create',     icon: 'fa-wand-magic-sparkles', title: 'New post',         subtitle: 'Open the post generator',          shortcut: '⌘⇧P', action: () => window.open('/generator/' + (app.currentBusiness ? '?business=' + app.currentBusiness.id : ''), '_blank') },
+
+        { id: 'open.bg',       group: 'Open',       icon: 'fa-palette',          title: 'Background Engine',  subtitle: 'AI visuals · port 3001',           action: () => window.open('/backgrounds/', '_blank') },
+        { id: 'open.gen',      group: 'Open',       icon: 'fa-wand-magic-sparkles', title: 'Post Generator',  subtitle: 'Content studio · port 3002',       action: () => window.open('/generator/', '_blank') },
+        { id: 'open.poster',   group: 'Open',       icon: 'fa-paper-plane',      title: 'Auto Poster',        subtitle: 'Distribution · port 3003',         action: () => window.open('/poster/', '_blank') },
+        { id: 'open.landing',  group: 'Open',       icon: 'fa-globe',            title: 'Landing page',       subtitle: 'Public marketing site',            action: () => window.location.href = '/landing' },
+
+        { id: 'theme.toggle',  group: 'Theme',      icon: 'fa-moon',             title: 'Toggle dark mode',   subtitle: 'Switch between light and dark',    action: () => themeBtn?.click() },
+        { id: 'help.shortcuts',group: 'Help',       icon: 'fa-circle-question',  title: 'Keyboard shortcuts', subtitle: 'See all available shortcuts',      shortcut: '?', action: () => window.openCheat?.() },
+        { id: 'help.tour',     group: 'Help',       icon: 'fa-route',            title: 'Show welcome tour',  subtitle: 'Replay the first-run nudge',       action: () => window.showCoach?.(true) },
+      ];
+
+      let cmdkIndex = 0;
+      let filtered = [];
+      let liveResults = [];
+      let fetchSeq = 0;
+      let fetchTimer = null;
+
+      function getRecent() {
+        try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); }
+        catch { return []; }
+      }
+      function pushRecent(cmdId) {
+        if (!cmdId) return;
+        const cur = getRecent().filter((x) => x !== cmdId);
+        cur.unshift(cmdId);
+        localStorage.setItem(RECENT_KEY, JSON.stringify(cur.slice(0, RECENT_MAX)));
+      }
+      function recentCommands() {
+        const ids = getRecent();
+        return ids
+          .map((id) => STATIC_COMMANDS.find((c) => c.id === id))
+          .filter(Boolean)
+          .map((c) => ({ ...c, group: 'Recent', icon: c.icon }));
+      }
+
+      function getRecentBiz() {
+        try { return JSON.parse(localStorage.getItem(RECENT_BIZ_KEY) || '[]'); }
+        catch { return []; }
+      }
+      function pushRecentBiz(id) {
+        if (!id) return;
+        const cur = getRecentBiz().filter((x) => x !== id);
+        cur.unshift(id);
+        localStorage.setItem(RECENT_BIZ_KEY, JSON.stringify(cur.slice(0, RECENT_MAX)));
+      }
+      function getPinnedBiz() {
+        try { return JSON.parse(localStorage.getItem(PINNED_BIZ_KEY) || '[]'); }
+        catch { return []; }
+      }
+      function togglePinBiz(id) {
+        const cur = getPinnedBiz();
+        const idx = cur.indexOf(id);
+        if (idx >= 0) cur.splice(idx, 1); else cur.unshift(id);
+        localStorage.setItem(PINNED_BIZ_KEY, JSON.stringify(cur));
+        return idx < 0; // returns new "pinned" state
+      }
+      function isPinned(id) { return getPinnedBiz().includes(id); }
+
+      function bizCommand(b, opts = {}) {
+        return {
+          id: 'biz.' + b.id,
+          rawBizId: b.id,
+          group: opts.group || 'Businesses',
+          icon: opts.pinned ? 'fa-thumbtack' : 'fa-briefcase',
+          title: b.name,
+          subtitle: (b.industry ? (b.industry + ' · ') : '') + (opts.pinned ? 'Pinned' : 'Switch to this business'),
+          pinned: !!opts.pinned,
+          action: () => app.selectBusiness(b.id),
+        };
+      }
+
+      function pinnedBusinesses() {
+        const ids = getPinnedBiz();
+        const list = (window.app?.businesses || []);
+        const cur = window.app?.currentBusiness?.id;
+        return ids
+          .filter((id) => id !== cur)
+          .map((id) => list.find((b) => b.id === id))
+          .filter(Boolean)
+          .map((b) => bizCommand(b, { group: 'Pinned', pinned: true }));
+      }
+
+      function recentBusinesses() {
+        const ids = getRecentBiz();
+        const pinnedIds = new Set(getPinnedBiz());
+        const list = (window.app?.businesses || []);
+        const cur = window.app?.currentBusiness?.id;
+        return ids
+          .filter((id) => id !== cur && !pinnedIds.has(id))
+          .map((id) => list.find((b) => b.id === id))
+          .filter(Boolean)
+          .slice(0, 4)
+          .map((b) => bizCommand(b, { group: 'Recent businesses' }));
+      }
+      // Expose for the breadcrumb observer to push recents
+      window.__pushRecentBiz = pushRecentBiz;
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      }
+
+      function debounce(fn, ms) {
+        return function () {
+          clearTimeout(fetchTimer);
+          fetchTimer = setTimeout(() => fn.apply(this, arguments), ms);
+        };
+      }
+
+      // --- Live API results: businesses + posts + templates ---
+      async function fetchLive(q) {
+        const seq = ++fetchSeq;
+        const results = [];
+        const businessId = app.currentBusiness?.id;
+
+        // Businesses (always; in-memory)
+        try {
+          const list = (app.businesses || []).filter((b) =>
+            b.name.toLowerCase().includes(q) || (b.industry || '').toLowerCase().includes(q));
+          list.slice(0, 5).forEach((b) => {
+            results.push(bizCommand(b));
+          });
+        } catch {}
+
+        // Posts (current business)
+        if (businessId) {
+          try {
+            const r = await fetch('/api/posts/' + businessId);
+            if (r.ok && seq === fetchSeq) {
+              const posts = await r.json();
+              const matches = (posts || [])
+                .filter((p) => (p.title || '').toLowerCase().includes(q))
+                .slice(0, 5);
+              matches.forEach((p) => {
+                results.push({
+                  id: 'post.' + p.id,
+                  group: 'Posts',
+                  icon: 'fa-image',
+                  title: p.title || 'Untitled post',
+                  subtitle: (p.status || 'draft') + ' · ' + ((p.platforms || []).join(', ') || 'no platforms'),
+                  action: () => app.viewPost(p.id),
+                });
+              });
+            }
+          } catch {}
+        }
+
+        // Templates (current business)
+        if (businessId) {
+          try {
+            const r = await fetch('/api/templates/' + businessId);
+            if (r.ok && seq === fetchSeq) {
+              const tpls = await r.json();
+              const matches = (tpls || [])
+                .filter((t) => (t.name || '').toLowerCase().includes(q))
+                .slice(0, 5);
+              matches.forEach((t) => {
+                results.push({
+                  id: 'tpl.' + t.id,
+                  group: 'Templates',
+                  icon: 'fa-layer-group',
+                  title: t.name || 'Untitled template',
+                  subtitle: (t.platform || 'template') + ' · Open in editor',
+                  action: () => window.open('/generator/?id=' + t.id + '&business=' + businessId, '_blank'),
+                });
+              });
+            }
+          } catch {}
+        }
+
+        if (seq === fetchSeq) {
+          liveResults = results;
+          renderCmdk();
+        }
+      }
+      const fetchLiveDebounced = debounce((q) => fetchLive(q), 220);
+
+      function renderCmdk() {
+        const q = cmdkInput.value.trim().toLowerCase();
+        const pinned = q ? [] : pinnedBusinesses();
+        const recentBiz = q ? [] : recentBusinesses();
+        const recent = q ? [] : recentCommands();
+
+        const staticFiltered = q
+          ? STATIC_COMMANDS.filter((c) => (c.title + ' ' + c.subtitle + ' ' + c.group).toLowerCase().includes(q))
+          : STATIC_COMMANDS.slice();
+
+        // For live business results when query is set, mark pinned ones with the pin icon
+        const liveWithPinFlag = liveResults.map((r) => {
+          if (r.rawBizId && isPinned(r.rawBizId)) return { ...r, pinned: true, icon: 'fa-thumbtack' };
+          return r;
+        });
+
+        filtered = [...pinned, ...recentBiz, ...recent, ...liveWithPinFlag, ...staticFiltered];
+
+        if (cmdkIndex >= filtered.length) cmdkIndex = Math.max(0, filtered.length - 1);
+
+        if (!filtered.length) {
+          cmdkList.innerHTML = '<div class="cmdk-empty"><i class="fas fa-magnifying-glass"></i><div>No commands match "<strong>' + escapeHtml(q) + '</strong>"</div></div>';
+          return;
+        }
+
+        let html = '';
+        let lastGroup = '';
+        filtered.forEach((cmd, i) => {
+          if (cmd.group !== lastGroup) {
+            if (lastGroup) html += '</div>';
+            html += '<div class="cmdk-group"><div class="cmdk-group-label">' + escapeHtml(cmd.group) + '</div>';
+            lastGroup = cmd.group;
+          }
+          const isBiz = !!cmd.rawBizId;
+          const pinTitle = cmd.pinned ? 'Unpin (shift+click)' : 'Pin (shift+click)';
+          html += '<div class="cmdk-row ' + (i === cmdkIndex ? 'active' : '') + '" data-i="' + i + '">' +
+                  '<button class="cmdk-item" role="option" data-i="' + i + '">' +
+                    '<span class="cmdk-icon"><i class="fas ' + cmd.icon + '"></i></span>' +
+                    '<span class="cmdk-body">' +
+                      '<span class="cmdk-title">' + escapeHtml(cmd.title) + '</span>' +
+                      '<span class="cmdk-sub">' + escapeHtml(cmd.subtitle) + '</span>' +
+                    '</span>' +
+                    (cmd.shortcut ? '<kbd class="kbd">' + escapeHtml(cmd.shortcut) + '</kbd>' : '') +
+                  '</button>' +
+                  (isBiz
+                    ? '<button class="cmdk-pin ' + (cmd.pinned ? 'pinned' : '') + '" data-pin="' + cmd.rawBizId + '" data-i="' + i + '" title="' + pinTitle + '" aria-label="' + pinTitle + '"><i class="fas fa-thumbtack"></i></button>'
+                    : '') +
+                  '</div>';
+        });
+        if (lastGroup) html += '</div>';
+        cmdkList.innerHTML = html;
+
+        cmdkList.querySelectorAll('.cmdk-item').forEach((el) => {
+          el.addEventListener('click', (e) => {
+            if (e.shiftKey) {
+              const cmd = filtered[Number(el.dataset.i)];
+              if (cmd?.rawBizId) { togglePinBiz(cmd.rawBizId); renderCmdk(); return; }
+            }
+            execute(Number(el.dataset.i));
+          });
+          el.addEventListener('mousemove', () => {
+            const newIdx = Number(el.dataset.i);
+            if (newIdx !== cmdkIndex) { cmdkIndex = newIdx; highlight(); }
+          });
+        });
+        cmdkList.querySelectorAll('.cmdk-pin').forEach((el) => {
+          el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            togglePinBiz(el.dataset.pin);
+            renderCmdk();
+          });
+        });
+        highlight();
+      }
+
+      function highlight() {
+        cmdkList.querySelectorAll('.cmdk-row').forEach((el) => {
+          const i = Number(el.dataset.i);
+          el.classList.toggle('active', i === cmdkIndex);
+          if (i === cmdkIndex) el.scrollIntoView({ block: 'nearest' });
+        });
+      }
+
+      function execute(i) {
+        const cmd = filtered[i];
+        if (!cmd) return;
+        if (cmd.id && !cmd.id.startsWith('biz.') && !cmd.id.startsWith('post.') && !cmd.id.startsWith('tpl.')) {
+          pushRecent(cmd.id);
+        }
+        closeCmdk();
+        try { cmd.action(); } catch (err) { console.error(err); }
+      }
+
+      function openCmdk() {
+        cmdkInput.value = '';
+        cmdkIndex = 0;
+        liveResults = [];
+        cmdk.classList.add('open');
+        cmdk.setAttribute('aria-hidden', 'false');
+        renderCmdk();
+        requestAnimationFrame(() => cmdkInput.focus());
+      }
+      function closeCmdk() {
+        cmdk.classList.remove('open');
+        cmdk.setAttribute('aria-hidden', 'true');
+      }
+      window.openCmdK = openCmdk;
+
+      cmdk.querySelectorAll('[data-cmdk-close]').forEach((el) => el.addEventListener('click', closeCmdk));
+      cmdkInput.addEventListener('input', () => {
+        cmdkIndex = 0;
+        const q = cmdkInput.value.trim().toLowerCase();
+        if (q.length >= 2) fetchLiveDebounced(q);
+        else { liveResults = []; }
+        renderCmdk();
+      });
+      cmdkInput.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); cmdkIndex = Math.min(filtered.length - 1, cmdkIndex + 1); highlight(); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); cmdkIndex = Math.max(0, cmdkIndex - 1); highlight(); }
+        else if (e.key === 'Enter') { e.preventDefault(); execute(cmdkIndex); }
+        else if (e.key === 'Escape') { e.preventDefault(); closeCmdk(); }
+      });
+
+      // Global shortcuts
+      document.addEventListener('keydown', (e) => {
+        const inField = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '');
+        const mod = e.metaKey || e.ctrlKey;
+        if (mod && e.key.toLowerCase() === 'k') {
+          e.preventDefault();
+          if (cmdk.classList.contains('open')) closeCmdk(); else openCmdk();
+        } else if (mod && !e.shiftKey && e.key.toLowerCase() === 'n' && !inField) {
+          e.preventDefault();
+          document.getElementById('addBusinessBtn')?.click();
+        } else if (mod && e.shiftKey && e.key.toLowerCase() === 'p') {
+          e.preventDefault();
+          window.open('/generator/' + (app.currentBusiness ? '?business=' + app.currentBusiness.id : ''), '_blank');
+        }
+      });
+
+      // Cmdk launcher in subheader
+      document.getElementById('cmdkLauncher')?.addEventListener('click', () => openCmdk());
+
+      // ============================================================
+      // Accessibility: focus trap + restore for overlays
+      // ============================================================
+      const FOCUSABLE_SEL = [
+        'a[href]', 'button:not([disabled])', 'input:not([disabled])',
+        'textarea:not([disabled])', 'select:not([disabled])',
+        '[tabindex]:not([tabindex="-1"])',
+      ].join(',');
+      const focusReturnMap = new WeakMap();
+      function trapFocus(container, e) {
+        const focusables = Array.from(container.querySelectorAll(FOCUSABLE_SEL))
+          .filter((el) => el.offsetWidth || el.offsetHeight || el === document.activeElement);
+        if (!focusables.length) { e.preventDefault(); return; }
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+      function makeOverlayA11y(container, openClass, focusOnOpenSel) {
+        if (!container) return;
+        container.setAttribute('role', container.getAttribute('role') || 'dialog');
+        container.setAttribute('aria-modal', 'true');
+        const observer = new MutationObserver(() => {
+          const open = container.classList.contains(openClass);
+          if (open) {
+            // Stash current focus and move into the dialog
+            focusReturnMap.set(container, document.activeElement);
+            const focusEl = focusOnOpenSel ? container.querySelector(focusOnOpenSel) : null;
+            const fallback = container.querySelector(FOCUSABLE_SEL);
+            (focusEl || fallback)?.focus();
+          } else {
+            const prev = focusReturnMap.get(container);
+            focusReturnMap.delete(container);
+            if (prev && typeof prev.focus === 'function') {
+              try { prev.focus(); } catch {}
+            }
+          }
+        });
+        observer.observe(container, { attributes: true, attributeFilter: ['class'] });
+        container.addEventListener('keydown', (e) => {
+          if (e.key === 'Tab' && container.classList.contains(openClass)) {
+            trapFocus(container, e);
+          }
+        });
+      }
+      // Apply to known overlays
+      makeOverlayA11y(document.getElementById('cmdk'),         'open', '#cmdkInput');
+      makeOverlayA11y(document.getElementById('cheat'),        'open');
+      makeOverlayA11y(document.getElementById('coach'),        'open', '#coachNext');
+      makeOverlayA11y(document.getElementById('businessModal'),'show', '#businessName');
+
+      // ============================================================
+      // Multi-step onboarding tour
+      // ============================================================
+      (function () {
+        const COACH_KEY = 'brandio:coach:seen';
+        const coach = document.getElementById('coach');
+        const stepEl = document.getElementById('coachStep');
+        const iconEl = document.getElementById('coachIcon');
+        const titleEl = document.getElementById('coachTitle');
+        const bodyEl = document.getElementById('coachBody');
+        const prevBtn = document.getElementById('coachPrev');
+        const nextBtn = document.getElementById('coachNext');
+        const skipBtn = document.getElementById('coachSkip');
+        const arrow = coach?.querySelector('.coach-arrow');
+        if (!coach) return;
+
+        const STEPS = [
+          {
+            targetId: 'cmdkLauncher',
+            icon: 'fa-bolt',
+            title: 'Command palette',
+            body: 'Press <kbd class="kbd">⌘</kbd><kbd class="kbd">K</kbd> anytime — jump to any page, switch business, run a command, or search live posts.',
+            placement: 'bottom-right',
+          },
+          {
+            targetId: 'notifBtn',
+            icon: 'fa-bell',
+            title: 'Notifications',
+            body: 'Recent activity surfaces here. Unread items show a blue dot; click to dive in or "Mark all read".',
+            placement: 'bottom-right',
+          },
+          {
+            targetId: 'userMenuBtn',
+            icon: 'fa-user',
+            title: 'Your account',
+            body: 'Toggle <strong>dark mode</strong>, view the landing page, or sign out from here.',
+            placement: 'bottom-right',
+          },
+          {
+            targetId: 'globalSearch',
+            icon: 'fa-magnifying-glass',
+            title: 'Filter the current view',
+            body: 'Type to filter posts, templates, or activity on whatever page you\'re on. Press <kbd class="kbd">/</kbd> to focus this bar.',
+            placement: 'bottom-center',
+          },
+        ];
+
+        let curStep = 0;
+        let activeTarget = null;
+
+        function findTargetForCurrentViewport(id) {
+          const el = document.getElementById(id);
+          if (!el) return null;
+          // If the search bar is hidden at narrow viewports, the step is skipped
+          if (el.offsetWidth === 0 && el.offsetHeight === 0) return null;
+          return el;
+        }
+
+        function position(step) {
+          const t = findTargetForCurrentViewport(step.targetId);
+          if (!t) return false;
+          const r = t.getBoundingClientRect();
+          coach.style.top = (r.bottom + 14) + 'px';
+
+          if (step.placement === 'bottom-center') {
+            const cx = r.left + r.width / 2;
+            const w = coach.offsetWidth;
+            const left = Math.max(16, Math.min(window.innerWidth - w - 16, cx - w / 2));
+            coach.style.right = 'auto';
+            coach.style.left = left + 'px';
+            if (arrow) {
+              arrow.style.right = 'auto';
+              arrow.style.left = Math.max(16, cx - left - 6) + 'px';
+            }
+          } else {
+            const right = Math.max(16, window.innerWidth - r.right);
+            coach.style.left = 'auto';
+            coach.style.right = right + 'px';
+            if (arrow) {
+              arrow.style.left = 'auto';
+              arrow.style.right = '28px';
+            }
+          }
+          return true;
+        }
+
+        function highlightTarget(id) {
+          activeTarget?.classList.remove('coach-target');
+          const t = document.getElementById(id);
+          if (t) { t.classList.add('coach-target'); activeTarget = t; }
+        }
+
+        function render() {
+          const step = STEPS[curStep];
+          if (!step) return finish(true);
+          // Skip steps whose target is hidden
+          if (!findTargetForCurrentViewport(step.targetId)) {
+            curStep++;
+            return render();
+          }
+          stepEl.textContent = `Step ${curStep + 1} of ${STEPS.length}`;
+          iconEl.className = 'fas ' + step.icon;
+          titleEl.textContent = step.title;
+          bodyEl.innerHTML = step.body;
+          prevBtn.disabled = curStep === 0;
+          nextBtn.innerHTML = (curStep === STEPS.length - 1)
+            ? 'Done <i class="fas fa-check"></i>'
+            : 'Next <i class="fas fa-chevron-right"></i>';
+          highlightTarget(step.targetId);
+          position(step);
+        }
+
+        function open() {
+          curStep = 0;
+          coach.classList.add('open');
+          coach.setAttribute('aria-hidden', 'false');
+          render();
+        }
+        function finish(persist) {
+          coach.classList.remove('open');
+          coach.setAttribute('aria-hidden', 'true');
+          activeTarget?.classList.remove('coach-target');
+          activeTarget = null;
+          if (persist) localStorage.setItem(COACH_KEY, '1');
+        }
+
+        prevBtn?.addEventListener('click', () => { if (curStep > 0) { curStep--; render(); } });
+        nextBtn?.addEventListener('click', () => {
+          if (curStep < STEPS.length - 1) { curStep++; render(); }
+          else finish(true);
+        });
+        skipBtn?.addEventListener('click', () => finish(true));
+
+        window.addEventListener('resize', () => {
+          if (coach.classList.contains('open')) position(STEPS[curStep]);
+        });
+        document.addEventListener('keydown', (e) => {
+          if (!coach.classList.contains('open')) return;
+          if (e.key === 'Escape') { e.preventDefault(); finish(true); }
+          else if (e.key === 'ArrowRight') { e.preventDefault(); nextBtn?.click(); }
+          else if (e.key === 'ArrowLeft')  { e.preventDefault(); prevBtn?.click(); }
+        });
+
+        window.showCoach = (force) => {
+          if (force) localStorage.removeItem(COACH_KEY);
+          if (!localStorage.getItem(COACH_KEY)) {
+            setTimeout(open, 600);
+          }
+        };
+        window.showCoach(false);
+      })();
+
+      // ============================================================
+      // Button loading helper — window.btnLoading(el, on)
+      // Auto-binds buttons with data-loading-action="<id>" to track
+      // loading state when their action toggles a global flag.
+      // ============================================================
+      window.btnLoading = function (el, on) {
+        if (!el) return;
+        if (on) {
+          if (el.dataset._origHtml === undefined) el.dataset._origHtml = el.innerHTML;
+          el.classList.add('is-loading');
+          el.setAttribute('aria-busy', 'true');
+          el.disabled = true;
+        } else {
+          el.classList.remove('is-loading');
+          el.removeAttribute('aria-busy');
+          el.disabled = false;
+        }
+      };
+      // Convenience: window.withLoading(el, asyncFn)
+      window.withLoading = async function (el, fn) {
+        window.btnLoading(el, true);
+        try { return await fn(); }
+        finally { window.btnLoading(el, false); }
+      };
+
+      // ============================================================
+      // New Business modal v2 — live preview, drag-drop, presets
+      // ============================================================
+      (function () {
+        const $id = (x) => document.getElementById(x);
+        const preview = $id('brandPreview');
+        const previewInit = $id('brandPreviewInit');
+        const previewName = $id('brandPreviewName');
+        const previewIndustry = $id('brandPreviewIndustry');
+        const previewMark = $id('brandPreviewMark');
+        const nameInput = $id('businessName');
+        const industrySelect = $id('businessIndustry');
+        const fileInput = $id('businessLogo');
+        const dropzone = $id('logoDropzone');
+        const logoPreview = $id('logoPreview');
+        const logoClearBtn = $id('logoClearBtn');
+        const logoBrowseBtn = $id('logoBrowseBtn');
+        const colorPrimary = $id('colorPrimary');
+        const colorSecondary = $id('colorSecondary');
+        const colorAccent = $id('colorAccent');
+        const colorPresets = $id('colorPresets');
+
+        if (!preview) return;
+
+        function syncSwatches() {
+          const p = colorPrimary?.value || '#3B82F6';
+          const s = colorSecondary?.value || '#1E40AF';
+          const a = colorAccent?.value || '#F59E0B';
+          preview.style.setProperty('--bp-primary', p);
+          preview.style.setProperty('--bp-secondary', s);
+          preview.style.setProperty('--bp-accent', a);
+          preview.querySelector('[data-role="primary"]').style.background = p;
+          preview.querySelector('[data-role="secondary"]').style.background = s;
+          preview.querySelector('[data-role="accent"]').style.background = a;
+          // Update the inline color-value text next to the color input
+          colorPrimary?.nextElementSibling && (colorPrimary.nextElementSibling.textContent = p.toUpperCase());
+          colorSecondary?.nextElementSibling && (colorSecondary.nextElementSibling.textContent = s.toUpperCase());
+          colorAccent?.nextElementSibling && (colorAccent.nextElementSibling.textContent = a.toUpperCase());
+        }
+        function syncName() {
+          const v = (nameInput?.value || '').trim();
+          previewName.textContent = v || 'Your business';
+          previewInit.textContent = (v ? v[0] : 'B').toUpperCase();
+        }
+        function syncIndustry() {
+          const opt = industrySelect?.options[industrySelect.selectedIndex];
+          const label = opt && opt.value ? opt.text : 'Pick an industry';
+          previewIndustry.textContent = label;
+        }
+        nameInput?.addEventListener('input', syncName);
+        industrySelect?.addEventListener('change', syncIndustry);
+        [colorPrimary, colorSecondary, colorAccent].forEach((el) => el?.addEventListener('input', syncSwatches));
+
+        // --- Color presets ---
+        colorPresets?.addEventListener('click', (e) => {
+          const btn = e.target.closest('.color-preset');
+          if (!btn) return;
+          if (colorPrimary)   { colorPrimary.value   = btn.dataset.primary; }
+          if (colorSecondary) { colorSecondary.value = btn.dataset.secondary; }
+          if (colorAccent)    { colorAccent.value    = btn.dataset.accent; }
+          colorPresets.querySelectorAll('.color-preset').forEach((b) => b.classList.toggle('active', b === btn));
+          syncSwatches();
+        });
+
+        // --- Logo: drag/drop + paste + browse + clear ---
+        function applyLogo(file) {
+          if (!file || !/^image\//.test(file.type)) return;
+          if (file.size > 5 * 1024 * 1024) { app?.showToast?.('Logo too large (max 5 MB)', 'warning'); return; }
+          const url = URL.createObjectURL(file);
+          logoPreview.innerHTML = '';
+          const img = document.createElement('img');
+          img.src = url;
+          img.alt = 'Logo preview';
+          logoPreview.appendChild(img);
+          // Mirror to live preview
+          previewMark.innerHTML = '';
+          const pImg = document.createElement('img');
+          pImg.src = url;
+          pImg.alt = '';
+          previewMark.appendChild(pImg);
+          logoClearBtn.hidden = false;
+          dropzone.classList.add('has-file');
+        }
+        function clearLogo() {
+          fileInput.value = '';
+          logoPreview.innerHTML = '<i class="fas fa-building"></i>';
+          previewMark.innerHTML = '<span class="brand-preview-init" id="brandPreviewInit"></span>';
+          // Re-grab the new init element since we replaced it
+          syncName();
+          logoClearBtn.hidden = true;
+          dropzone.classList.remove('has-file');
+        }
+
+        logoBrowseBtn?.addEventListener('click', (e) => { e.preventDefault(); fileInput.click(); });
+        dropzone?.addEventListener('click', (e) => {
+          if (e.target.closest('.logo-clear, .dropdown-link')) return;
+          fileInput.click();
+        });
+        dropzone?.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+        });
+        fileInput?.addEventListener('change', () => applyLogo(fileInput.files?.[0]));
+        logoClearBtn?.addEventListener('click', (e) => { e.stopPropagation(); clearLogo(); });
+
+        ['dragenter', 'dragover'].forEach((evt) => {
+          dropzone?.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('is-dragging'); });
+        });
+        ['dragleave', 'drop'].forEach((evt) => {
+          dropzone?.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('is-dragging'); });
+        });
+        dropzone?.addEventListener('drop', (e) => {
+          const f = e.dataTransfer?.files?.[0];
+          if (f) {
+            try {
+              const dt = new DataTransfer();
+              dt.items.add(f);
+              fileInput.files = dt.files;
+            } catch {}
+            applyLogo(f);
+          }
+        });
+
+        // Initial sync
+        syncName(); syncIndustry(); syncSwatches();
+      })();
+
+      // ============================================================
+      // Business tab scroll arrows
+      // ============================================================
+      (function () {
+        const wrap = document.getElementById('businessTabsWrap');
+        const tabs = document.getElementById('businessTabs');
+        const L = document.getElementById('tabsArrowL');
+        const R = document.getElementById('tabsArrowR');
+        if (!wrap || !tabs || !L || !R) return;
+
+        function syncArrows() {
+          const overflow = tabs.scrollWidth > tabs.clientWidth + 1;
+          wrap.classList.toggle('no-overflow', !overflow);
+          if (!overflow) return;
+          L.classList.toggle('disabled', tabs.scrollLeft <= 2);
+          R.classList.toggle('disabled', tabs.scrollLeft + tabs.clientWidth >= tabs.scrollWidth - 2);
+        }
+        function scrollBy(dir) {
+          const step = Math.max(120, tabs.clientWidth * 0.6);
+          tabs.scrollBy({ left: dir * step, behavior: 'smooth' });
+        }
+        L.addEventListener('click', () => scrollBy(-1));
+        R.addEventListener('click', () => scrollBy(1));
+        tabs.addEventListener('scroll', syncArrows, { passive: true });
+        window.addEventListener('resize', syncArrows);
+        new MutationObserver(syncArrows).observe(tabs, { childList: true, subtree: true });
+        // Initial + after first render
+        syncArrows();
+        setTimeout(syncArrows, 100);
+        setTimeout(syncArrows, 600);
+      })();
+
+      // ============================================================
+      // Shortcut cheatsheet (?)
+      // ============================================================
+      const cheat = document.getElementById('cheat');
+      function openCheat() {
+        cheat.classList.add('open');
+        cheat.setAttribute('aria-hidden', 'false');
+      }
+      function closeCheat() {
+        cheat.classList.remove('open');
+        cheat.setAttribute('aria-hidden', 'true');
+      }
+      cheat.querySelectorAll('[data-cheat-close]').forEach((el) => el.addEventListener('click', closeCheat));
+      window.openCheat = openCheat;
+      document.addEventListener('keydown', (e) => {
+        const inField = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '');
+        if (e.key === '?' && !inField && !e.metaKey && !e.ctrlKey) {
+          e.preventDefault();
+          if (cheat.classList.contains('open')) closeCheat(); else openCheat();
+        }
+        if (e.key === 'Escape' && cheat.classList.contains('open')) {
+          e.preventDefault();
+          closeCheat();
+        }
+      });
+
+      // ============================================================
+      // Breadcrumbs — sync from sidebar + business tabs + page title
+      // ============================================================
+      const crumbBusiness = document.getElementById('crumbBusiness');
+      const crumbPage = document.getElementById('crumbPage');
+      const crumbSep2 = document.getElementById('crumbSep2');
+
+      let lastBizId = null;
+      function updateCrumbs() {
+        const bizTab = document.querySelector('.business-tab.active');
+        const bizLabel = bizTab?.textContent?.trim().replace(/\s+/g, ' ').replace(/×$/, '').trim();
+        const bizId = bizTab?.dataset?.id || window.app?.currentBusiness?.id || null;
+        if (bizLabel) {
+          crumbBusiness.textContent = bizLabel;
+          crumbBusiness.classList.remove('crumb-empty');
+        } else {
+          crumbBusiness.textContent = 'No business selected';
+          crumbBusiness.classList.add('crumb-empty');
+        }
+        if (bizId && bizId !== lastBizId) {
+          lastBizId = bizId;
+          window.__pushRecentBiz?.(bizId);
+        }
+
+        const activeNav = document.querySelector('.nav-item.active');
+        const pageText = activeNav?.querySelector('span')?.textContent?.trim();
+        const pageTitleText = document.querySelector('.page-title')?.textContent?.trim();
+
+        // Prefer .page-title if it differs meaningfully from the nav label
+        let label = pageText || '';
+        if (pageTitleText && pageText && !pageTitleText.toLowerCase().includes(pageText.toLowerCase())) {
+          label = pageTitleText;
+        } else if (pageTitleText && !pageText) {
+          label = pageTitleText;
+        }
+
+        if (label) {
+          crumbPage.textContent = label;
+          crumbPage.style.display = '';
+          crumbSep2.style.display = '';
+        } else {
+          crumbPage.style.display = 'none';
+          crumbSep2.style.display = 'none';
+        }
+      }
+      // Observe both header (business tabs) and content area (page title / nav active)
+      const targets = [
+        document.getElementById('businessTabs'),
+        document.querySelector('.nav-menu'),
+        document.querySelector('.content-area'),
+      ].filter(Boolean);
+      const mo = new MutationObserver(() => updateCrumbs());
+      targets.forEach((t) => mo.observe(t, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] }));
+      updateCrumbs();
+      setTimeout(updateCrumbs, 500); // catch first render
+
+      // ============================================================
+      // Skeleton loaders — swap .loading-state with shimmer cards
+      // ============================================================
+      const SKELETON_TEMPLATES = {
+        dashboard: `
+          <div class="skel-grid">
+            <div class="skel skel-stat"></div>
+            <div class="skel skel-stat"></div>
+            <div class="skel skel-stat"></div>
+            <div class="skel skel-stat"></div>
+          </div>
+          <div class="skel-row">
+            <div class="skel skel-card"></div>
+            <div class="skel skel-card skel-card-sm"></div>
+          </div>`,
+        grid: `
+          <div class="skel-grid skel-grid-3">
+            <div class="skel skel-tile"></div>
+            <div class="skel skel-tile"></div>
+            <div class="skel skel-tile"></div>
+            <div class="skel skel-tile"></div>
+            <div class="skel skel-tile"></div>
+            <div class="skel skel-tile"></div>
+          </div>`,
+      };
+      function inferSkeletonKind(el) {
+        const page = document.querySelector('.nav-item.active')?.dataset?.page || '';
+        if (page === 'posts' || page === 'templates' || page === 'assets') return 'grid';
+        return 'dashboard';
+      }
+      function swapSkeletons(root) {
+        root.querySelectorAll('.loading-state').forEach((el) => {
+          // Don't re-swap something we already replaced
+          if (el.dataset.skeletonized === '1') return;
+          const kind = inferSkeletonKind(el);
+          el.innerHTML = SKELETON_TEMPLATES[kind] || SKELETON_TEMPLATES.dashboard;
+          el.dataset.skeletonized = '1';
+          el.classList.add('loading-state-skel');
+        });
+      }
+      // ============================================================
+      // Sidebar: Pinned businesses
+      // ============================================================
+      function renderPinnedSidebar() {
+        const section = document.getElementById('pinnedSection');
+        const list = document.getElementById('pinnedList');
+        const countEl = document.getElementById('pinnedCount');
+        if (!section || !list) return;
+        const ids = (function () {
+          try { return JSON.parse(localStorage.getItem(PINNED_BIZ_KEY) || '[]'); } catch { return []; }
+        })();
+        const businesses = (window.app?.businesses || []);
+        const cur = window.app?.currentBusiness?.id;
+        const pinned = ids.map((id) => businesses.find((b) => b.id === id)).filter(Boolean);
+        if (!pinned.length) { section.hidden = true; return; }
+        section.hidden = false;
+        countEl.textContent = pinned.length;
+        list.innerHTML = pinned.map((b) => {
+          const init = (b.name || '?').trim()[0]?.toUpperCase() || '?';
+          const isActive = b.id === cur;
+          return `<a href="#" class="service-link pinned-link ${isActive ? 'active' : ''}" data-pin-biz="${b.id}" title="${b.name}">
+            <span class="pinned-init">${init}</span>
+            <span class="pinned-name">${b.name}</span>
+            <button class="pinned-unpin" data-unpin="${b.id}" title="Unpin" aria-label="Unpin ${b.name}"><i class="fas fa-thumbtack"></i></button>
+          </a>`;
+        }).join('');
+        list.querySelectorAll('[data-pin-biz]').forEach((el) => {
+          el.addEventListener('click', (e) => {
+            if (e.target.closest('[data-unpin]')) return;
+            e.preventDefault();
+            window.app?.selectBusiness(el.dataset.pinBiz);
+          });
+        });
+        list.querySelectorAll('[data-unpin]').forEach((el) => {
+          el.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const id = el.dataset.unpin;
+            const cur = (function () { try { return JSON.parse(localStorage.getItem(PINNED_BIZ_KEY) || '[]'); } catch { return []; } })();
+            localStorage.setItem(PINNED_BIZ_KEY, JSON.stringify(cur.filter((x) => x !== id)));
+            renderPinnedSidebar();
+          });
+        });
+      }
+      // Re-render whenever business tabs change OR pin storage changes
+      new MutationObserver(() => renderPinnedSidebar())
+        .observe(document.getElementById('businessTabs'), { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+      window.addEventListener('storage', (e) => {
+        if (e.key === PINNED_BIZ_KEY) renderPinnedSidebar();
+      });
+      // Hook into renderCmdk so toggling a pin from palette refreshes sidebar
+      const _origTogglePinBiz = togglePinBiz;
+      togglePinBiz = function (id) {
+        const r = _origTogglePinBiz(id);
+        renderPinnedSidebar();
+        return r;
+      };
+      window.__renderPinnedSidebar = renderPinnedSidebar;
+      setTimeout(renderPinnedSidebar, 500);
+      setTimeout(renderPinnedSidebar, 1500);
+
+      // ============================================================
+      // Settings page tabs — auto-inserted via DOM observer
+      // ============================================================
+      function upgradeSettingsPage(root) {
+        const title = root.querySelector('.page-title');
+        const isSettings = title && /business settings/i.test(title.textContent || '');
+        if (!isSettings) return;
+        const card = root.querySelector('.card .card-body');
+        if (!card || card.dataset.tabsInjected === '1') return;
+        const sections = Array.from(card.querySelectorAll(':scope > .settings-section'));
+        if (sections.length < 2) return;
+        card.dataset.tabsInjected = '1';
+
+        // Build tab labels from each section's h3 (strip ":" / "Zone" etc)
+        const labels = sections.map((s) => {
+          const raw = (s.querySelector('h3')?.textContent || 'Section').trim();
+          return raw.replace(/\s*zone\s*$/i, '').trim();
+        });
+
+        // Insert tab strip
+        const tabs = document.createElement('div');
+        tabs.className = 'form-tabs settings-tabs';
+        tabs.setAttribute('role', 'tablist');
+        labels.forEach((label, i) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'form-tab' + (i === 0 ? ' active' : '');
+          btn.setAttribute('role', 'tab');
+          btn.dataset.idx = i;
+          btn.textContent = label;
+          tabs.appendChild(btn);
+        });
+        card.insertBefore(tabs, sections[0]);
+
+        // Hide all sections except first
+        sections.forEach((s, i) => { s.style.display = i === 0 ? '' : 'none'; });
+
+        tabs.addEventListener('click', (e) => {
+          const btn = e.target.closest('.form-tab');
+          if (!btn) return;
+          const idx = Number(btn.dataset.idx);
+          tabs.querySelectorAll('.form-tab').forEach((b) => b.classList.toggle('active', b === btn));
+          sections.forEach((s, i) => { s.style.display = i === idx ? '' : 'none'; });
+        });
+      }
+
+      // ============================================================
+      // Auto-upgrade empty states rendered by app.js to v2 pattern
+      // ============================================================
+      function upgradeEmptyStates(root) {
+        root.querySelectorAll('.empty-state:not([data-upgraded])').forEach((el) => {
+          el.dataset.upgraded = '1';
+          // Wrap trailing buttons in .empty-actions
+          const buttons = Array.from(el.children).filter((c) => c.matches('button.btn, a.btn'));
+          if (buttons.length && !el.querySelector('.empty-actions')) {
+            const wrap = document.createElement('div');
+            wrap.className = 'empty-actions';
+            buttons.forEach((b) => wrap.appendChild(b));
+            el.appendChild(wrap);
+          }
+          // Add a contextual hint if missing
+          if (!el.querySelector('.empty-hint')) {
+            const hint = document.createElement('span');
+            hint.className = 'empty-hint';
+            hint.innerHTML = 'Tip: press <kbd class="kbd">⌘K</kbd> for commands';
+            el.appendChild(hint);
+          }
+        });
+      }
+
+      const contentArea = document.querySelector('.content-area');
+      if (contentArea) {
+        swapSkeletons(contentArea);
+        upgradeEmptyStates(contentArea);
+        let lastHash = '';
+        const applyPageEnter = () => {
+          // Only fire if the actual root structure changed
+          const sig = Array.from(contentArea.children).map((c) => c.tagName + c.className).join('|');
+          if (sig === lastHash) return;
+          lastHash = sig;
+          contentArea.classList.remove('page-enter');
+          // Force reflow to restart the animation
+          void contentArea.offsetWidth;
+          contentArea.classList.add('page-enter');
+        };
+        new MutationObserver(() => {
+          swapSkeletons(contentArea);
+          upgradeEmptyStates(contentArea);
+          upgradeSettingsPage(contentArea);
+          applyPageEnter();
+        }).observe(contentArea, { childList: true, subtree: true });
+        applyPageEnter();
+        upgradeSettingsPage(contentArea);
+      }
+    })();
+  </script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

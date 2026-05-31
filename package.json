@@ -1,0 +1,61 @@
+{
+  "name": "social-media-manager",
+  "version": "1.0.0",
+  "description": "Integrated social media management platform with multiple micro-apps",
+  "main": "main.js",
+  "bin": "main.js",
+  "scripts": {
+    "start": "concurrently --kill-others-on-fail \"npm:start:*\"",
+    "start:manager": "cd manager && node --no-deprecation server.js",
+    "start:background": "cd background_engine && node --no-deprecation server.js",
+    "start:post-generator": "cd post_generator && node --no-deprecation server.js",
+    "start:auto-poster": "cd auto_poster && node --no-deprecation server.js",
+    "dev": "concurrently --kill-others-on-fail \"npm:dev:*\"",
+    "dev:manager": "cd manager && nodemon server.js",
+    "dev:background": "cd background_engine && nodemon server.js",
+    "dev:post-generator": "cd post_generator && nodemon server.js",
+    "dev:auto-poster": "cd auto_poster && nodemon server.js",
+    "install:all": "npm install && cd manager && npm install && cd ../background_engine && npm install && cd ../post_generator && npm install && cd ../auto_poster && npm install",
+    "setup": "npm run install:all && npm run db:init",
+    "db:init": "node shared/db/init.js",
+    "build": "./build.sh",
+    "package": "pkg . --out-path dist/bin"
+  },
+  "pkg": {
+    "scripts": [
+      "manager/**/*.js",
+      "background_engine/**/*.js",
+      "post_generator/**/*.js",
+      "auto_poster/**/*.js",
+      "shared/**/*.js"
+    ],
+    "assets": [
+      "manager/public/**/*",
+      "background_engine/public/**/*",
+      "background_engine/backgrounds/**/*",
+      "post_generator/public/**/*",
+      "auto_poster/public/**/*",
+      "shared/**/*",
+      ".env.example"
+    ],
+    "targets": [
+      "node18-macos-x64",
+      "node18-macos-arm64",
+      "node18-win-x64",
+      "node18-linux-x64"
+    ],
+    "outputPath": "dist/bin"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "dotenv": "^16.3.1",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "pkg": "^5.8.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,53 @@
+# Dependencies
+node_modules
+*/node_modules
+
+# Build outputs
+dist
+*.zip
+
+# Development files
+.git
+.gitignore
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Test files
+coverage
+.nyc_output
+*.test.js
+*.spec.js
+
+# Documentation
+*.md
+!README.md
+
+# Misc
+*.png
+*.jpg
+*.jpeg
+*.webp
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Local database (will be created fresh)
+shared/db/data.json
+
+# Temporary files
+tmp
+temp
+*.tmp

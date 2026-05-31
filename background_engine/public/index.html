@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Background Engine - AI Background Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="http://localhost:3004/css/brandio-shell.css">
+  <script src="http://localhost:3004/js/brandio-shell.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      /* bg/color/font come from brandio-shell brutalist layer */
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      color: #aaa;
+      font-size: 1.1rem;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 30px;
+    }
+
+    @media (max-width: 1024px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 25px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .panel h2 {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel h2 span {
+      font-size: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .search-box input {
+      flex: 1;
+    }
+
+    .search-box .btn {
+      flex-shrink: 0;
+    }
+
+    .backgrounds-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .background-card {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .background-card:hover {
+      transform: scale(1.02);
+      border-color: #667eea;
+    }
+
+    .background-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .background-card .overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 15px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .background-card:hover .overlay {
+      opacity: 1;
+    }
+
+    .background-card .overlay p {
+      font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .tag {
+      padding: 6px 12px;
+      background: rgba(102, 126, 234, 0.2);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: #a5b4fc;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .tag:hover {
+      background: rgba(102, 126, 234, 0.4);
+    }
+
+    .preview-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .preview-modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preview-content {
+      max-width: 900px;
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .preview-image {
+      width: 100%;
+      max-height: 500px;
+      object-fit: contain;
+      background: #000;
+    }
+
+    .preview-info {
+      padding: 25px;
+    }
+
+    .preview-info h3 {
+      margin-bottom: 15px;
+    }
+
+    .preview-info .meta {
+      color: #aaa;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+    }
+
+    .preview-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 2rem;
+      color: white;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      color: #aaa;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 15px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .alert {
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .alert-success {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #6ee7b7;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    .alert-info {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.05);
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-card .number {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .stat-card .label {
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 5px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .empty-state span {
+      font-size: 4rem;
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    .suggestions-list {
+      margin-top: 20px;
+    }
+
+    .suggestion-item {
+      padding: 15px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .suggestion-item:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .suggestion-item img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .suggestion-item .info {
+      flex: 1;
+    }
+
+    .suggestion-item .info h4 {
+      margin-bottom: 5px;
+    }
+
+    .suggestion-item .info p {
+      font-size: 0.85rem;
+      color: #aaa;
+    }
+
+    /* Upload styles */
+    .tab-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.05);
+      color: #aaa;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.95rem;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: transparent;
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .upload-area {
+      border: 2px dashed rgba(255,255,255,0.3);
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .upload-area:hover, .upload-area.dragover {
+      border-color: #667eea;
+      background: rgba(102, 126, 234, 0.1);
+    }
+
+    .upload-area span {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .upload-area p {
+      color: #aaa;
+      margin-bottom: 5px;
+    }
+
+    .upload-area small {
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    .upload-preview {
+      display: none;
+      margin-bottom: 20px;
+    }
+
+    .upload-preview.active {
+      display: block;
+    }
+
+    .upload-preview img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .upload-preview .file-info {
+      font-size: 0.85rem;
+      color: #aaa;
+    }
+
+    /* Settings styles */
+    .settings-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .settings-btn:hover {
+      background: rgba(102, 126, 234, 0.3);
+      transform: rotate(30deg);
+    }
+
+    .settings-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 1001;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .settings-modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .settings-content {
+      max-width: 500px;
+      width: 100%;
+      background: #1a1a2e;
+      border-radius: 16px;
+      padding: 30px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .settings-content h2 {
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .api-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .api-status .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .api-status .dot.active {
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+    }
+
+    .api-status .dot.inactive {
+      background: #ef4444;
+    }
+
+    .api-key-input {
+      position: relative;
+    }
+
+    .api-key-input input {
+      padding-right: 50px;
+    }
+
+    .toggle-visibility {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #aaa;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .settings-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .settings-actions .btn {
+      flex: 1;
+    }
+
+    .help-text {
+      font-size: 0.85rem;
+      color: #888;
+      margin-top: 10px;
+    }
+
+    .help-text a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .help-text a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <nav class="br-nav">
+    <div class="br-nav-left">
+      <a href="http://localhost:3004/dashboard" class="br-back" title="Back to dashboard"><i class="fas fa-arrow-left"></i></a>
+      <a href="http://localhost:3004/landing" class="br-brand"><i class="fas fa-bolt"></i> Brandio</a>
+      <span class="br-sep"></span>
+      <span class="br-section"><em>Background Engine</em></span>
+    </div>
+    <div class="br-nav-right">
+      <span class="br-pill"><span class="dot"></span> Service online</span>
+      <a href="http://localhost:3004/dashboard" class="br-link"><i class="fas fa-gauge-high"></i> Dashboard</a>
+      <button type="button" class="br-theme-toggle" onclick="window.__brandioShellTheme && window.__brandioShellTheme.toggle()" aria-label="Toggle theme" title="Toggle theme">
+        <i class="fas fa-moon icon-moon"></i>
+        <i class="fas fa-sun icon-sun"></i>
+      </button>
+    </div>
+  </nav>
+  <!-- Settings Button -->
+  <button class="settings-btn" id="settingsBtn" title="Settings">&#9881;</button>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="settings-modal">
+    <div class="settings-content">
+      <h2><span>&#9881;</span> Settings</h2>
+
+      <div class="api-status" id="apiStatus">
+        <div class="dot inactive" id="apiDot"></div>
+        <span id="apiStatusText">API Key not configured</span>
+      </div>
+
+      <form id="settingsForm">
+        <div class="form-group">
+          <label>Gemini API Key</label>
+          <div class="api-key-input">
+            <input type="password" id="apiKeyInput" placeholder="Enter your Gemini API key">
+            <button type="button" class="toggle-visibility" id="toggleApiKey">&#128065;</button>
+          </div>
+          <p class="help-text">
+            Get your API key from <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a>
+          </p>
+        </div>
+
+        <div class="settings-actions">
+          <button type="submit" class="btn btn-primary" id="saveApiKeyBtn">Save API Key</button>
+          <button type="button" class="btn btn-secondary" id="closeSettingsBtn">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="container">
+    <header>
+      <h1>Background Engine</h1>
+      <p>AI-powered background generator for social media posts</p>
+    </header>
+
+    <div class="main-grid">
+      <!-- Left Panel - Generator & Upload -->
+      <div class="panel">
+        <div class="tab-buttons">
+          <button class="tab-btn active" data-tab="generate">Generate with AI</button>
+          <button class="tab-btn" data-tab="upload">Upload from Gallery</button>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <!-- Generate Tab -->
+        <div id="generateTab" class="tab-content active">
+          <form id="generateForm">
+            <div class="form-group">
+              <label>Prompt / Description *</label>
+              <textarea
+                id="prompt"
+                placeholder="Describe the background you want... e.g., 'Diwali festival celebration with diyas and fireworks'"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Category</label>
+                <select id="category">
+                  <option value="general">General</option>
+                  <option value="festival">Festival</option>
+                  <option value="celebration">Celebration</option>
+                  <option value="business">Business</option>
+                  <option value="nature">Nature</option>
+                  <option value="abstract">Abstract</option>
+                  <option value="seasonal">Seasonal</option>
+                  <option value="promotional">Promotional</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Style</label>
+                <select id="style">
+                  <option value="vibrant">Vibrant</option>
+                  <option value="minimal">Minimal</option>
+                  <option value="gradient">Gradient</option>
+                  <option value="festive">Festive</option>
+                  <option value="corporate">Corporate</option>
+                  <option value="nature">Nature</option>
+                  <option value="abstract">Abstract</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Occasion (optional)</label>
+              <input type="text" id="occasion" placeholder="e.g., diwali, christmas, new year">
+            </div>
+
+            <div class="form-group">
+              <label>
+                <input type="checkbox" id="forceNew"> Force new generation (skip existing matches)
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="generateBtn">
+              <span>🎨</span> Generate Background
+            </button>
+          </form>
+
+          <div class="tags" id="occasionTags">
+            <span class="tag" data-occasion="diwali">Diwali</span>
+            <span class="tag" data-occasion="christmas">Christmas</span>
+            <span class="tag" data-occasion="new year">New Year</span>
+            <span class="tag" data-occasion="holi">Holi</span>
+            <span class="tag" data-occasion="eid">Eid</span>
+            <span class="tag" data-occasion="birthday">Birthday</span>
+            <span class="tag" data-occasion="sale">Sale</span>
+          </div>
+        </div>
+
+        <!-- Upload Tab -->
+        <div id="uploadTab" class="tab-content">
+          <form id="uploadForm">
+            <div class="upload-area" id="uploadArea">
+              <span>📁</span>
+              <p>Click to select or drag & drop image</p>
+              <small>PNG, JPG, WebP (max 10MB)</small>
+              <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" hidden>
+            </div>
+
+            <div class="upload-preview" id="uploadPreview">
+              <img id="previewImg" src="" alt="Preview">
+              <div class="file-info" id="fileInfo"></div>
+            </div>
+
+            <div class="form-group">
+              <label>Background Name *</label>
+              <input type="text" id="uploadName" placeholder="e.g., Diwali Festival Background" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Category</label>
+                <select id="uploadCategory">
+                  <option value="general">General</option>
+                  <option value="festival">Festival</option>
+                  <option value="celebration">Celebration</option>
+                  <option value="business">Business</option>
+                  <option value="nature">Nature</option>
+                  <option value="abstract">Abstract</option>
+                  <option value="seasonal">Seasonal</option>
+                  <option value="promotional">Promotional</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Occasion</label>
+                <input type="text" id="uploadOccasion" placeholder="e.g., diwali">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Description (optional)</label>
+              <textarea id="uploadDescription" placeholder="Brief description of the background..." rows="2"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Tags (comma separated)</label>
+              <input type="text" id="uploadTags" placeholder="e.g., festive, colorful, lights">
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="uploadBtn" disabled>
+              <span>📤</span> Upload Background
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Panel - Gallery -->
+      <div class="panel">
+        <h2><span>🖼️</span> Backgrounds Gallery</h2>
+
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search backgrounds...">
+          <button class="btn btn-secondary" id="searchBtn">Search</button>
+          <button class="btn btn-secondary" id="refreshBtn">Refresh</button>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card">
+            <div class="number" id="totalCount">0</div>
+            <div class="label">Total Backgrounds</div>
+          </div>
+          <div class="stat-card">
+            <div class="number" id="festivalCount">0</div>
+            <div class="label">Festival</div>
+          </div>
+          <div class="stat-card">
+            <div class="number" id="businessCount">0</div>
+            <div class="label">Business</div>
+          </div>
+        </div>
+
+        <div id="suggestionsContainer" class="suggestions-list" style="display: none;"></div>
+
+        <div id="loadingIndicator" class="loading" style="display: none;">
+          <div class="spinner"></div>
+          <span>Loading...</span>
+        </div>
+
+        <div id="backgroundsGrid" class="backgrounds-grid"></div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+          <span>🖼️</span>
+          <p>No backgrounds yet. Generate your first one!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview Modal -->
+  <div id="previewModal" class="preview-modal">
+    <button class="close-btn" id="closeModal">&times;</button>
+    <div class="preview-content">
+      <img id="previewImage" class="preview-image" src="" alt="Preview">
+      <div class="preview-info">
+        <h3 id="previewTitle"></h3>
+        <p class="meta" id="previewMeta"></p>
+        <p id="previewDescription"></p>
+        <div class="tags" id="previewTags"></div>
+        <div class="preview-actions">
+          <a id="downloadBtn" class="btn btn-primary" download>Download PNG</a>
+          <button id="copyUrlBtn" class="btn btn-secondary">Copy URL</button>
+          <button id="deleteBtn" class="btn btn-secondary" style="color: #ef4444;">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = '/api';
+    let currentPreview = null;
+    let selectedFile = null;
+
+    // DOM Elements
+    const generateForm = document.getElementById('generateForm');
+    const generateBtn = document.getElementById('generateBtn');
+    const uploadForm = document.getElementById('uploadForm');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const uploadPreview = document.getElementById('uploadPreview');
+    const previewImg = document.getElementById('previewImg');
+    const fileInfo = document.getElementById('fileInfo');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const backgroundsGrid = document.getElementById('backgroundsGrid');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const emptyState = document.getElementById('emptyState');
+    const previewModal = document.getElementById('previewModal');
+    const alertContainer = document.getElementById('alertContainer');
+    const suggestionsContainer = document.getElementById('suggestionsContainer');
+
+    // Settings elements
+    const settingsBtn = document.getElementById('settingsBtn');
+    const settingsModal = document.getElementById('settingsModal');
+    const settingsForm = document.getElementById('settingsForm');
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    const toggleApiKey = document.getElementById('toggleApiKey');
+    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+    const apiDot = document.getElementById('apiDot');
+    const apiStatusText = document.getElementById('apiStatusText');
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadBackgrounds();
+      loadStats();
+      setupTabs();
+      setupSettings();
+      checkApiStatus();
+      setupUpload();
+    });
+
+    // Tab switching
+    function setupTabs() {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tab = btn.dataset.tab;
+
+          // Update buttons
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          // Update content
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          document.getElementById(tab + 'Tab').classList.add('active');
+        });
+      });
+    }
+
+    // Upload setup
+    function setupUpload() {
+      // Click to upload
+      uploadArea.addEventListener('click', () => fileInput.click());
+
+      // File selection
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+          handleFileSelect(e.target.files[0]);
+        }
+      });
+
+      // Drag and drop
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+      });
+
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+      });
+
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+          handleFileSelect(e.dataTransfer.files[0]);
+        }
+      });
+    }
+
+    // Handle file selection
+    function handleFileSelect(file) {
+      const validTypes = ['image/png', 'image/jpeg', 'image/webp'];
+      if (!validTypes.includes(file.type)) {
+        showAlert('Invalid file type. Please select PNG, JPG, or WebP.', 'error');
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        showAlert('File too large. Maximum size is 10MB.', 'error');
+        return;
+      }
+
+      selectedFile = file;
+
+      // Show preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImg.src = e.target.result;
+        uploadPreview.classList.add('active');
+      };
+      reader.readAsDataURL(file);
+
+      // Show file info
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+      fileInfo.textContent = `${file.name} (${sizeMB} MB)`;
+
+      // Enable upload button
+      uploadBtn.disabled = false;
+    }
+
+    // Settings setup
+    function setupSettings() {
+      settingsBtn.addEventListener('click', openSettings);
+      closeSettingsBtn.addEventListener('click', closeSettings);
+      settingsForm.addEventListener('submit', saveApiKey);
+
+      toggleApiKey.addEventListener('click', () => {
+        const type = apiKeyInput.type === 'password' ? 'text' : 'password';
+        apiKeyInput.type = type;
+        toggleApiKey.innerHTML = type === 'password' ? '&#128065;' : '&#128064;';
+      });
+
+      settingsModal.addEventListener('click', (e) => {
+        if (e.target === settingsModal) closeSettings();
+      });
+    }
+
+    function openSettings() {
+      settingsModal.classList.add('active');
+      checkApiStatus();
+    }
+
+    function closeSettings() {
+      settingsModal.classList.remove('active');
+      apiKeyInput.value = '';
+    }
+
+    async function checkApiStatus() {
+      try {
+        const response = await fetch(`${API_BASE}/settings/api-status`);
+        const data = await response.json();
+
+        if (data.configured) {
+          apiDot.classList.remove('inactive');
+          apiDot.classList.add('active');
+          apiStatusText.textContent = 'API Key configured';
+        } else {
+          apiDot.classList.remove('active');
+          apiDot.classList.add('inactive');
+          apiStatusText.textContent = 'API Key not configured';
+        }
+      } catch (error) {
+        console.error('Error checking API status:', error);
+      }
+    }
+
+    async function saveApiKey(e) {
+      e.preventDefault();
+
+      const apiKey = apiKeyInput.value.trim();
+      if (!apiKey) {
+        showAlert('Please enter an API key', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/settings/api-key`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ apiKey })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showAlert('API Key saved successfully!', 'success');
+          closeSettings();
+          checkApiStatus();
+        } else {
+          showAlert(data.error || 'Failed to save API key', 'error');
+        }
+      } catch (error) {
+        showAlert('Error: ' + error.message, 'error');
+      }
+    }
+
+    // Event Listeners
+    generateForm.addEventListener('submit', handleGenerate);
+    uploadForm.addEventListener('submit', handleUpload);
+    searchBtn.addEventListener('click', handleSearch);
+    refreshBtn.addEventListener('click', loadBackgrounds);
+    document.getElementById('closeModal').addEventListener('click', closePreview);
+    document.getElementById('copyUrlBtn').addEventListener('click', copyUrl);
+    document.getElementById('deleteBtn').addEventListener('click', handleDelete);
+
+    // Occasion tags click
+    document.querySelectorAll('.tag[data-occasion]').forEach(tag => {
+      tag.addEventListener('click', () => {
+        document.getElementById('prompt').value = tag.dataset.occasion + ' background';
+        document.getElementById('occasion').value = tag.dataset.occasion;
+        document.getElementById('category').value = 'festival';
+      });
+    });
+
+    // Close modal on outside click
+    previewModal.addEventListener('click', (e) => {
+      if (e.target === previewModal) closePreview();
+    });
+
+    // Handle upload
+    async function handleUpload(e) {
+      e.preventDefault();
+
+      if (!selectedFile) {
+        showAlert('Please select an image file', 'error');
+        return;
+      }
+
+      const name = document.getElementById('uploadName').value.trim();
+      if (!name) {
+        showAlert('Please enter a background name', 'error');
+        return;
+      }
+
+      uploadBtn.disabled = true;
+      uploadBtn.innerHTML = '<div class="spinner" style="width:20px;height:20px;margin:0"></div> Uploading...';
+
+      try {
+        const formData = new FormData();
+        formData.append('image', selectedFile);
+        formData.append('name', name);
+        formData.append('category', document.getElementById('uploadCategory').value);
+        formData.append('occasion', document.getElementById('uploadOccasion').value.trim());
+        formData.append('description', document.getElementById('uploadDescription').value.trim());
+        formData.append('tags', document.getElementById('uploadTags').value.trim());
+
+        const response = await fetch(`${API_BASE}/backgrounds/upload`, {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showAlert('Background uploaded successfully!', 'success');
+
+          // Reset form
+          uploadForm.reset();
+          selectedFile = null;
+          uploadPreview.classList.remove('active');
+          uploadBtn.disabled = true;
+
+          // Reload backgrounds
+          loadBackgrounds();
+          loadStats();
+        } else {
+          showAlert(data.error || 'Upload failed', 'error');
+        }
+      } catch (error) {
+        showAlert('Error: ' + error.message, 'error');
+      }
+
+      uploadBtn.disabled = false;
+      uploadBtn.innerHTML = '<span>📤</span> Upload Background';
+    }
+
+    // Generate background
+    async function handleGenerate(e) {
+      e.preventDefault();
+
+      const prompt = document.getElementById('prompt').value.trim();
+      const category = document.getElementById('category').value;
+      const style = document.getElementById('style').value;
+      const occasion = document.getElementById('occasion').value.trim();
+      const forceNew = document.getElementById('forceNew').checked;
+
+      if (!prompt) {
+        showAlert('Please enter a prompt', 'error');
+        return;
+      }
+
+      generateBtn.disabled = true;
+      generateBtn.innerHTML = '<div class="spinner" style="width:20px;height:20px;margin:0"></div> Generating...';
+
+      try {
+        const response = await fetch(`${API_BASE}/backgrounds/generate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt, category, style, occasion, forceNew })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          if (data.type === 'existing') {
+            showAlert('Found existing backgrounds matching your query!', 'info');
+            showSuggestions(data.suggestions);
+          } else {
+            showAlert('Background generated successfully!', 'success');
+            suggestionsContainer.style.display = 'none';
+            loadBackgrounds();
+          }
+        } else {
+          showAlert(data.error || 'Generation failed', 'error');
+        }
+      } catch (error) {
+        showAlert('Error: ' + error.message, 'error');
+      }
+
+      generateBtn.disabled = false;
+      generateBtn.innerHTML = '<span>🎨</span> Generate Background';
+    }
+
+    // Search backgrounds
+    async function handleSearch() {
+      const query = searchInput.value.trim();
+      if (!query) {
+        loadBackgrounds();
+        return;
+      }
+
+      showLoading(true);
+
+      try {
+        const response = await fetch(`${API_BASE}/backgrounds/search?q=${encodeURIComponent(query)}`);
+        const data = await response.json();
+
+        if (data.success) {
+          renderBackgrounds(data.results);
+        }
+      } catch (error) {
+        showAlert('Search error: ' + error.message, 'error');
+      }
+
+      showLoading(false);
+    }
+
+    // Load all backgrounds
+    async function loadBackgrounds() {
+      showLoading(true);
+      suggestionsContainer.style.display = 'none';
+
+      try {
+        const response = await fetch(`${API_BASE}/backgrounds/list?limit=50`);
+        const data = await response.json();
+
+        if (data.success) {
+          renderBackgrounds(data.items);
+        }
+      } catch (error) {
+        console.error('Load error:', error);
+      }
+
+      showLoading(false);
+    }
+
+    // Load stats
+    async function loadStats() {
+      try {
+        const response = await fetch(`${API_BASE}/integration/stats`);
+        const data = await response.json();
+
+        if (data.success) {
+          document.getElementById('totalCount').textContent = data.stats.totalBackgrounds;
+          document.getElementById('festivalCount').textContent = data.stats.byCategory.festival || 0;
+          document.getElementById('businessCount').textContent = data.stats.byCategory.business || 0;
+        }
+      } catch (error) {
+        console.error('Stats error:', error);
+      }
+    }
+
+    // Render backgrounds grid
+    function renderBackgrounds(backgrounds) {
+      if (!backgrounds || backgrounds.length === 0) {
+        backgroundsGrid.innerHTML = '';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      backgroundsGrid.innerHTML = backgrounds.map(bg => `
+        <div class="background-card" onclick="showPreview('${bg.filename || bg.id}')">
+          <img src="/api/backgrounds/image/${bg.imagePath || bg.filename + '.png'}" alt="${bg.prompt}" loading="lazy">
+          <div class="overlay">
+            <p>${bg.prompt || 'Background'}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Show suggestions
+    function showSuggestions(suggestions) {
+      suggestionsContainer.style.display = 'block';
+      suggestionsContainer.innerHTML = `
+        <h4 style="margin-bottom: 15px; color: #93c5fd;">Found existing backgrounds:</h4>
+        ${suggestions.map(bg => `
+          <div class="suggestion-item" onclick="showPreview('${bg.filename || bg.id}')">
+            <img src="/api/backgrounds/image/${bg.imagePath || bg.filename + '.png'}" alt="${bg.prompt}">
+            <div class="info">
+              <h4>${bg.prompt}</h4>
+              <p>${bg.category || 'general'} • ${bg.occasion || 'N/A'}</p>
+            </div>
+          </div>
+        `).join('')}
+        <p style="margin-top: 15px; color: #aaa; font-size: 0.9rem;">
+          Want a new one? Check "Force new generation" and try again.
+        </p>
+      `;
+    }
+
+    // Show preview modal
+    async function showPreview(identifier) {
+      try {
+        const response = await fetch(`${API_BASE}/backgrounds/${identifier}`);
+        const data = await response.json();
+
+        if (data.success) {
+          currentPreview = data.background;
+          const bg = data.background;
+
+          document.getElementById('previewImage').src = `/api/backgrounds/image/${bg.imagePath || bg.filename + '.png'}`;
+          document.getElementById('previewTitle').textContent = bg.prompt;
+          document.getElementById('previewMeta').textContent = `${bg.category || 'general'} • ${bg.occasion || 'No occasion'} • ${new Date(bg.metadata?.createdAt || Date.now()).toLocaleDateString()}`;
+          document.getElementById('previewDescription').textContent = bg.description || '';
+          document.getElementById('previewTags').innerHTML = (bg.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+          document.getElementById('downloadBtn').href = `/api/backgrounds/image/${bg.imagePath || bg.filename + '.png'}`;
+
+          previewModal.classList.add('active');
+        }
+      } catch (error) {
+        showAlert('Error loading preview', 'error');
+      }
+    }
+
+    // Close preview
+    function closePreview() {
+      previewModal.classList.remove('active');
+      currentPreview = null;
+    }
+
+    // Copy URL
+    function copyUrl() {
+      if (!currentPreview) return;
+      const url = window.location.origin + `/api/backgrounds/image/${currentPreview.imagePath || currentPreview.filename + '.png'}`;
+      navigator.clipboard.writeText(url);
+      showAlert('URL copied to clipboard!', 'success');
+    }
+
+    // Delete background
+    async function handleDelete() {
+      if (!currentPreview) return;
+      if (!confirm('Are you sure you want to delete this background?')) return;
+
+      try {
+        const response = await fetch(`${API_BASE}/backgrounds/${currentPreview.id || currentPreview.filename}`, {
+          method: 'DELETE'
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          showAlert('Background deleted', 'success');
+          closePreview();
+          loadBackgrounds();
+          loadStats();
+        } else {
+          showAlert(data.error || 'Delete failed', 'error');
+        }
+      } catch (error) {
+        showAlert('Error: ' + error.message, 'error');
+      }
+    }
+
+    // Show loading indicator
+    function showLoading(show) {
+      loadingIndicator.style.display = show ? 'flex' : 'none';
+      if (show) {
+        backgroundsGrid.innerHTML = '';
+        emptyState.style.display = 'none';
+      }
+    }
+
+    // Show alert
+    function showAlert(message, type = 'info') {
+      alertContainer.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+      setTimeout(() => {
+        alertContainer.innerHTML = '';
+      }, 5000);
+    }
+
+    // Make showPreview available globally
+    window.showPreview = showPreview;
+  </script>
+</body>
+</html>

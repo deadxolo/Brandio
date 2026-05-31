@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Template Editor - Create Dynamic Templates</title>
+  <!-- Google Fonts - Comprehensive Collection -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700;900&family=Open+Sans:wght@300;400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Lato:wght@300;400;700;900&family=Oswald:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Ubuntu:wght@300;400;500;700&family=Nunito:wght@300;400;500;600;700;800;900&family=Bebas+Neue&family=Dancing+Script:wght@400;500;600;700&family=Pacifico&family=Lobster&family=Caveat:wght@400;500;600;700&family=Righteous&family=Abril+Fatface&family=Cinzel:wght@400;500;600;700;800;900&family=Comfortaa:wght@300;400;500;600;700&family=Josefin+Sans:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=Work+Sans:wght@300;400;500;600;700;800;900&family=Source+Sans+Pro:wght@300;400;600;700;900&family=Rubik:wght@300;400;500;600;700;800;900&family=Noto+Sans:wght@300;400;500;600;700;800;900&family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&family=Libre+Baskerville:wght@400;700&family=Crimson+Text:wght@400;600;700&family=Bitter:wght@300;400;500;600;700;800;900&family=Archivo:wght@300;400;500;600;700;800;900&family=Fira+Sans:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Lexend:wght@300;400;500;600;700;800;900&family=Sora:wght@300;400;500;600;700;800&family=Fredoka:wght@300;400;500;600;700&family=Satisfy&family=Great+Vibes&family=Sacramento&family=Tangerine:wght@400;700&family=Kaushan+Script&family=Permanent+Marker&family=Bangers&family=Bungee&family=Staatliches&family=Anton&family=Russo+One&family=Teko:wght@300;400;500;600;700&family=Chakra+Petch:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Press+Start+2P&family=Monoton&family=Shadows+Into+Light&family=Amatic+SC:wght@400;700&family=Special+Elite&family=Indie+Flower&family=Patrick+Hand&family=Gloria+Hallelujah&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/editor.css">
+  <link rel="stylesheet" href="http://localhost:3004/css/brandio-shell.css">
+  <script src="http://localhost:3004/js/brandio-shell.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="editor-header">
+      <div class="header-left">
+        <a href="http://localhost:3004/dashboard" class="back-link" title="Back to dashboard">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="logo">
+          <i class="fas fa-bolt"></i>
+          <span>Brandio <span style="color:var(--br-text-2); font-weight:500; margin-left:6px; font-size:13px;">· Editor</span></span>
+        </div>
+        <div class="template-info">
+          <input type="text" id="templateName" class="template-name-input" placeholder="Untitled Template" value="New Template">
+          <span class="save-status" id="saveStatus">
+            <i class="fas fa-cloud"></i>
+            <span>Saved</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <div class="platform-select">
+          <button class="platform-btn active" data-platform="instagram" data-width="1080" data-height="1080">
+            <i class="fab fa-instagram"></i>
+            <span>Post</span>
+          </button>
+          <button class="platform-btn" data-platform="instagram-story" data-width="1080" data-height="1920">
+            <i class="fab fa-instagram"></i>
+            <span>Story</span>
+          </button>
+          <button class="platform-btn" data-platform="facebook" data-width="1200" data-height="630">
+            <i class="fab fa-facebook"></i>
+            <span>Facebook</span>
+          </button>
+          <button class="platform-btn" data-platform="twitter" data-width="1200" data-height="675">
+            <i class="fab fa-twitter"></i>
+            <span>Twitter</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button class="btn btn-outline" id="previewBtn" title="Preview Template">
+          <i class="fas fa-eye"></i>
+          <span>Preview</span>
+        </button>
+        <button class="btn btn-outline" id="saveBtn" title="Save Template">
+          <i class="fas fa-save"></i>
+          <span>Save</span>
+        </button>
+        <button class="btn btn-primary" id="generateBtn" title="Generate Posts from Template">
+          <i class="fas fa-magic"></i>
+          <span>Generate Posts</span>
+        </button>
+        <button type="button" class="br-theme-toggle" onclick="window.__brandioShellTheme && window.__brandioShellTheme.toggle()" aria-label="Toggle theme" title="Toggle theme">
+          <i class="fas fa-moon icon-moon"></i>
+          <i class="fas fa-sun icon-sun"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Editor -->
+    <div class="editor-main">
+      <!-- Left Toolbar -->
+      <aside class="toolbar-left">
+        <div class="tool-section">
+          <button class="tool-btn active" data-tool="select" title="Select (V)">
+            <i class="fas fa-mouse-pointer"></i>
+          </button>
+          <button class="tool-btn" data-tool="text" title="Add Text (T)">
+            <i class="fas fa-font"></i>
+          </button>
+          <button class="tool-btn" data-tool="image" title="Add Image (I)">
+            <i class="fas fa-image"></i>
+          </button>
+          <button class="tool-btn" data-tool="shape" title="Add Shape (S)">
+            <i class="fas fa-shapes"></i>
+          </button>
+        </div>
+
+        <div class="tool-divider"></div>
+
+        <div class="tool-section">
+          <button class="tool-btn ai-tool-btn" id="aiTemplateBtn" title="Generate Template with AI">
+            <i class="fas fa-wand-magic-sparkles"></i>
+          </button>
+        </div>
+
+        <div class="tool-divider"></div>
+
+        <div class="tool-section">
+          <button class="tool-btn" data-action="undo" title="Undo (Ctrl+Z)">
+            <i class="fas fa-undo"></i>
+          </button>
+          <button class="tool-btn" data-action="redo" title="Redo (Ctrl+Y)">
+            <i class="fas fa-redo"></i>
+          </button>
+        </div>
+
+        <div class="tool-divider"></div>
+
+        <div class="tool-section">
+          <button class="tool-btn" data-action="zoom-in" title="Zoom In">
+            <i class="fas fa-search-plus"></i>
+          </button>
+          <button class="tool-btn" data-action="zoom-out" title="Zoom Out">
+            <i class="fas fa-search-minus"></i>
+          </button>
+          <button class="tool-btn" data-action="fit" title="Fit to Screen">
+            <i class="fas fa-expand"></i>
+          </button>
+        </div>
+
+        <div class="toolbar-spacer"></div>
+
+        <div class="tool-section">
+          <button class="tool-btn" data-action="delete" title="Delete Selected">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Canvas Area -->
+      <main class="canvas-area">
+        <div class="canvas-toolbar">
+          <div class="zoom-controls">
+            <button class="btn-icon btn-icon-sm" data-action="zoom-out">
+              <i class="fas fa-minus"></i>
+            </button>
+            <span class="zoom-display" id="zoomDisplay">100%</span>
+            <button class="btn-icon btn-icon-sm" data-action="zoom-in">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="canvas-container" id="canvasContainer">
+          <!-- Multi-select status indicator -->
+          <div id="multiSelectStatus" class="multi-select-status" style="display: none;">
+            <i class="fas fa-layer-group"></i>
+            <span>0 elements selected</span>
+            <small>Shift+Click to add more | Ctrl+A to select all</small>
+          </div>
+          <div class="canvas-wrapper" id="canvasWrapper">
+            <canvas id="mainCanvas"></canvas>
+            <div class="element-handles" id="elementHandles" style="display: none;">
+              <div class="handle nw" data-handle="nw"></div>
+              <div class="handle n" data-handle="n"></div>
+              <div class="handle ne" data-handle="ne"></div>
+              <div class="handle e" data-handle="e"></div>
+              <div class="handle se" data-handle="se"></div>
+              <div class="handle s" data-handle="s"></div>
+              <div class="handle sw" data-handle="sw"></div>
+              <div class="handle w" data-handle="w"></div>
+              <div class="handle rotate" data-handle="rotate">
+                <i class="fas fa-sync-alt"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Right Panel -->
+      <aside class="panel-right">
+        <div class="panel-tabs">
+          <button class="panel-tab active" data-panel="properties">Properties</button>
+          <button class="panel-tab" data-panel="placeholders">Placeholders</button>
+          <button class="panel-tab" data-panel="layers">Layers</button>
+        </div>
+
+        <!-- Properties Panel -->
+        <div class="panel-content active" id="panel-properties">
+          <!-- No Selection State -->
+          <div class="no-selection" id="noSelection">
+            <i class="fas fa-mouse-pointer"></i>
+            <h4>No element selected</h4>
+            <p>Select an element on the canvas to edit its properties</p>
+          </div>
+
+          <!-- Text Properties -->
+          <div class="panel-section hidden" id="textProperties">
+            <div class="panel-section-header">
+              <span class="panel-section-title">Text</span>
+            </div>
+
+            <div class="property-group">
+              <div class="property-label">
+                <span>Content</span>
+                <button class="dynamic-toggle" data-property="text" title="Make Dynamic">
+                  <i class="fas fa-link"></i> Dynamic
+                </button>
+              </div>
+              <div class="input-wrapper" id="textContentWrapper">
+                <textarea id="textContent" rows="3" placeholder="Enter text..."></textarea>
+              </div>
+            </div>
+
+            <div class="property-row">
+              <div class="property-group">
+                <div class="property-label">
+                  <span>Font</span>
+                </div>
+                <select id="fontFamily">
+                  <!-- Modern Sans-Serif -->
+                  <optgroup label="Modern Sans-Serif">
+                    <option value="Inter">Inter</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Poppins">Poppins</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Nunito">Nunito</option>
+                    <option value="Raleway">Raleway</option>
+                    <option value="Ubuntu">Ubuntu</option>
+                    <option value="Quicksand">Quicksand</option>
+                    <option value="Josefin Sans">Josefin Sans</option>
+                    <option value="Work Sans">Work Sans</option>
+                    <option value="Source Sans Pro">Source Sans Pro</option>
+                    <option value="Rubik">Rubik</option>
+                    <option value="Noto Sans">Noto Sans</option>
+                    <option value="PT Sans">PT Sans</option>
+                    <option value="Fira Sans">Fira Sans</option>
+                    <option value="Barlow">Barlow</option>
+                    <option value="Manrope">Manrope</option>
+                    <option value="DM Sans">DM Sans</option>
+                    <option value="Space Grotesk">Space Grotesk</option>
+                    <option value="Outfit">Outfit</option>
+                    <option value="Lexend">Lexend</option>
+                    <option value="Sora">Sora</option>
+                    <option value="Comfortaa">Comfortaa</option>
+                    <option value="Fredoka">Fredoka</option>
+                    <option value="Archivo">Archivo</option>
+                  </optgroup>
+
+                  <!-- Serif & Elegant -->
+                  <optgroup label="Serif & Elegant">
+                    <option value="Playfair Display">Playfair Display</option>
+                    <option value="Merriweather">Merriweather</option>
+                    <option value="PT Serif">PT Serif</option>
+                    <option value="Libre Baskerville">Libre Baskerville</option>
+                    <option value="Crimson Text">Crimson Text</option>
+                    <option value="Bitter">Bitter</option>
+                    <option value="Abril Fatface">Abril Fatface</option>
+                    <option value="Cinzel">Cinzel</option>
+                  </optgroup>
+
+                  <!-- Display & Headlines -->
+                  <optgroup label="Display & Headlines">
+                    <option value="Oswald">Oswald</option>
+                    <option value="Bebas Neue">Bebas Neue</option>
+                    <option value="Righteous">Righteous</option>
+                    <option value="Anton">Anton</option>
+                    <option value="Russo One">Russo One</option>
+                    <option value="Teko">Teko</option>
+                    <option value="Staatliches">Staatliches</option>
+                    <option value="Bungee">Bungee</option>
+                    <option value="Bangers">Bangers</option>
+                    <option value="Permanent Marker">Permanent Marker</option>
+                    <option value="Monoton">Monoton</option>
+                  </optgroup>
+
+                  <!-- Handwriting & Script -->
+                  <optgroup label="Handwriting & Script">
+                    <option value="Dancing Script">Dancing Script</option>
+                    <option value="Pacifico">Pacifico</option>
+                    <option value="Lobster">Lobster</option>
+                    <option value="Caveat">Caveat</option>
+                    <option value="Satisfy">Satisfy</option>
+                    <option value="Great Vibes">Great Vibes</option>
+                    <option value="Sacramento">Sacramento</option>
+                    <option value="Tangerine">Tangerine</option>
+                    <option value="Kaushan Script">Kaushan Script</option>
+                    <option value="Shadows Into Light">Shadows Into Light</option>
+                    <option value="Amatic SC">Amatic SC</option>
+                    <option value="Indie Flower">Indie Flower</option>
+                    <option value="Patrick Hand">Patrick Hand</option>
+                    <option value="Gloria Hallelujah">Gloria Hallelujah</option>
+                  </optgroup>
+
+                  <!-- Tech & Futuristic -->
+                  <optgroup label="Tech & Futuristic">
+                    <option value="Chakra Petch">Chakra Petch</option>
+                    <option value="Orbitron">Orbitron</option>
+                    <option value="Press Start 2P">Press Start 2P</option>
+                    <option value="Special Elite">Special Elite</option>
+                  </optgroup>
+
+                  <!-- System Fonts -->
+                  <optgroup label="System Fonts">
+                    <option value="Arial">Arial</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Impact">Impact</option>
+                  </optgroup>
+                </select>
+              </div>
+              <div class="property-group" style="max-width: 80px;">
+                <div class="property-label">
+                  <span>Size</span>
+                  <button class="dynamic-toggle" data-property="fontSize" title="Make Dynamic">
+                    <i class="fas fa-link"></i>
+                  </button>
+                </div>
+                <input type="number" id="fontSize" value="48" min="8" max="300">
+              </div>
+            </div>
+
+            <div class="property-row">
+              <div class="property-group">
+                <div class="property-label"><span>Weight</span></div>
+                <select id="fontWeight">
+                  <option value="300">Light</option>
+                  <option value="normal">Regular</option>
+                  <option value="500">Medium</option>
+                  <option value="600">Semi Bold</option>
+                  <option value="bold">Bold</option>
+                  <option value="800">Extra Bold</option>
+                </select>
+              </div>
+              <div class="property-group">
+                <div class="property-label">
+                  <span>Color</span>
+                  <button class="dynamic-toggle" data-property="color" title="Make Dynamic">
+                    <i class="fas fa-link"></i>
+                  </button>
+                </div>
+                <input type="color" id="textColor" value="#1f2937">
+              </div>
+            </div>
+
+            <div class="property-group">
+              <div class="property-label"><span>Alignment</span></div>
+              <div class="btn-group">
+                <button class="btn-icon" data-align="left" title="Left">
+                  <i class="fas fa-align-left"></i>
+                </button>
+                <button class="btn-icon active" data-align="center" title="Center">
+                  <i class="fas fa-align-center"></i>
+                </button>
+                <button class="btn-icon" data-align="right" title="Right">
+                  <i class="fas fa-align-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="property-row">
+              <div class="property-group">
+                <div class="property-label"><span>Line Height</span></div>
+                <input type="number" id="lineHeight" value="1.2" min="0.5" max="3" step="0.1">
+              </div>
+              <div class="property-group">
+                <div class="property-label"><span>Letter Spacing</span></div>
+                <input type="number" id="letterSpacing" value="0" min="-10" max="20">
+              </div>
+            </div>
+
+            <div class="property-row">
+              <div class="property-group">
+                <div class="property-label"><span>Text Width</span></div>
+                <div class="text-width-toggle">
+                  <button class="text-width-btn active" id="autoWidthBtn" title="Auto-fit width to text">
+                    <i class="fas fa-text-width"></i> Auto
+                  </button>
+                  <button class="text-width-btn" id="fixedWidthBtn" title="Fixed width with wrapping">
+                    <i class="fas fa-arrows-alt-h"></i> Fixed
+                  </button>
+                </div>
+              </div>
+              <div class="property-group" id="fixedWidthInput" style="display: none;">
+                <div class="property-label"><span>Width</span></div>
+                <input type="number" id="textWidth" value="400" min="50" max="2000">
+              </div>
+            </div>
+
+            <div class="panel-section-header" style="margin-top: 16px;">
+              <span class="panel-section-title">Text Stroke (Outline)</span>
+            </div>
+
+            <div class="property-row">
+              <div class="property-group">
+                <div class="property-label">
+                  <span>Stroke Color</span>
+                  <button class="dynamic-toggle" data-property="textStrokeColor" title="Make Dynamic">
+                    <i class="fas fa-link"></i>
+                  </button>
+                </div>
+                <input type="color" id="textStrokeColor" value="#000000">
+              </div>
+              <div class="property-group">
+                <div class="property-label"><span>Stroke Width</span></div>
+                <div class="range-with-value">
+                  <input type="range" id="textStrokeWidth" min="0" max="20" value="0">
+                  <span class="range-value" id="textStrokeWidthValue">0</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-section-header" style="margin-top: 16px;">
+              <span class="panel-section-title">Text Background & Border</span>
+            </div>
+
+            <div class="property-row">
+              <div class="property-group">
+                <div class="property-label">
+                  <span>Background</span>
+                  <button class="dynamic-toggle" data-property="backgroundColor" title="Make Dynamic">
+                    <i class="fas fa-link"></i>
+                  </button>
+                </div>
+                <input type="color" id="textBackgroundColor" value="#000000">
+              </div>
+              <div class="property-group">
+                <div class="property-label"><span>BG Opacity</span></div>
+                <div class="range-with-value">
+                  <input type="range" id="textBackgroundOpacity" min="0" max="100" value="0">
+                  <span class="range-value" id="textBgOpacityValue">0%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="property-row">
+              <div class="property-group">
+                <div class="property-label">
+                  <span>Border Color</span>
+                  <button class="dynamic-toggle" data-property="borderColor" title="Make Dynamic">
+                    <i class="fas fa-link"></i>
+                  </button>
+                </div>
+                <input type="color" id="textBorderColor" value="#000000">
+              </div>
+              <div class="property-group">
+                <div class="property-label"><span>Border Width</span></div>
+                <div class="range-with-value">
+                  <input type="range" id="textBorderWidth" min="0" max="10" value="0">
+                  <span class="range-value" id="textBorderWidthValue">0</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="property-row">
+              <div class="property-group">
+                <div class="property-label"><span>Border Radius</span></div>
+                <div class="range-with-value">
+                  <input type="range" id="textBorderRadius" min="0" max="50" value="0">
+                  <span class="range-value" id="textBorderRadiusValue">0</span>
+                </div>
+              </div>
+              <div class="property-group">
+                <div class="property-label"><span>Padding</span></div>
+                <div class="range-with-value">
+                  <input type="range" id="textPadding" min="0" max="50" value="0">
+                  <span class="range-value" id="textPaddingValue">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image Properties -->
+          <div class="panel-section hidden" id="imageProperties">
+            <div class="panel-section-header">
+              <span class="panel-section-title">Image</span>
+            </div>
+
+            <div class="property-group">
+              <div class="property-label">
+                <span>Source</span>
+                <button class="dynamic-toggle" data-property="src" title="Make Dynamic">
+                  <i class="fas fa-link"></i> Dynamic
+                </button>
+              </div>
+              <div class="btn-group" style="width: 100%;">
+                <button class="btn btn-outline btn-sm" id="uploadImageBtn" style="flex: 1;">
+                  <i class="fas fa-upload"></i> Upload
+                </button>
+                <button class="btn btn-outline btn-sm" id="aiImageBtn" style="flex: 1;">
+                  <i class="fas fa-wand-magic-sparkles"></i> AI
+                </button>
+              </div>
+              <input type="file" id="imageUpload" accept="image/*" hidden>
+            </div>
+
+            <div class="property-row mt-3">
+              <div class="property-group">
+                <div class="property-label"><span>Width</span></div>
+                <input type="number" id="imageWidth" value="200">
+              </div>
+              <div class="property-group">
+                <div class="property-label"><span>Height</span></div>
+                <input type="number" id="imageHeight" value="200">
+              </div>
+            </div>
+
+            <div class="property-group">
+              <div class="property-label">
+                <span>Opacity</span>
+                <button class="dynamic-toggle" data-property="opacity" title="Make Dynamic">
+                  <i class="fas fa-link"></i>
+                </button>
+              </div>
+              <div class="range-with-value">
+                <input type="range" id="imageOpacity" min="0" max="100" value="100">
+                <span class="range-value" id="opacityValue">100%</span>
+              </div>
+            </div>
+
+            <div class="property-group">
+              <div class="property-label"><span>Border Radius</span></div>
+              <div class="range-with-value">
+                <input type="range" id="imageBorderRadius" min="0" max="50" value="0">
+                <span class="range-value" id="borderRadiusValue">0%</span>
+              </div>
+            </div>
+
+            <div class="property-group">
+              <div class="property-label"><span>Fit Mode</span></div>
+              <div class="fit-mode-options">
+                <button class="fit-mode-btn" data-fit="contain" title="Fit inside (letterbox)">
+                  <i class="fas fa-compress"></i>
+                </button>
+                <button class="fit-mode-btn active" data-fit="cover" title="Cover & crop">
+                  <i class="fas fa-expand"></i>
+                </button>
+                <button class="fit-mode-btn" data-fit="fill" title="Stretch to fill">
+                  <i class="fas fa-arrows-alt"></i>
+                </button>
+                <button class="fit-mode-btn" data-fit="center" title="Original size">
+                  <i class="fas fa-crosshairs"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="panel-section-header" style="margin-top: 16px;">
+              <span class="panel-section-title">Image Stroke</span>
+            </div>
+
+            <div class="property-row">
+              <div class="property-group">
+                <div class="property-label">
+                  <span>Stroke Color</span>
+                  <button class="dynamic-toggle" data-property="imageStrokeColor" title="Make Dynamic">
+                    <i class="fas fa-link"></i>
+                  </button>
+                </div>
+                <input type="color" id="imageStrokeColor" value="#000000">
+              </div>
+              <div class="property-group">
+                <div class="property-label"><span>Stroke Width</span></div>
+                <div class="range-with-value">
+                  <input type="range" id="imageStrokeWidth" min="0" max="20" value="0">
+                  <span class="range-value" id="imageStrokeWidthValue">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shape Properties -->
+          <div class="panel-section hidden" id="shapeProperties">
+            <div class="panel-section-header">
+              <span class="panel-section-title">Shape</span>
+            </div>
+
+            <div class="property-group">
+              <div class="property-label"><span>Type</span></div>
+              <div class="shape-options">
+                <button class="shape-btn active" data-shape="rect" title="Rectangle">
+                  <i class="fas fa-square"></i>
+                </button>
+                <button class="shape-btn" data-shape="circle" title="Circle">
+                  <i class="fas fa-circle"></i>
+                </button>
+                <button class="shape-btn" data-shape="triangle" title="Triangle">
+                  <i class="fas fa-play fa-rotate-270"></i>
+                </button>
+                <button class="shape-btn" data-shape="line" title="Line">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="property-row">
+              <div class="property-group">
+                <div class="property-label">
+                  <span>Fill</span>
+                  <button class="dynamic-toggle" data-property="fill" title="Make Dynamic">
+                    <i class="fas fa-link"></i>
+                  </button>
+                </div>
+                <input type="color" id="shapeFill" value="#e94560">
+              </div>
+              <div class="property-group">
+                <div class="property-label">
+                  <span>Stroke</span>
+                  <button class="dynamic-toggle" data-property="stroke" title="Make Dynamic">
+                    <i class="fas fa-link"></i>
+                  </button>
+                </div>
+                <input type="color" id="shapeStroke" value="#000000">
+              </div>
+            </div>
+
+            <div class="property-group">
+              <div class="property-label"><span>Stroke Width</span></div>
+              <div class="range-with-value">
+                <input type="range" id="shapeStrokeWidth" min="0" max="20" value="0">
+                <span class="range-value" id="strokeWidthValue">0</span>
+              </div>
+            </div>
+
+            <div class="property-group">
+              <div class="property-label">
+                <span>Opacity</span>
+                <button class="dynamic-toggle" data-property="shapeOpacity" title="Make Dynamic">
+                  <i class="fas fa-link"></i>
+                </button>
+              </div>
+              <div class="range-with-value">
+                <input type="range" id="shapeOpacity" min="0" max="100" value="100">
+                <span class="range-value" id="shapeOpacityValue">100%</span>
+              </div>
+            </div>
+
+            <div class="property-group">
+              <div class="property-label">
+                <span>Border Radius</span>
+                <button class="dynamic-toggle" data-property="shapeBorderRadius" title="Make Dynamic">
+                  <i class="fas fa-link"></i>
+                </button>
+              </div>
+              <div class="range-with-value">
+                <input type="range" id="shapeBorderRadius" min="0" max="100" value="0">
+                <span class="range-value" id="shapeBorderRadiusValue">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Position & Size (shown for all element types) -->
+          <div class="panel-section hidden" id="positionSection">
+            <div class="panel-section-header">
+              <span class="panel-section-title">Position & Size</span>
+            </div>
+            <div class="property-row">
+              <div class="property-group">
+                <div class="property-label">
+                  <span>X</span>
+                  <button class="dynamic-toggle" data-property="x" title="Make Dynamic">
+                    <i class="fas fa-link"></i>
+                  </button>
+                </div>
+                <input type="number" id="elementX" value="0">
+              </div>
+              <div class="property-group">
+                <div class="property-label">
+                  <span>Y</span>
+                  <button class="dynamic-toggle" data-property="y" title="Make Dynamic">
+                    <i class="fas fa-link"></i>
+                  </button>
+                </div>
+                <input type="number" id="elementY" value="0">
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-group">
+                <div class="property-label">
+                  <span>W</span>
+                  <button class="dynamic-toggle" data-property="width" title="Make Dynamic">
+                    <i class="fas fa-link"></i>
+                  </button>
+                </div>
+                <input type="number" id="elementW" value="100">
+              </div>
+              <div class="property-group">
+                <div class="property-label">
+                  <span>H</span>
+                  <button class="dynamic-toggle" data-property="height" title="Make Dynamic">
+                    <i class="fas fa-link"></i>
+                  </button>
+                </div>
+                <input type="number" id="elementH" value="100">
+              </div>
+            </div>
+            <div class="property-group">
+              <div class="property-label"><span>Rotation</span></div>
+              <div class="range-with-value">
+                <input type="range" id="elementRotation" min="0" max="360" value="0">
+                <span class="range-value" id="rotationValue">0°</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Background Section (shown when no element selected) -->
+          <div class="panel-section" id="backgroundSection">
+            <div class="panel-section-header">
+              <span class="panel-section-title">Background</span>
+            </div>
+
+            <div class="bg-type-selector">
+              <button class="bg-type-btn active" data-bg-type="color">Color</button>
+              <button class="bg-type-btn" data-bg-type="gradient">Gradient</button>
+              <button class="bg-type-btn" data-bg-type="image">Image</button>
+            </div>
+
+            <div class="bg-options active" id="bgColorOptions">
+              <div class="property-group">
+                <div class="property-label">
+                  <span>Color</span>
+                  <button class="dynamic-toggle" data-property="bgColor" title="Make Dynamic">
+                    <i class="fas fa-link"></i> Dynamic
+                  </button>
+                </div>
+                <input type="color" id="bgColor" value="#f5f5f5">
+              </div>
+              <div class="preset-colors">
+                <button class="preset-color" style="background: #ffffff;" data-color="#ffffff"></button>
+                <button class="preset-color" style="background: #f5f5f5;" data-color="#f5f5f5"></button>
+                <button class="preset-color" style="background: #e5e7eb;" data-color="#e5e7eb"></button>
+                <button class="preset-color" style="background: #3b82f6;" data-color="#3b82f6"></button>
+                <button class="preset-color" style="background: #ef4444;" data-color="#ef4444"></button>
+                <button class="preset-color" style="background: #f59e0b;" data-color="#f59e0b"></button>
+                <button class="preset-color" style="background: #22c55e;" data-color="#22c55e"></button>
+                <button class="preset-color" style="background: #8b5cf6;" data-color="#8b5cf6"></button>
+                <button class="preset-color" style="background: #ec4899;" data-color="#ec4899"></button>
+                <button class="preset-color" style="background: #1f2937;" data-color="#1f2937"></button>
+                <button class="preset-color" style="background: #111827;" data-color="#111827"></button>
+                <button class="preset-color" style="background: #000000;" data-color="#000000"></button>
+              </div>
+            </div>
+
+            <div class="bg-options" id="bgGradientOptions">
+              <div class="property-row">
+                <div class="property-group">
+                  <div class="property-label"><span>Start</span></div>
+                  <input type="color" id="gradientStart" value="#667eea">
+                </div>
+                <div class="property-group">
+                  <div class="property-label"><span>End</span></div>
+                  <input type="color" id="gradientEnd" value="#764ba2">
+                </div>
+              </div>
+              <div class="property-group mt-2">
+                <div class="property-label"><span>Direction</span></div>
+                <select id="gradientDirection">
+                  <option value="to bottom">Top to Bottom</option>
+                  <option value="to right">Left to Right</option>
+                  <option value="to bottom right">Diagonal ↘</option>
+                  <option value="to bottom left">Diagonal ↙</option>
+                  <option value="radial">Radial</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="bg-options" id="bgImageOptions">
+              <div class="property-group">
+                <div class="property-label">
+                  <span>Image</span>
+                  <button class="dynamic-toggle" data-property="bgImage" title="Make Dynamic">
+                    <i class="fas fa-link"></i> Dynamic
+                  </button>
+                </div>
+                <button class="btn btn-primary btn-block" id="selectBgBtn">
+                  <i class="fas fa-image"></i> Select Background
+                </button>
+                <input type="file" id="bgImageUpload" accept="image/*" hidden>
+              </div>
+              <div class="bg-preview hidden" id="bgPreview">
+                <img id="bgPreviewImg" src="" alt="Background">
+                <div class="bg-preview-overlay">
+                  <button class="btn btn-sm btn-outline" id="removeBgBtn">
+                    <i class="fas fa-times"></i> Remove
+                  </button>
+                </div>
+              </div>
+
+              <!-- Background Fit Mode Options -->
+              <div class="property-group mt-3 hidden" id="bgFitOptions">
+                <div class="property-label"><span>Fit Mode</span></div>
+                <div class="fit-mode-options">
+                  <button class="bg-fit-btn" data-fit="cover" title="Cover (fill & crop)">
+                    <i class="fas fa-expand"></i>
+                  </button>
+                  <button class="bg-fit-btn active" data-fit="contain" title="Fit (letterbox)">
+                    <i class="fas fa-compress"></i>
+                  </button>
+                  <button class="bg-fit-btn" data-fit="fill" title="Stretch to fill">
+                    <i class="fas fa-arrows-alt"></i>
+                  </button>
+                  <button class="bg-fit-btn" data-fit="center" title="Center (original)">
+                    <i class="fas fa-crosshairs"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Background Blur Option -->
+              <div class="property-group mt-2 hidden" id="bgBlurOption">
+                <div class="property-label">
+                  <span>Blur</span>
+                  <span id="bgBlurValue">0px</span>
+                </div>
+                <input type="range" id="bgBlur" min="0" max="50" value="0">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Placeholders Panel -->
+        <div class="panel-content" id="panel-placeholders">
+          <div class="panel-section">
+            <div class="panel-section-header">
+              <span class="panel-section-title">Dynamic Placeholders</span>
+              <button class="btn btn-sm btn-outline" id="addPlaceholderBtn">
+                <i class="fas fa-plus"></i> Add
+              </button>
+            </div>
+
+            <div class="placeholders-list" id="placeholdersList">
+              <!-- Placeholders will be rendered here -->
+            </div>
+
+            <div class="placeholder-empty" id="placeholderEmpty">
+              <i class="fas fa-puzzle-piece"></i>
+              <p>No placeholders yet</p>
+              <small>Use the dynamic toggle on properties to create placeholders</small>
+            </div>
+          </div>
+
+          <div class="panel-section mt-4">
+            <div class="panel-section-header">
+              <span class="panel-section-title">How it works</span>
+            </div>
+            <div class="help-text" style="text-align: left; padding: 12px; background: var(--bg-input); border-radius: var(--radius); font-size: 11px; color: var(--text-secondary);">
+              <p style="margin-bottom: 8px;"><strong>1.</strong> Click the <i class="fas fa-link"></i> button next to any property</p>
+              <p style="margin-bottom: 8px;"><strong>2.</strong> Give your placeholder a name (e.g., "product_name")</p>
+              <p style="margin-bottom: 8px;"><strong>3.</strong> When generating posts, fill in values for each placeholder</p>
+              <p><strong>4.</strong> Generate multiple posts with different data!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Layers Panel -->
+        <div class="panel-content" id="panel-layers">
+          <div class="layers-header">
+            <span class="panel-section-title">Layers</span>
+            <div class="btn-group">
+              <button class="btn-icon btn-icon-sm" id="moveUpBtn" title="Move Up">
+                <i class="fas fa-arrow-up"></i>
+              </button>
+              <button class="btn-icon btn-icon-sm" id="moveDownBtn" title="Move Down">
+                <i class="fas fa-arrow-down"></i>
+              </button>
+            </div>
+          </div>
+          <ul class="layers-list" id="layersList">
+            <!-- Layers will be rendered here -->
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Placeholder Name Modal -->
+    <div class="modal" id="placeholderModal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Create Placeholder</h3>
+          <button class="modal-close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="placeholder-modal-form">
+            <div class="property-group">
+              <div class="property-label"><span>Placeholder Name</span></div>
+              <input type="text" id="placeholderName" placeholder="e.g., product_name, price, headline">
+              <small class="text-muted mt-2" style="display: block;">Use lowercase letters and underscores. This will be shown as {{name}} in the template.</small>
+            </div>
+            <div class="property-group">
+              <div class="property-label"><span>Default Value</span></div>
+              <input type="text" id="placeholderDefault" placeholder="Default value (optional)">
+            </div>
+            <div class="placeholder-preview">
+              <span class="placeholder-preview-text" id="placeholderPreviewText">{{placeholder_name}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" id="savePlaceholderBtn">
+            <i class="fas fa-check"></i> Create Placeholder
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export/Preview Modal -->
+    <div class="modal" id="exportModal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Export Image</h3>
+          <button class="modal-close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="export-format-selector">
+            <div class="format-option active" data-format="png">
+              <i class="fas fa-image"></i>
+              <span>PNG</span>
+            </div>
+            <div class="format-option" data-format="jpg">
+              <i class="fas fa-file-image"></i>
+              <span>JPG</span>
+            </div>
+            <div class="format-option" data-format="webp">
+              <i class="fas fa-globe"></i>
+              <span>WebP</span>
+            </div>
+          </div>
+          <div class="property-group">
+            <div class="property-label"><span>Quality (for JPG/WebP)</span></div>
+            <div class="range-with-value">
+              <input type="range" id="exportQuality" min="1" max="100" value="90">
+              <span class="range-value" id="qualityValue">90%</span>
+            </div>
+          </div>
+          <div class="export-preview">
+            <canvas id="exportPreview"></canvas>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" id="downloadBtn">
+            <i class="fas fa-download"></i> Download
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Background Modal -->
+    <div class="modal" id="aiBgModal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-lg">
+        <div class="modal-header">
+          <h3>Generate AI Background</h3>
+          <button class="modal-close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="property-group">
+            <div class="property-label"><span>Describe your background</span></div>
+            <textarea id="bgPrompt" rows="3" placeholder="e.g., Colorful gradient with geometric shapes, modern business background"></textarea>
+          </div>
+          <div class="property-row">
+            <div class="property-group">
+              <div class="property-label"><span>Category</span></div>
+              <select id="bgCategory">
+                <option value="general">General</option>
+                <option value="festival">Festival</option>
+                <option value="business">Business</option>
+                <option value="nature">Nature</option>
+                <option value="abstract">Abstract</option>
+              </select>
+            </div>
+            <div class="property-group">
+              <div class="property-label"><span>Style</span></div>
+              <select id="bgStyle">
+                <option value="vibrant">Vibrant</option>
+                <option value="minimal">Minimal</option>
+                <option value="gradient">Gradient</option>
+                <option value="festive">Festive</option>
+                <option value="corporate">Corporate</option>
+              </select>
+            </div>
+          </div>
+          <div class="search-results hidden" id="bgSearchResults">
+            <h4>Existing Backgrounds</h4>
+            <div class="results-grid" id="bgResultsGrid"></div>
+          </div>
+          <div class="generating-state hidden" id="bgGenerating">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Generating background...</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-outline" id="searchBgBtn">
+            <i class="fas fa-search"></i> Search Existing
+          </button>
+          <button class="btn btn-primary" id="generateBgBtn">
+            <i class="fas fa-wand-magic-sparkles"></i> Generate
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Background Library Modal -->
+    <div class="modal" id="bgLibraryModal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-xl">
+        <div class="modal-header">
+          <h3><i class="fas fa-images"></i> Background Library</h3>
+          <button class="modal-close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <!-- Search and Filters -->
+          <div class="library-toolbar">
+            <div class="library-search">
+              <i class="fas fa-search"></i>
+              <input type="text" id="bgLibrarySearch" placeholder="Search backgrounds...">
+            </div>
+            <div class="library-filters">
+              <select id="bgLibraryCategory">
+                <option value="">All Categories</option>
+                <option value="general">General</option>
+                <option value="festival">Festival</option>
+                <option value="business">Business</option>
+                <option value="nature">Nature</option>
+                <option value="abstract">Abstract</option>
+                <option value="gradient">Gradient</option>
+                <option value="pattern">Pattern</option>
+              </select>
+              <select id="bgLibraryOccasion">
+                <option value="">All Occasions</option>
+                <option value="new_year">New Year</option>
+                <option value="christmas">Christmas</option>
+                <option value="diwali">Diwali</option>
+                <option value="holi">Holi</option>
+                <option value="eid">Eid</option>
+                <option value="independence_day">Independence Day</option>
+                <option value="valentines">Valentine's Day</option>
+                <option value="thanksgiving">Thanksgiving</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Loading State -->
+          <div class="library-loading" id="bgLibraryLoading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading backgrounds...</p>
+          </div>
+
+          <!-- Empty State -->
+          <div class="library-empty hidden" id="bgLibraryEmpty">
+            <i class="fas fa-image"></i>
+            <p>No backgrounds found</p>
+            <small>Try a different search or generate a new background</small>
+            <button class="btn btn-primary mt-3" id="generateFromLibraryBtn">
+              <i class="fas fa-wand-magic-sparkles"></i> Generate New
+            </button>
+          </div>
+
+          <!-- Background Grid -->
+          <div class="library-grid hidden" id="bgLibraryGrid">
+            <!-- Backgrounds will be rendered here -->
+          </div>
+
+          <!-- Pagination -->
+          <div class="library-pagination hidden" id="bgLibraryPagination">
+            <button class="btn btn-outline btn-sm" id="bgLibraryPrev">
+              <i class="fas fa-chevron-left"></i> Previous
+            </button>
+            <span class="pagination-info" id="bgLibraryPageInfo">Page 1</span>
+            <button class="btn btn-outline btn-sm" id="bgLibraryNext">
+              Next <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-outline" id="openAiGeneratorBtn">
+            <i class="fas fa-wand-magic-sparkles"></i> Generate with AI
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Template Creation Modal -->
+    <div class="modal" id="templateCreateModal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-lg">
+        <div class="modal-header">
+          <h3><i class="fas fa-plus-circle"></i> Create New Template</h3>
+        </div>
+        <div class="modal-body">
+          <div class="property-group mb-4">
+            <div class="property-label"><span>Template Name</span></div>
+            <input type="text" id="newTemplateName" placeholder="Enter template name..." value="New Template">
+          </div>
+
+          <div class="property-label mb-3"><span>Choose Template Size</span></div>
+
+          <div class="size-categories">
+            <!-- Instagram -->
+            <div class="size-category">
+              <div class="size-category-title"><i class="fab fa-instagram"></i> Instagram</div>
+              <div class="size-presets">
+                <div class="size-preset" data-width="1080" data-height="1080" data-platform="instagram" data-type="post">
+                  <div class="size-preset-icon"><i class="fas fa-square"></i></div>
+                  <div class="size-preset-name">Post</div>
+                  <div class="size-preset-dimensions">1080 x 1080</div>
+                </div>
+                <div class="size-preset" data-width="1080" data-height="1920" data-platform="instagram" data-type="story">
+                  <div class="size-preset-icon"><i class="fas fa-mobile-alt"></i></div>
+                  <div class="size-preset-name">Story / Reel</div>
+                  <div class="size-preset-dimensions">1080 x 1920</div>
+                </div>
+                <div class="size-preset" data-width="1080" data-height="1350" data-platform="instagram" data-type="portrait">
+                  <div class="size-preset-icon"><i class="fas fa-portrait"></i></div>
+                  <div class="size-preset-name">Portrait</div>
+                  <div class="size-preset-dimensions">1080 x 1350</div>
+                </div>
+                <div class="size-preset" data-width="1080" data-height="566" data-platform="instagram" data-type="landscape">
+                  <div class="size-preset-icon"><i class="fas fa-image"></i></div>
+                  <div class="size-preset-name">Landscape</div>
+                  <div class="size-preset-dimensions">1080 x 566</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Facebook -->
+            <div class="size-category">
+              <div class="size-category-title"><i class="fab fa-facebook"></i> Facebook</div>
+              <div class="size-presets">
+                <div class="size-preset" data-width="1200" data-height="630" data-platform="facebook" data-type="post">
+                  <div class="size-preset-icon"><i class="fas fa-newspaper"></i></div>
+                  <div class="size-preset-name">Post</div>
+                  <div class="size-preset-dimensions">1200 x 630</div>
+                </div>
+                <div class="size-preset" data-width="1080" data-height="1920" data-platform="facebook" data-type="story">
+                  <div class="size-preset-icon"><i class="fas fa-mobile-alt"></i></div>
+                  <div class="size-preset-name">Story</div>
+                  <div class="size-preset-dimensions">1080 x 1920</div>
+                </div>
+                <div class="size-preset" data-width="820" data-height="312" data-platform="facebook" data-type="cover">
+                  <div class="size-preset-icon"><i class="fas fa-images"></i></div>
+                  <div class="size-preset-name">Cover Photo</div>
+                  <div class="size-preset-dimensions">820 x 312</div>
+                </div>
+                <div class="size-preset" data-width="1200" data-height="1200" data-platform="facebook" data-type="square">
+                  <div class="size-preset-icon"><i class="fas fa-square"></i></div>
+                  <div class="size-preset-name">Square</div>
+                  <div class="size-preset-dimensions">1200 x 1200</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Twitter/X -->
+            <div class="size-category">
+              <div class="size-category-title"><i class="fab fa-twitter"></i> Twitter / X</div>
+              <div class="size-presets">
+                <div class="size-preset" data-width="1200" data-height="675" data-platform="twitter" data-type="post">
+                  <div class="size-preset-icon"><i class="fas fa-image"></i></div>
+                  <div class="size-preset-name">Post</div>
+                  <div class="size-preset-dimensions">1200 x 675</div>
+                </div>
+                <div class="size-preset" data-width="1500" data-height="500" data-platform="twitter" data-type="header">
+                  <div class="size-preset-icon"><i class="fas fa-heading"></i></div>
+                  <div class="size-preset-name">Header</div>
+                  <div class="size-preset-dimensions">1500 x 500</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- LinkedIn -->
+            <div class="size-category">
+              <div class="size-category-title"><i class="fab fa-linkedin"></i> LinkedIn</div>
+              <div class="size-presets">
+                <div class="size-preset" data-width="1200" data-height="627" data-platform="linkedin" data-type="post">
+                  <div class="size-preset-icon"><i class="fas fa-image"></i></div>
+                  <div class="size-preset-name">Post</div>
+                  <div class="size-preset-dimensions">1200 x 627</div>
+                </div>
+                <div class="size-preset" data-width="1128" data-height="191" data-platform="linkedin" data-type="cover">
+                  <div class="size-preset-icon"><i class="fas fa-panorama"></i></div>
+                  <div class="size-preset-name">Cover</div>
+                  <div class="size-preset-dimensions">1128 x 191</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- YouTube -->
+            <div class="size-category">
+              <div class="size-category-title"><i class="fab fa-youtube"></i> YouTube</div>
+              <div class="size-presets">
+                <div class="size-preset" data-width="1280" data-height="720" data-platform="youtube" data-type="thumbnail">
+                  <div class="size-preset-icon"><i class="fas fa-play-circle"></i></div>
+                  <div class="size-preset-name">Thumbnail</div>
+                  <div class="size-preset-dimensions">1280 x 720</div>
+                </div>
+                <div class="size-preset" data-width="2560" data-height="1440" data-platform="youtube" data-type="banner">
+                  <div class="size-preset-icon"><i class="fas fa-image"></i></div>
+                  <div class="size-preset-name">Banner</div>
+                  <div class="size-preset-dimensions">2560 x 1440</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- WhatsApp -->
+            <div class="size-category">
+              <div class="size-category-title"><i class="fab fa-whatsapp"></i> WhatsApp</div>
+              <div class="size-presets">
+                <div class="size-preset" data-width="800" data-height="800" data-platform="whatsapp" data-type="status">
+                  <div class="size-preset-icon"><i class="fas fa-mobile-alt"></i></div>
+                  <div class="size-preset-name">Status</div>
+                  <div class="size-preset-dimensions">800 x 800</div>
+                </div>
+                <div class="size-preset" data-width="1080" data-height="1920" data-platform="whatsapp" data-type="story">
+                  <div class="size-preset-icon"><i class="fas fa-mobile-alt"></i></div>
+                  <div class="size-preset-name">Story</div>
+                  <div class="size-preset-dimensions">1080 x 1920</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Custom -->
+            <div class="size-category">
+              <div class="size-category-title"><i class="fas fa-sliders-h"></i> Custom Size</div>
+              <div class="custom-size-inputs">
+                <div class="property-row">
+                  <div class="property-group">
+                    <div class="property-label"><span>Width</span></div>
+                    <input type="number" id="customWidth" value="1080" min="100" max="4096">
+                  </div>
+                  <div class="property-group">
+                    <div class="property-label"><span>Height</span></div>
+                    <input type="number" id="customHeight" value="1080" min="100" max="4096">
+                  </div>
+                </div>
+                <button class="btn btn-outline btn-block mt-2" id="useCustomSizeBtn">
+                  <i class="fas fa-check"></i> Use Custom Size
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="templates.html" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to Templates
+          </a>
+          <button class="btn btn-primary" id="createTemplateBtn" disabled>
+            <i class="fas fa-plus"></i> Create Template
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text to Template Modal -->
+    <div class="modal" id="textToTemplateModal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-lg">
+        <div class="modal-header">
+          <h3><i class="fas fa-wand-magic-sparkles"></i> AI Template Generator</h3>
+          <button class="modal-close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="property-group">
+            <div class="property-label"><span>Describe your template</span></div>
+            <textarea id="templateDescription" rows="4" placeholder="e.g., A Diwali sale poster with a big headline at the top, 50% off discount badge, festive colors, and contact details at the bottom"></textarea>
+            <small class="text-muted mt-2" style="display: block;">Be specific about text content, layout, colors, and style you want.</small>
+          </div>
+
+          <div class="ai-template-examples mt-3">
+            <div class="property-label mb-2"><span>Quick Examples</span></div>
+            <div class="example-chips">
+              <button class="example-chip" data-example="A product showcase template with product name at top, large image placeholder in center, price and buy now button at bottom">
+                <i class="fas fa-shopping-bag"></i> Product Showcase
+              </button>
+              <button class="example-chip" data-example="A motivational quote template with a large inspiring quote in the center, author name below, and decorative elements">
+                <i class="fas fa-quote-left"></i> Quote Post
+              </button>
+              <button class="example-chip" data-example="An event announcement with event name as headline, date and time below, venue details, and RSVP call to action">
+                <i class="fas fa-calendar-alt"></i> Event Announcement
+              </button>
+              <button class="example-chip" data-example="A special offer post with big discount percentage, original and sale price, product name, and limited time offer text">
+                <i class="fas fa-tags"></i> Sale / Offer
+              </button>
+            </div>
+          </div>
+
+          <div class="generating-state hidden" id="templateGenerating">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Generating template with AI...</p>
+            <small>This may take a few seconds</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" id="generateTemplateBtn">
+            <i class="fas fa-wand-magic-sparkles"></i> Generate Template
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unified Image Picker Modal -->
+    <div class="modal" id="imagePickerModal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-xl">
+        <div class="modal-header">
+          <h3 id="imagePickerTitle">Select Image</h3>
+          <button class="modal-close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <!-- Image Picker Tabs -->
+          <div class="image-picker-tabs">
+            <button class="picker-tab active" data-tab="upload">
+              <i class="fas fa-upload"></i> Upload
+            </button>
+            <button class="picker-tab" data-tab="library">
+              <i class="fas fa-images"></i> Library
+            </button>
+            <button class="picker-tab" data-tab="search">
+              <i class="fas fa-search"></i> Search
+            </button>
+            <button class="picker-tab" data-tab="ai">
+              <i class="fas fa-wand-magic-sparkles"></i> AI Generate
+            </button>
+          </div>
+
+          <!-- Upload Tab -->
+          <div class="picker-content active" id="pickerUpload">
+            <div class="upload-dropzone" id="imageDropzone">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Drag & drop an image here</p>
+              <span>or</span>
+              <button class="btn btn-primary" id="browseImageBtn">
+                <i class="fas fa-folder-open"></i> Browse Files
+              </button>
+              <input type="file" id="imagePickerFile" accept="image/*" class="hidden">
+              <small>Supports: JPG, PNG, WebP, GIF (Max 10MB)</small>
+            </div>
+          </div>
+
+          <!-- Library Tab -->
+          <div class="picker-content" id="pickerLibrary">
+            <div class="library-categories">
+              <button class="category-btn active" data-category="all">All</button>
+              <button class="category-btn" data-category="backgrounds">Backgrounds</button>
+              <button class="category-btn" data-category="templates">Templates</button>
+              <button class="category-btn" data-category="uploads">My Uploads</button>
+            </div>
+            <div class="library-grid" id="libraryGrid">
+              <div class="library-loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading library...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search Tab -->
+          <div class="picker-content" id="pickerSearch">
+            <div class="search-input-group">
+              <i class="fas fa-search"></i>
+              <input type="text" id="imageSearchInput" placeholder="Search for images (e.g., 'sunset', 'office', 'celebration')">
+              <button class="btn btn-primary" id="searchImagesBtn">Search</button>
+            </div>
+            <div class="search-suggestions">
+              <span>Popular:</span>
+              <button class="suggestion-chip" data-keyword="business">Business</button>
+              <button class="suggestion-chip" data-keyword="nature">Nature</button>
+              <button class="suggestion-chip" data-keyword="celebration">Celebration</button>
+              <button class="suggestion-chip" data-keyword="abstract">Abstract</button>
+              <button class="suggestion-chip" data-keyword="festival">Festival</button>
+              <button class="suggestion-chip" data-keyword="technology">Technology</button>
+            </div>
+            <div class="search-results-grid" id="searchResultsGrid">
+              <div class="search-placeholder">
+                <i class="fas fa-search"></i>
+                <p>Enter a keyword to search for images</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Generate Tab -->
+          <div class="picker-content" id="pickerAI">
+            <div class="ai-generate-form">
+              <div class="ai-prompt-section">
+                <label>Describe the background you want:</label>
+                <div class="prompt-input-wrap">
+                  <textarea id="aiImagePrompt" rows="3" placeholder="E.g., 'Festive Diwali background with glowing diyas, golden sparkles, and warm colors' or 'Modern tech gradient with geometric shapes'"></textarea>
+                  <button class="btn btn-sm btn-outline" id="improvePromptBtn" title="Enhance your prompt with AI">
+                    <i class="fas fa-magic"></i> Improve
+                  </button>
+                </div>
+                <div class="prompt-suggestions" id="promptSuggestions" style="display: none;">
+                  <small>Suggested improvements:</small>
+                  <div class="suggestion-list" id="suggestionList"></div>
+                </div>
+              </div>
+
+              <div class="ai-quick-prompts">
+                <label>Quick Prompts:</label>
+                <div class="quick-prompt-chips">
+                  <button class="quick-prompt-chip" data-prompt="Festive Diwali background with glowing diyas and rangoli">Diwali</button>
+                  <button class="quick-prompt-chip" data-prompt="Christmas holiday background with snow and decorations">Christmas</button>
+                  <button class="quick-prompt-chip" data-prompt="Professional business background with modern office aesthetic">Business</button>
+                  <button class="quick-prompt-chip" data-prompt="Colorful Holi festival background with powder colors">Holi</button>
+                  <button class="quick-prompt-chip" data-prompt="Abstract gradient background with soft flowing colors">Abstract</button>
+                  <button class="quick-prompt-chip" data-prompt="Nature landscape with mountains and sunset">Nature</button>
+                </div>
+              </div>
+
+              <div class="ai-options-row">
+                <div class="ai-option">
+                  <label>Category:</label>
+                  <select id="aiCategory">
+                    <option value="general">General</option>
+                    <option value="festival">Festival</option>
+                    <option value="business">Business</option>
+                    <option value="social">Social Media</option>
+                    <option value="nature">Nature</option>
+                    <option value="abstract">Abstract</option>
+                  </select>
+                </div>
+                <div class="ai-option">
+                  <label>Style:</label>
+                  <select id="aiStyle">
+                    <option value="vibrant">Vibrant</option>
+                    <option value="photorealistic">Photorealistic</option>
+                    <option value="illustration">Illustration</option>
+                    <option value="minimal">Minimal</option>
+                    <option value="abstract">Abstract</option>
+                    <option value="gradient">Gradient</option>
+                  </select>
+                </div>
+              </div>
+
+              <button class="btn btn-primary btn-block" id="generateAIImageBtn">
+                <i class="fas fa-wand-magic-sparkles"></i> Generate Background
+              </button>
+            </div>
+            <div class="ai-results" id="aiImageResults">
+              <!-- AI generated images will appear here -->
+            </div>
+          </div>
+
+          <!-- Image Preview & Options -->
+          <div class="image-preview-section" id="imagePreviewSection" style="display: none;">
+            <div class="preview-header">
+              <h4>Preview & Fit Options</h4>
+              <button class="btn btn-sm btn-outline" id="clearPreviewBtn">
+                <i class="fas fa-times"></i> Clear
+              </button>
+            </div>
+            <div class="preview-container">
+              <div class="preview-canvas-wrap">
+                <canvas id="imagePreviewCanvas"></canvas>
+                <div class="crop-overlay" id="cropOverlay" style="display: none;"></div>
+              </div>
+              <div class="preview-options">
+                <div class="fit-options">
+                  <label>Fit Mode:</label>
+                  <div class="fit-buttons">
+                    <button class="fit-btn" data-fit="contain" title="Fit (contain)">
+                      <i class="fas fa-compress"></i>
+                      <span>Fit</span>
+                    </button>
+                    <button class="fit-btn active" data-fit="cover" title="Cover (fill & crop)">
+                      <i class="fas fa-expand"></i>
+                      <span>Cover</span>
+                    </button>
+                    <button class="fit-btn" data-fit="fill" title="Stretch to fill">
+                      <i class="fas fa-arrows-alt"></i>
+                      <span>Stretch</span>
+                    </button>
+                    <button class="fit-btn" data-fit="center" title="Center (original size)">
+                      <i class="fas fa-crosshairs"></i>
+                      <span>Center</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="crop-option">
+                  <button class="btn btn-outline btn-block" id="enableCropBtn">
+                    <i class="fas fa-crop-alt"></i> Custom Crop
+                  </button>
+                </div>
+                <div class="image-info" id="imageInfo">
+                  <p><strong>Size:</strong> <span id="imageSizeInfo">-</span></p>
+                  <p><strong>Aspect:</strong> <span id="imageAspectInfo">-</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" id="applyImageBtn" disabled>
+            <i class="fas fa-check"></i> Apply Image
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Background Editor Modal (Figma-like) -->
+    <div class="modal" id="bgEditorModal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-xl">
+        <div class="modal-header">
+          <h3>Edit Background Image</h3>
+          <button class="modal-close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body bg-editor-body">
+          <div class="bg-editor-container">
+            <!-- Canvas area with crop overlay -->
+            <div class="bg-editor-canvas-area">
+              <div class="bg-editor-canvas-wrapper" id="bgEditorCanvasWrapper">
+                <canvas id="bgEditorCanvas"></canvas>
+                <!-- Crop selection overlay -->
+                <div class="crop-selection" id="cropSelection">
+                  <div class="crop-handle nw" data-handle="nw"></div>
+                  <div class="crop-handle ne" data-handle="ne"></div>
+                  <div class="crop-handle sw" data-handle="sw"></div>
+                  <div class="crop-handle se" data-handle="se"></div>
+                  <div class="crop-handle n" data-handle="n"></div>
+                  <div class="crop-handle s" data-handle="s"></div>
+                  <div class="crop-handle e" data-handle="e"></div>
+                  <div class="crop-handle w" data-handle="w"></div>
+                </div>
+                <!-- Canvas size indicator -->
+                <div class="canvas-size-overlay" id="canvasSizeOverlay"></div>
+              </div>
+              <div class="bg-editor-zoom-controls">
+                <button class="zoom-btn" id="bgZoomOut"><i class="fas fa-minus"></i></button>
+                <span id="bgZoomLevel">100%</span>
+                <button class="zoom-btn" id="bgZoomIn"><i class="fas fa-plus"></i></button>
+                <button class="zoom-btn" id="bgZoomFit"><i class="fas fa-expand"></i></button>
+              </div>
+            </div>
+
+            <!-- Controls sidebar -->
+            <div class="bg-editor-controls">
+              <div class="bg-editor-section">
+                <h4>Fit Mode</h4>
+                <div class="bg-fit-buttons">
+                  <button class="bg-editor-fit-btn active" data-fit="cover" title="Cover - Fill canvas, crop excess">
+                    <i class="fas fa-expand"></i>
+                    <span>Cover</span>
+                  </button>
+                  <button class="bg-editor-fit-btn" data-fit="contain" title="Contain - Fit inside canvas">
+                    <i class="fas fa-compress"></i>
+                    <span>Fit</span>
+                  </button>
+                  <button class="bg-editor-fit-btn" data-fit="fill" title="Stretch - Fill exactly">
+                    <i class="fas fa-arrows-alt"></i>
+                    <span>Stretch</span>
+                  </button>
+                  <button class="bg-editor-fit-btn" data-fit="custom" title="Custom - Select area">
+                    <i class="fas fa-crop-alt"></i>
+                    <span>Custom</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="bg-editor-section">
+                <h4>Position & Scale</h4>
+                <div class="bg-editor-inputs">
+                  <div class="input-row">
+                    <label>X Offset</label>
+                    <input type="number" id="bgOffsetX" value="0" step="1">
+                  </div>
+                  <div class="input-row">
+                    <label>Y Offset</label>
+                    <input type="number" id="bgOffsetY" value="0" step="1">
+                  </div>
+                  <div class="input-row">
+                    <label>Scale</label>
+                    <input type="range" id="bgScale" min="10" max="300" value="100">
+                    <span id="bgScaleValue">100%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-editor-section">
+                <h4>Effects</h4>
+                <div class="bg-editor-inputs">
+                  <div class="input-row">
+                    <label>Blur</label>
+                    <input type="range" id="bgEditorBlur" min="0" max="50" value="0">
+                    <span id="bgEditorBlurValue">0px</span>
+                  </div>
+                  <div class="input-row">
+                    <label>Brightness</label>
+                    <input type="range" id="bgBrightness" min="0" max="200" value="100">
+                    <span id="bgBrightnessValue">100%</span>
+                  </div>
+                  <div class="input-row">
+                    <label>Contrast</label>
+                    <input type="range" id="bgContrast" min="0" max="200" value="100">
+                    <span id="bgContrastValue">100%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-editor-section">
+                <h4>Canvas Info</h4>
+                <div class="bg-editor-info">
+                  <p><strong>Canvas:</strong> <span id="bgCanvasSize">1080 x 1080</span></p>
+                  <p><strong>Image:</strong> <span id="bgImageSize">-</span></p>
+                  <p><strong>Crop Area:</strong> <span id="bgCropSize">-</span></p>
+                </div>
+              </div>
+
+              <button class="btn btn-outline btn-block" id="bgResetBtn">
+                <i class="fas fa-undo"></i> Reset to Original
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" id="applyBgEditBtn">
+            <i class="fas fa-check"></i> Apply Changes
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Chat Panel -->
+    <div class="ai-chat-panel" id="aiChatPanel">
+      <div class="ai-chat-header">
+        <div class="ai-chat-title">
+          <i class="fas fa-robot"></i>
+          <span>AI Assistant</span>
+        </div>
+        <button class="ai-chat-close" id="closeChatBtn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="ai-chat-messages" id="aiChatMessages">
+        <div class="ai-message assistant">
+          <div class="ai-message-avatar">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="ai-message-content">
+            <p>Hi! I can help you edit your template. Try commands like:</p>
+            <ul>
+              <li>"Change the headline text to 'Summer Sale'"</li>
+              <li>"Make the background more festive"</li>
+              <li>"Add a subtitle below the main text"</li>
+              <li>"Change all text colors to white"</li>
+              <li>"Make the headline bigger"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="ai-chat-input-container">
+        <input type="text" class="ai-chat-input" id="aiChatInput" placeholder="Tell me what to change...">
+        <button class="ai-chat-send" id="aiChatSend">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- AI Chat Toggle Button -->
+    <button class="ai-chat-toggle" id="aiChatToggle" title="AI Assistant">
+      <i class="fas fa-robot"></i>
+      <span class="ai-chat-badge">AI</span>
+    </button>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+  </div>
+
+  <script src="js/editor.js"></script>
+</body>
+</html>

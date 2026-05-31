@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - AI Post Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6366F1;
+      --primary-dark: #4F46E5;
+      --primary-light: #818CF8;
+      --secondary: #EC4899;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-600: #4B5563;
+      --gray-700: #374151;
+      --gray-800: #1F2937;
+      --gray-900: #111827;
+      --bg-primary: #ffffff;
+      --bg-secondary: #F9FAFB;
+      --gradient-primary: linear-gradient(135deg, #6366F1 0%, #EC4899 100%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-secondary);
+      color: var(--gray-900);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--gray-200);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gray-900);
+      text-decoration: none;
+    }
+
+    .logo i {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-links a {
+      color: var(--gray-600);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+
+    /* Main Container */
+    .main-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      color: var(--gray-500);
+      margin-bottom: 32px;
+    }
+
+    /* Business Selector */
+    .business-selector {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      border: 1px solid var(--gray-200);
+    }
+
+    .business-selector label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-700);
+      margin-bottom: 8px;
+    }
+
+    .business-selector select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      font-size: 15px;
+      background: white;
+    }
+
+    /* Settings Card */
+    .settings-card {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--gray-200);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-header i {
+      font-size: 20px;
+      color: var(--primary);
+    }
+
+    .card-header h3 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .card-body {
+      padding: 24px;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-700);
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 640px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Logo Upload */
+    .logo-upload-area {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .logo-preview {
+      width: 120px;
+      height: 120px;
+      border-radius: 12px;
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 2px dashed var(--gray-300);
+    }
+
+    .logo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .logo-preview i {
+      font-size: 40px;
+      color: var(--gray-400);
+    }
+
+    .logo-upload-actions {
+      flex: 1;
+    }
+
+    .logo-upload-actions p {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+    }
+
+    .btn-primary:hover { opacity: 0.9; }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--gray-300);
+      color: var(--gray-700);
+    }
+
+    .btn-outline:hover { background: var(--gray-100); }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover { opacity: 0.9; }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    /* Social Links */
+    .social-link-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .social-link-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .social-link-row i {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gray-100);
+      border-radius: 8px;
+      font-size: 18px;
+      color: var(--gray-600);
+    }
+
+    .social-link-row input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .social-link-row input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    /* Brand Colors */
+    .color-inputs {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .color-input-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .color-input-group label {
+      font-size: 13px;
+      color: var(--gray-600);
+    }
+
+    .color-input-wrapper {
+      position: relative;
+      width: 60px;
+      height: 60px;
+    }
+
+    .color-input-wrapper input[type="color"] {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .color-input-wrapper input[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    .color-input-wrapper input[type="color"]::-webkit-color-swatch {
+      border: 2px solid var(--gray-300);
+      border-radius: 12px;
+    }
+
+    /* Save Button */
+    .save-section {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2000;
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      margin-top: 12px;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast.success { border-left: 4px solid var(--success); }
+    .toast.error { border-left: 4px solid var(--danger); }
+    .toast.info { border-left: 4px solid var(--primary); }
+
+    /* Loading */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .loading-overlay.hidden {
+      display: none;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--gray-200);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Hidden file input */
+    #logoInput { display: none; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="./" class="logo">
+      <i class="fas fa-wand-magic-sparkles"></i>
+      PostGen AI
+    </a>
+    <nav class="nav-links">
+      <a href="./">Home</a>
+      <a href="templates">Templates</a>
+      <a href="generate">Generate</a>
+      <a href="settings" class="active">Settings</a>
+    </nav>
+  </header>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+
+  <main class="main-container">
+    <h1 class="page-title">Settings</h1>
+    <p class="page-subtitle">Manage your business details, logo, and brand settings</p>
+
+    <!-- Business Selector -->
+    <div class="business-selector">
+      <label for="businessSelect">Select Business</label>
+      <select id="businessSelect">
+        <option value="">Loading businesses...</option>
+      </select>
+    </div>
+
+    <!-- Business Details -->
+    <div class="settings-card">
+      <div class="card-header">
+        <i class="fas fa-building"></i>
+        <h3>Business Details</h3>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label for="businessName">Business Name *</label>
+          <input type="text" id="businessName" placeholder="Enter business name">
+        </div>
+        <div class="form-group">
+          <label for="businessTagline">Tagline / Slogan</label>
+          <input type="text" id="businessTagline" placeholder="Enter your business tagline">
+        </div>
+        <div class="form-group">
+          <label for="businessDescription">Description</label>
+          <textarea id="businessDescription" placeholder="Brief description of your business"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="businessPhone">Phone</label>
+            <input type="tel" id="businessPhone" placeholder="+91 98765 43210">
+          </div>
+          <div class="form-group">
+            <label for="businessEmail">Email</label>
+            <input type="email" id="businessEmail" placeholder="contact@business.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="businessWebsite">Website</label>
+          <input type="url" id="businessWebsite" placeholder="https://www.example.com">
+        </div>
+        <div class="form-group">
+          <label for="businessAddress">Address</label>
+          <textarea id="businessAddress" placeholder="Full business address" style="min-height: 60px;"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logo Upload -->
+    <div class="settings-card">
+      <div class="card-header">
+        <i class="fas fa-image"></i>
+        <h3>Business Logo</h3>
+      </div>
+      <div class="card-body">
+        <div class="logo-upload-area">
+          <div class="logo-preview" id="logoPreview">
+            <i class="fas fa-building"></i>
+          </div>
+          <div class="logo-upload-actions">
+            <p>Upload your business logo. Recommended size: 500x500px. Supported formats: PNG, JPG, WebP, SVG.</p>
+            <div class="btn-group">
+              <button class="btn btn-primary" onclick="document.getElementById('logoInput').click()">
+                <i class="fas fa-upload"></i> Upload Logo
+              </button>
+              <button class="btn btn-outline" id="removeLogo" onclick="removeLogo()" style="display: none;">
+                <i class="fas fa-trash"></i> Remove
+              </button>
+            </div>
+          </div>
+        </div>
+        <input type="file" id="logoInput" accept="image/*" onchange="handleLogoUpload(event)">
+      </div>
+    </div>
+
+    <!-- Social Links -->
+    <div class="settings-card">
+      <div class="card-header">
+        <i class="fas fa-share-nodes"></i>
+        <h3>Social Media Links</h3>
+      </div>
+      <div class="card-body">
+        <div class="social-link-row">
+          <i class="fab fa-facebook-f"></i>
+          <input type="url" id="socialFacebook" placeholder="https://facebook.com/yourbusiness">
+        </div>
+        <div class="social-link-row">
+          <i class="fab fa-instagram"></i>
+          <input type="url" id="socialInstagram" placeholder="https://instagram.com/yourbusiness">
+        </div>
+        <div class="social-link-row">
+          <i class="fab fa-x-twitter"></i>
+          <input type="url" id="socialTwitter" placeholder="https://x.com/yourbusiness">
+        </div>
+        <div class="social-link-row">
+          <i class="fab fa-linkedin-in"></i>
+          <input type="url" id="socialLinkedin" placeholder="https://linkedin.com/company/yourbusiness">
+        </div>
+        <div class="social-link-row">
+          <i class="fab fa-youtube"></i>
+          <input type="url" id="socialYoutube" placeholder="https://youtube.com/@yourbusiness">
+        </div>
+      </div>
+    </div>
+
+    <!-- Brand Colors -->
+    <div class="settings-card">
+      <div class="card-header">
+        <i class="fas fa-palette"></i>
+        <h3>Brand Colors</h3>
+      </div>
+      <div class="card-body">
+        <div class="color-inputs">
+          <div class="color-input-group">
+            <div class="color-input-wrapper">
+              <input type="color" id="colorPrimary" value="#6366F1">
+            </div>
+            <label>Primary</label>
+          </div>
+          <div class="color-input-group">
+            <div class="color-input-wrapper">
+              <input type="color" id="colorSecondary" value="#1E40AF">
+            </div>
+            <label>Secondary</label>
+          </div>
+          <div class="color-input-group">
+            <div class="color-input-wrapper">
+              <input type="color" id="colorAccent" value="#F59E0B">
+            </div>
+            <label>Accent</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save Button -->
+    <div class="save-section">
+      <button class="btn btn-outline" onclick="loadBusinessData()">
+        <i class="fas fa-undo"></i> Reset Changes
+      </button>
+      <button class="btn btn-primary" onclick="saveSettings()">
+        <i class="fas fa-save"></i> Save Settings
+      </button>
+    </div>
+  </main>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    const MANAGER_URL = 'http://localhost:3004';
+    let currentBusinessId = null;
+    let currentBusiness = null;
+    let logoFile = null;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadBusinesses();
+    });
+
+    // Load businesses
+    async function loadBusinesses() {
+      try {
+        const res = await fetch(`${MANAGER_URL}/api/businesses`);
+        const data = await res.json();
+        const select = document.getElementById('businessSelect');
+        select.innerHTML = '<option value="">Select a business</option>';
+
+        if (data.businesses && data.businesses.length > 0) {
+          data.businesses.forEach(b => {
+            const opt = document.createElement('option');
+            opt.value = b.id;
+            opt.textContent = b.name;
+            select.appendChild(opt);
+          });
+
+          // Select first business by default
+          select.value = data.businesses[0].id;
+          currentBusinessId = data.businesses[0].id;
+          loadBusinessData();
+        }
+
+        hideLoading();
+      } catch (err) {
+        console.error('Error loading businesses:', err);
+        showToast('Failed to load businesses', 'error');
+        hideLoading();
+      }
+    }
+
+    // Business select change
+    document.getElementById('businessSelect').addEventListener('change', (e) => {
+      currentBusinessId = e.target.value;
+      if (currentBusinessId) {
+        loadBusinessData();
+      }
+    });
+
+    // Load business data
+    async function loadBusinessData() {
+      if (!currentBusinessId) return;
+
+      showLoading();
+      try {
+        const res = await fetch(`${MANAGER_URL}/api/businesses/${currentBusinessId}`);
+        const data = await res.json();
+
+        if (data.success && data.business) {
+          currentBusiness = data.business;
+          populateForm(data.business);
+        }
+      } catch (err) {
+        console.error('Error loading business:', err);
+        showToast('Failed to load business data', 'error');
+      }
+      hideLoading();
+    }
+
+    // Populate form with business data
+    function populateForm(business) {
+      document.getElementById('businessName').value = business.name || '';
+      document.getElementById('businessTagline').value = business.tagline || '';
+      document.getElementById('businessDescription').value = business.description || '';
+      document.getElementById('businessPhone').value = business.phone || '';
+      document.getElementById('businessEmail').value = business.email || '';
+      document.getElementById('businessWebsite').value = business.website || '';
+      document.getElementById('businessAddress').value = business.address || '';
+
+      // Logo
+      const logoPreview = document.getElementById('logoPreview');
+      const removeBtn = document.getElementById('removeLogo');
+      if (business.logo) {
+        logoPreview.innerHTML = `<img src="${MANAGER_URL}${business.logo}" alt="Logo">`;
+        removeBtn.style.display = 'inline-flex';
+      } else {
+        logoPreview.innerHTML = '<i class="fas fa-building"></i>';
+        removeBtn.style.display = 'none';
+      }
+
+      // Social links
+      const social = business.social_links || {};
+      document.getElementById('socialFacebook').value = social.facebook || '';
+      document.getElementById('socialInstagram').value = social.instagram || '';
+      document.getElementById('socialTwitter').value = social.twitter || '';
+      document.getElementById('socialLinkedin').value = social.linkedin || '';
+      document.getElementById('socialYoutube').value = social.youtube || '';
+
+      // Brand colors
+      const colors = business.brand_colors || {};
+      document.getElementById('colorPrimary').value = colors.primary || '#6366F1';
+      document.getElementById('colorSecondary').value = colors.secondary || '#1E40AF';
+      document.getElementById('colorAccent').value = colors.accent || '#F59E0B';
+    }
+
+    // Handle logo upload
+    function handleLogoUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+      if (!validTypes.includes(file.type)) {
+        showToast('Invalid file type. Please upload PNG, JPG, WebP, or SVG.', 'error');
+        return;
+      }
+
+      // Validate file size (5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('File too large. Maximum size is 5MB.', 'error');
+        return;
+      }
+
+      logoFile = file;
+
+      // Preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const logoPreview = document.getElementById('logoPreview');
+        logoPreview.innerHTML = `<img src="${e.target.result}" alt="Logo preview">`;
+        document.getElementById('removeLogo').style.display = 'inline-flex';
+      };
+      reader.readAsDataURL(file);
+
+      showToast('Logo selected. Click Save to apply changes.', 'info');
+    }
+
+    // Remove logo
+    function removeLogo() {
+      logoFile = null;
+      document.getElementById('logoInput').value = '';
+      document.getElementById('logoPreview').innerHTML = '<i class="fas fa-building"></i>';
+      document.getElementById('removeLogo').style.display = 'none';
+
+      // Mark logo for removal
+      if (currentBusiness && currentBusiness.logo) {
+        currentBusiness.logoRemoved = true;
+      }
+    }
+
+    // Save settings
+    async function saveSettings() {
+      if (!currentBusinessId) {
+        showToast('Please select a business first', 'error');
+        return;
+      }
+
+      const name = document.getElementById('businessName').value.trim();
+      if (!name) {
+        showToast('Business name is required', 'error');
+        return;
+      }
+
+      showLoading();
+
+      try {
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('tagline', document.getElementById('businessTagline').value.trim());
+        formData.append('description', document.getElementById('businessDescription').value.trim());
+        formData.append('phone', document.getElementById('businessPhone').value.trim());
+        formData.append('email', document.getElementById('businessEmail').value.trim());
+        formData.append('website', document.getElementById('businessWebsite').value.trim());
+        formData.append('address', document.getElementById('businessAddress').value.trim());
+
+        // Social links
+        const socialLinks = {
+          facebook: document.getElementById('socialFacebook').value.trim(),
+          instagram: document.getElementById('socialInstagram').value.trim(),
+          twitter: document.getElementById('socialTwitter').value.trim(),
+          linkedin: document.getElementById('socialLinkedin').value.trim(),
+          youtube: document.getElementById('socialYoutube').value.trim()
+        };
+        formData.append('social_links', JSON.stringify(socialLinks));
+
+        // Brand colors
+        const brandColors = {
+          primary: document.getElementById('colorPrimary').value,
+          secondary: document.getElementById('colorSecondary').value,
+          accent: document.getElementById('colorAccent').value
+        };
+        formData.append('brand_colors', JSON.stringify(brandColors));
+
+        // Logo
+        if (logoFile) {
+          formData.append('logo', logoFile);
+        }
+
+        const res = await fetch(`${MANAGER_URL}/api/businesses/${currentBusinessId}`, {
+          method: 'PUT',
+          body: formData
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          showToast('Settings saved successfully!', 'success');
+          logoFile = null;
+          currentBusiness = data.business;
+          populateForm(data.business);
+        } else {
+          throw new Error(data.error || 'Failed to save');
+        }
+      } catch (err) {
+        console.error('Error saving settings:', err);
+        showToast('Failed to save settings: ' + err.message, 'error');
+      }
+
+      hideLoading();
+    }
+
+    // Show/hide loading
+    function showLoading() {
+      document.getElementById('loadingOverlay').classList.remove('hidden');
+    }
+
+    function hideLoading() {
+      document.getElementById('loadingOverlay').classList.add('hidden');
+    }
+
+    // Toast notification
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "id": "bdff6c65-09c8-4a09-b818-1283d04c2d10",
+  "filename": "test_1776899270167",
+  "imagePath": "test_1776899270167.png",
+  "prompt": "test",
+  "description": "Here's a premium-quality background image designed for your specifications:\n`",
+  "category": "general",
+  "occasion": "",
+  "tags": [],
+  "metadata": {
+    "width": 1080,
+    "height": 1080,
+    "style": "minimal",
+    "category": "general",
+    "generatedAt": "2026-04-22T23:07:50.167Z",
+    "mimeType": "image/png",
+    "size": 1472489,
+    "createdAt": "2026-04-22T23:07:50.171Z"
+  },
+  "location": {
+    "absolute": "/Users/arju/Documents/Chetana/countmarketingtool/background_engine/backgrounds/test_1776899270167.png",
+    "relative": "./backgrounds/test_1776899270167.png",
+    "url": "/api/backgrounds/image/test_1776899270167.png"
+  }
+}

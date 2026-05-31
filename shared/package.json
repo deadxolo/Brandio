@@ -1,0 +1,8 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "description": "Shared database and configuration",
+  "dependencies": {
+    "uuid": "^9.0.0"
+  }
+}

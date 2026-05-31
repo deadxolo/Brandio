@@ -1,0 +1,643 @@
+/* ============================================================
+   BRANDIO SHELL — shared polish layer for sub-services
+   (background_engine / post_generator / auto_poster)
+   Supports light + dark mode driven by data-theme on <html>
+   ============================================================ */
+
+:root {
+  --br-bg:        #F8FAFC;
+  --br-surface:   #FFFFFF;
+  --br-surface-2: #F1F5F9;
+  --br-surface-3: #E2E8F0;
+  --br-text:      #0F172A;
+  --br-text-2:    #475569;
+  --br-text-3:    #94A3B8;
+  --br-border:    #E2E8F0;
+  --br-border-2:  #CBD5E1;
+  --br-primary:   #3B82F6;
+  --br-primary-d: #2563EB;
+  --br-primary-50: rgba(59, 130, 246, 0.10);
+  --br-secondary: #6366F1;
+  --br-accent:    #F59E0B;
+  --br-success:   #10B981;
+  --br-danger:    #EF4444;
+  --br-warning:   #F59E0B;
+
+  --br-radius:    8px;
+  --br-radius-lg: 12px;
+  --br-radius-xl: 16px;
+  --br-radius-pill: 999px;
+
+  --br-shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --br-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.07), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --br-shadow:    0 4px 8px -2px rgba(15, 23, 42, 0.08);
+  --br-shadow-md: 0 8px 18px -4px rgba(15, 23, 42, 0.1);
+  --br-shadow-lg: 0 16px 36px -8px rgba(15, 23, 42, 0.14);
+  --br-focus:     0 0 0 3px rgba(59, 130, 246, 0.22);
+
+  --br-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --br-nav-h: 56px;
+
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  --br-bg:        #060B17;
+  --br-surface:   #11182C;
+  --br-surface-2: #1A2238;
+  --br-surface-3: #1F2842;
+  --br-text:      #F1F5F9;
+  --br-text-2:    #B0BBCB;
+  --br-text-3:    #8794AB;
+  --br-border:    #243049;
+  --br-border-2:  #38456A;
+  --br-primary:   #60A5FA;
+  --br-primary-d: #93C5FD;
+  --br-primary-50: rgba(96, 165, 250, 0.14);
+  --br-secondary: #818CF8;
+
+  --br-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --br-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.55), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --br-shadow:    0 4px 12px rgba(0, 0, 0, 0.55);
+  --br-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --br-shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.7);
+  --br-focus:     0 0 0 3px rgba(96, 165, 250, 0.38);
+
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  background: var(--br-bg) !important;
+  color: var(--br-text) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: 14.5px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.18s var(--br-ease), color 0.18s var(--br-ease);
+}
+
+/* ===== Brandio navbar (top of each sub-service) ===== */
+.br-nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: var(--br-nav-h);
+  padding: 0 20px;
+  background: color-mix(in srgb, var(--br-surface) 88%, transparent);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid var(--br-border);
+  font-family: inherit;
+  color: var(--br-text);
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .br-nav { background: var(--br-surface); }
+}
+.br-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.br-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--br-radius);
+  color: var(--br-text-2);
+  text-decoration: none;
+  border: 1px solid var(--br-border);
+  background: var(--br-surface);
+  box-shadow: var(--br-shadow-xs);
+  transition: background 0.16s var(--br-ease), color 0.16s var(--br-ease),
+              border-color 0.16s var(--br-ease), transform 0.12s var(--br-ease);
+}
+.br-back:hover {
+  background: var(--br-surface-2);
+  color: var(--br-text);
+  border-color: var(--br-border-2);
+  transform: translateX(-1px);
+}
+.br-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--br-text);
+  text-decoration: none;
+}
+.br-brand i {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--br-primary), var(--br-secondary));
+  color: #fff;
+  font-size: 13px;
+  box-shadow: 0 4px 10px -2px rgba(59, 130, 246, 0.45),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.br-sep {
+  width: 1px;
+  height: 22px;
+  background: var(--br-border);
+}
+.br-section {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--br-text-2);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.br-section em {
+  font-style: normal;
+  color: var(--br-text);
+  font-weight: 700;
+}
+.br-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.br-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.003em;
+  color: var(--br-text-2);
+  background: var(--br-surface-2);
+  border: 1px solid var(--br-border);
+  border-radius: var(--br-radius-pill);
+}
+.br-pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--br-success);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+.br-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--br-text);
+  text-decoration: none;
+  border: 1px solid var(--br-border);
+  border-radius: var(--br-radius);
+  background: var(--br-surface);
+  box-shadow: var(--br-shadow-xs);
+  transition: background 0.16s var(--br-ease), border-color 0.16s var(--br-ease);
+}
+.br-link:hover { background: var(--br-surface-2); border-color: var(--br-border-2); }
+.br-link i { color: var(--br-primary); font-size: 11px; }
+
+/* Theme toggle in br-nav */
+.br-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--br-border);
+  border-radius: var(--br-radius);
+  background: var(--br-surface);
+  color: var(--br-text-2);
+  cursor: pointer;
+  box-shadow: var(--br-shadow-xs);
+  transition: background 0.16s var(--br-ease), color 0.16s var(--br-ease),
+              border-color 0.16s var(--br-ease);
+}
+.br-theme-toggle:hover { background: var(--br-surface-2); color: var(--br-text); border-color: var(--br-border-2); }
+.br-theme-toggle .icon-sun, .br-theme-toggle .icon-moon { font-size: 13px; }
+html[data-theme="dark"] .br-theme-toggle .icon-moon { display: none; }
+html:not([data-theme="dark"]) .br-theme-toggle .icon-sun { display: none; }
+
+@media (max-width: 700px) {
+  .br-nav { padding: 0 12px; }
+  .br-section { display: none; }
+  .br-sep { display: none; }
+  .br-pill { display: none; }
+}
+
+/* ===== Generic polish (works in both themes) ===== */
+
+body .btn,
+body button.btn {
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  border-radius: var(--br-radius);
+  transition: background 0.18s var(--br-ease), border-color 0.18s var(--br-ease),
+              box-shadow 0.18s var(--br-ease), transform 0.08s var(--br-ease);
+}
+body .btn:active { transform: translateY(1px); }
+body .btn:focus-visible { outline: 0; box-shadow: var(--br-focus); }
+body .btn-primary {
+  background: linear-gradient(180deg, var(--br-primary), var(--br-primary-d));
+  color: #fff;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+body .btn-primary:hover {
+  background: linear-gradient(180deg, var(--br-primary-d), #1E40AF);
+  box-shadow: 0 6px 14px -2px rgba(59, 130, 246, 0.5);
+}
+html[data-theme="dark"] body .btn-primary {
+  color: #0B1220;
+  background: linear-gradient(180deg, var(--br-primary), #3B82F6);
+}
+html[data-theme="dark"] body .btn-primary:hover {
+  background: linear-gradient(180deg, #93C5FD, var(--br-primary));
+}
+body .btn-outline {
+  background: var(--br-surface);
+  border: 1px solid var(--br-border-2);
+  color: var(--br-text);
+  box-shadow: var(--br-shadow-xs);
+}
+body .btn-outline:hover {
+  background: var(--br-surface-2);
+  border-color: var(--br-border-2);
+}
+
+body input[type="text"],
+body input[type="email"],
+body input[type="url"],
+body input[type="number"],
+body input[type="search"],
+body input[type="tel"],
+body input[type="password"],
+body input[type="date"],
+body input[type="datetime-local"],
+body input[type="time"],
+body textarea,
+body select {
+  font-family: inherit;
+  background: var(--br-surface);
+  border: 1px solid var(--br-border);
+  border-radius: var(--br-radius);
+  color: var(--br-text);
+  transition: border-color 0.18s var(--br-ease), box-shadow 0.18s var(--br-ease),
+              background 0.18s var(--br-ease);
+}
+html[data-theme="dark"] body input,
+html[data-theme="dark"] body textarea,
+html[data-theme="dark"] body select {
+  background: var(--br-surface-2);
+  color: var(--br-text);
+  border-color: var(--br-border-2);
+}
+body input::placeholder, body textarea::placeholder { color: var(--br-text-3); }
+body input:focus,
+body textarea:focus,
+body select:focus {
+  outline: 0;
+  border-color: var(--br-primary);
+  box-shadow: var(--br-focus);
+}
+
+.br-card {
+  background: var(--br-surface);
+  border: 1px solid var(--br-border);
+  border-radius: var(--br-radius-lg);
+  box-shadow: var(--br-shadow-xs);
+  color: var(--br-text);
+}
+
+body ::-webkit-scrollbar { width: 10px; height: 10px; }
+body ::-webkit-scrollbar-track { background: transparent; }
+body ::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.16);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+body ::-webkit-scrollbar-thumb:hover { background-color: rgba(15, 23, 42, 0.28); background-clip: padding-box; }
+html[data-theme="dark"] body ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  background-clip: padding-box;
+}
+html[data-theme="dark"] body ::-webkit-scrollbar-thumb:hover { background-color: rgba(255, 255, 255, 0.22); background-clip: padding-box; }
+
+/* ===== AUTO POSTER overrides ===== */
+body .header,
+body .editor-header {
+  height: var(--br-nav-h) !important;
+  padding: 0 20px !important;
+  background: color-mix(in srgb, var(--br-surface) 88%, transparent) !important;
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid var(--br-border) !important;
+  color: var(--br-text) !important;
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  body .header, body .editor-header { background: var(--br-surface) !important; }
+}
+body .header .header-title,
+body .editor-header .editor-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--br-text);
+}
+body .header .header-title > i,
+body .editor-header > i {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--br-primary), var(--br-secondary));
+  color: #fff !important;
+  font-size: 13px;
+  box-shadow: 0 4px 10px -2px rgba(59, 130, 246, 0.45),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+body .back-link {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: var(--br-radius) !important;
+  border: 1px solid var(--br-border);
+  background: var(--br-surface);
+  box-shadow: var(--br-shadow-xs);
+  color: var(--br-text-2);
+}
+body .back-link:hover {
+  background: var(--br-surface-2);
+  border-color: var(--br-border-2);
+  color: var(--br-text);
+}
+body .business-select {
+  padding: 7px 12px;
+  font-size: 13px;
+  background: var(--br-surface);
+  border: 1px solid var(--br-border);
+  border-radius: var(--br-radius);
+  color: var(--br-text);
+}
+html[data-theme="dark"] body .business-select { background: var(--br-surface-2); border-color: var(--br-border-2); }
+
+body .sidebar,
+body .properties-panel,
+body .left-panel,
+body .right-panel,
+body .toolbar,
+body .layers-panel,
+body .templates-panel,
+body .stats-card,
+body .panel,
+body .content {
+  background: var(--br-surface) !important;
+  border-color: var(--br-border) !important;
+  color: var(--br-text);
+}
+
+/* Common text classes inside services */
+body .stat-label,
+body .stat-info span,
+body .empty p,
+body .help-text,
+body label,
+body p,
+body .meta,
+body .sub {
+  color: var(--br-text-2);
+}
+body .stat-value,
+body h1, body h2, body h3, body h4, body h5, body h6,
+body .header-title { color: var(--br-text); }
+
+/* Status pill text in dark */
+html[data-theme="dark"] body [class*="status-"] { color: var(--br-text); }
+
+/* Stat icons in services */
+body .stat-icon.blue   { background: rgba(59, 130, 246, 0.12); color: var(--br-primary-d); }
+body .stat-icon.green  { background: rgba(16, 185, 129, 0.12); color: var(--br-success); }
+body .stat-icon.orange { background: rgba(245, 158, 11, 0.12); color: var(--br-accent); }
+body .stat-icon.red    { background: rgba(239, 68, 68, 0.12);  color: var(--br-danger); }
+html[data-theme="dark"] body .stat-icon.blue   { background: rgba(96, 165, 250, 0.18); color: var(--br-primary-d); }
+html[data-theme="dark"] body .stat-icon.green  { background: rgba(52, 211, 153, 0.18); color: #6EE7B7; }
+html[data-theme="dark"] body .stat-icon.orange { background: rgba(251, 191, 36, 0.18); color: #FCD34D; }
+html[data-theme="dark"] body .stat-icon.red    { background: rgba(248, 113, 113, 0.18); color: #FCA5A5; }
+
+/* Toolbar buttons in editor */
+body .tool-btn {
+  border-radius: var(--br-radius);
+  background: transparent;
+  color: var(--br-text-2);
+  transition: background 0.16s var(--br-ease), color 0.16s var(--br-ease);
+}
+body .tool-btn:hover { background: var(--br-surface-2); color: var(--br-text); }
+body .tool-btn.active {
+  background: var(--br-primary-50);
+  color: var(--br-primary-d);
+}
+
+/* Platform select buttons in editor */
+body .platform-btn {
+  padding: 6px 12px;
+  background: var(--br-surface);
+  border: 1px solid var(--br-border);
+  border-radius: var(--br-radius);
+  color: var(--br-text-2);
+  font-weight: 600;
+  font-size: 12.5px;
+  transition: all 0.16s var(--br-ease);
+}
+body .platform-btn:hover { background: var(--br-surface-2); color: var(--br-text); }
+body .platform-btn.active {
+  background: var(--br-primary-50);
+  color: var(--br-primary-d);
+  border-color: color-mix(in srgb, var(--br-primary) 35%, transparent);
+}
+
+
+/* ===== Dark mode hard overrides for inline color traps ===== */
+html[data-theme="dark"] [style*="background: white"],
+html[data-theme="dark"] [style*="background:white"],
+html[data-theme="dark"] [style*="background:#fff"],
+html[data-theme="dark"] [style*="background: #fff"],
+html[data-theme="dark"] [style*="background:#ffffff"],
+html[data-theme="dark"] [style*="background: #ffffff"],
+html[data-theme="dark"] [style*="background-color: white"],
+html[data-theme="dark"] [style*="background-color:#fff"] {
+  background: var(--br-surface) !important;
+  color: var(--br-text) !important;
+  border-color: var(--br-border) !important;
+}
+html[data-theme="dark"] [style*="color:#000"],
+html[data-theme="dark"] [style*="color: #000"],
+html[data-theme="dark"] [style*="color: black"],
+html[data-theme="dark"] [style*="color:#111"],
+html[data-theme="dark"] [style*="color: #111"],
+html[data-theme="dark"] [style*="color:#222"],
+html[data-theme="dark"] [style*="color: #222"],
+html[data-theme="dark"] [style*="color:#333"],
+html[data-theme="dark"] [style*="color: #333"] { color: var(--br-text) !important; }
+html[data-theme="dark"] [style*="color:#666"],
+html[data-theme="dark"] [style*="color: #666"],
+html[data-theme="dark"] [style*="color:#777"],
+html[data-theme="dark"] [style*="color: #777"],
+html[data-theme="dark"] [style*="color:#888"],
+html[data-theme="dark"] [style*="color: #888"],
+html[data-theme="dark"] [style*="color:#999"],
+html[data-theme="dark"] [style*="color: #999"],
+html[data-theme="dark"] [style*="color:#aaa"],
+html[data-theme="dark"] [style*="color: #aaa"],
+html[data-theme="dark"] [style*="color: gray"] { color: var(--br-text-2) !important; }
+
+/* Cards/panels that fall back to gray */
+html[data-theme="dark"] body {
+  background-color: var(--br-bg) !important;
+}
+
+/* ============================================================
+   Override sub-services' OWN CSS variables in dark mode
+   so their existing styles re-theme correctly.
+   ============================================================ */
+html[data-theme="dark"] {
+  /* Post Generator editor.css tokens */
+  --bg-darkest: #060B17;
+  --bg-dark:    #11182C;
+  --bg-panel:   #1A2238;
+  --bg-input:   #1A2238;
+  --bg-hover:   #1F2842;
+  --bg-active:  rgba(96, 165, 250, 0.18);
+  --primary:        #60A5FA;
+  --primary-hover:  #93C5FD;
+  --primary-dim:    rgba(96, 165, 250, 0.16);
+  --text-primary:   #F1F5F9;
+  --text-secondary: #B0BBCB;
+  --text-muted:     #8794AB;
+  --text-link:      #93C5FD;
+  --border-default: #243049;
+  --border-muted:   #1F2842;
+  --border-accent:  #60A5FA;
+  --dynamic-bg:     rgba(167, 139, 250, 0.18);
+  --dynamic-border: #A78BFA;
+  --dynamic-text:   #C4B5FD;
+
+  /* Auto Poster styles.css tokens */
+  --bg-primary:   #11182C;
+  --bg-secondary: #060B17;
+  --border-color: #243049;
+  --gray-50:  #1A2238;
+  --gray-100: #1F2842;
+  --gray-200: #243049;
+  --gray-300: #38456A;
+  --gray-400: #6F7C94;
+  --gray-500: #B0BBCB;
+  --gray-600: #CBD5E1;
+  --gray-700: #E2E8F0;
+  --gray-800: #F1F5F9;
+  --gray-900: #F8FAFC;
+}
+
+/* Make sure sub-service body bg follows the override even where
+   the original CSS uses var(--bg-secondary)/var(--bg-darkest) directly */
+html[data-theme="dark"] body { background: var(--br-bg) !important; color: var(--br-text) !important; }
+
+/* Card-ish surfaces */
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .stats-card,
+html[data-theme="dark"] .content,
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .editor-header,
+html[data-theme="dark"] .header,
+html[data-theme="dark"] .toolbar-left,
+html[data-theme="dark"] .properties-panel,
+html[data-theme="dark"] .layers-panel,
+html[data-theme="dark"] .templates-panel,
+html[data-theme="dark"] .canvas-container,
+html[data-theme="dark"] .right-panel,
+html[data-theme="dark"] .left-panel {
+  background: var(--br-surface) !important;
+  border-color: var(--br-border) !important;
+  color: var(--br-text);
+}
+
+/* Inputs */
+html[data-theme="dark"] body input,
+html[data-theme="dark"] body textarea,
+html[data-theme="dark"] body select,
+html[data-theme="dark"] body .template-name-input,
+html[data-theme="dark"] body .form-control {
+  background: var(--br-surface-2) !important;
+  color: var(--br-text) !important;
+  border-color: var(--br-border-2) !important;
+}
+
+/* Anchors / nav items */
+html[data-theme="dark"] body a:not(.btn):not(.br-back):not(.br-brand):not(.br-link) {
+  color: var(--br-primary-d);
+}
+
+/* Common toolbar/button/link hover surfaces */
+html[data-theme="dark"] body .tool-btn:hover,
+html[data-theme="dark"] body .platform-btn:hover,
+html[data-theme="dark"] body .back-link:hover,
+html[data-theme="dark"] body .icon-btn:hover {
+  background: var(--br-surface-2) !important;
+  color: var(--br-text);
+}
+
+/* Scrollbars are handled above */
+
+/* Section dividers / subtle borders the services use */
+html[data-theme="dark"] body [class*="border-bottom"],
+html[data-theme="dark"] body [class*="border-top"] {
+  border-color: var(--br-border) !important;
+}
+
+/* Keep the editor canvas readable (white canvas stays white) */
+html[data-theme="dark"] .canvas-wrapper,
+html[data-theme="dark"] canvas { background: #FFFFFF; }
+
+/* Background engine: also adapt to dark mode automatically */
+html[data-theme="dark"] body.br-light-bg {
+  background: var(--br-bg) !important;
+  color: var(--br-text) !important;
+}
+html[data-theme="dark"] body.br-light-bg .panel {
+  background: var(--br-surface) !important;
+  border-color: var(--br-border) !important;
+  color: var(--br-text) !important;
+}
+html[data-theme="dark"] body.br-light-bg .panel p,
+html[data-theme="dark"] body.br-light-bg .panel span:not(.dot),
+html[data-theme="dark"] body.br-light-bg .panel label,
+html[data-theme="dark"] body.br-light-bg header p,
+html[data-theme="dark"] body.br-light-bg label { color: var(--br-text-2) !important; }
+html[data-theme="dark"] body.br-light-bg input,
+html[data-theme="dark"] body.br-light-bg textarea,
+html[data-theme="dark"] body.br-light-bg select {
+  background: var(--br-surface-2) !important;
+  color: var(--br-text) !important;
+  border-color: var(--br-border-2) !important;
+}
+

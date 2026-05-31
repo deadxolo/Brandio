@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Post Generator - Create Stunning Social Media Posts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <!-- Google Fonts - Comprehensive Collection -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700;900&family=Open+Sans:wght@300;400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Lato:wght@300;400;700;900&family=Oswald:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Ubuntu:wght@300;400;500;700&family=Nunito:wght@300;400;500;600;700;800;900&family=Bebas+Neue&family=Dancing+Script:wght@400;500;600;700&family=Pacifico&family=Lobster&family=Caveat:wght@400;500;600;700&family=Righteous&family=Abril+Fatface&family=Cinzel:wght@400;500;600;700;800;900&family=Comfortaa:wght@300;400;500;600;700&family=Josefin+Sans:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=Work+Sans:wght@300;400;500;600;700;800;900&family=Source+Sans+Pro:wght@300;400;600;700;900&family=Rubik:wght@300;400;500;600;700;800;900&family=Noto+Sans:wght@300;400;500;600;700;800;900&family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&family=Libre+Baskerville:wght@400;700&family=Crimson+Text:wght@400;600;700&family=Bitter:wght@300;400;500;600;700;800;900&family=Archivo:wght@300;400;500;600;700;800;900&family=Fira+Sans:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Lexend:wght@300;400;500;600;700;800;900&family=Sora:wght@300;400;500;600;700;800&family=Fredoka:wght@300;400;500;600;700&family=Satisfy&family=Great+Vibes&family=Sacramento&family=Tangerine:wght@400;700&family=Kaushan+Script&family=Permanent+Marker&family=Bangers&family=Bungee&family=Staatliches&family=Anton&family=Russo+One&family=Teko:wght@300;400;500;600;700&family=Chakra+Petch:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Press+Start+2P&family=Monoton&family=Shadows+Into+Light&family=Amatic+SC:wght@400;700&family=Special+Elite&family=Indie+Flower&family=Patrick+Hand&family=Gloria+Hallelujah&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6366F1;
+      --primary-dark: #4F46E5;
+      --primary-light: #818CF8;
+      --secondary: #EC4899;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-600: #4B5563;
+      --gray-700: #374151;
+      --gray-800: #1F2937;
+      --gray-900: #111827;
+      --bg-primary: #ffffff;
+      --bg-secondary: #F9FAFB;
+      --gradient-primary: linear-gradient(135deg, #6366F1 0%, #EC4899 100%);
+      --gradient-hero: linear-gradient(135deg, #1F2937 0%, #111827 100%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-secondary);
+      color: var(--gray-900);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--gray-200);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gray-900);
+      text-decoration: none;
+    }
+
+    .logo i {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-links a {
+      color: var(--gray-600);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--primary); }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+    }
+
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--gray-300);
+      color: var(--gray-700);
+    }
+
+    .btn-outline:hover { background: var(--gray-100); }
+
+    /* Hero Section */
+    .hero {
+      background: var(--gradient-hero);
+      padding: 80px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50px;
+      color: var(--primary-light);
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+
+    .hero-badge i { font-size: 12px; }
+
+    .hero h1 {
+      font-size: 48px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .hero h1 span {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--gray-400);
+      margin-bottom: 40px;
+    }
+
+    /* AI Prompt Box */
+    .prompt-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .prompt-box {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .prompt-box.expanded {
+      text-align: left;
+    }
+
+    .prompt-main {
+      margin-bottom: 20px;
+    }
+
+    .prompt-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 16px 20px;
+      border: 2px solid var(--gray-200);
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+
+    .prompt-textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .prompt-textarea::placeholder {
+      color: var(--gray-400);
+      line-height: 1.6;
+    }
+
+    .prompt-hint {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--gray-400);
+    }
+
+    .prompt-hint kbd {
+      padding: 2px 6px;
+      background: var(--gray-100);
+      border: 1px solid var(--gray-300);
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 11px;
+    }
+
+    .prompt-details {
+      background: var(--gray-50);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .detail-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .detail-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .detail-field {
+      flex: 1;
+    }
+
+    .detail-field.full-width {
+      flex: 1 1 100%;
+    }
+
+    .detail-field label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-600);
+      margin-bottom: 8px;
+    }
+
+    .detail-field label i {
+      color: var(--primary);
+      font-size: 12px;
+    }
+
+    .detail-field input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .detail-field input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .detail-field input::placeholder {
+      color: var(--gray-400);
+    }
+
+    .prompt-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .prompt-footer .options-row {
+      margin: 0;
+      justify-content: flex-start;
+    }
+
+    .prompt-footer .option-select {
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      color: var(--gray-700);
+      padding: 12px 16px;
+    }
+
+    .prompt-footer .option-select:focus {
+      border-color: var(--primary);
+    }
+
+    .prompt-btn {
+      padding: 14px 28px;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .prompt-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+    }
+
+    .prompt-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .prompt-suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+
+    .suggestion-chip {
+      padding: 10px 18px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50px;
+      color: var(--gray-300);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .suggestion-chip:hover {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Options Row */
+    .options-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .option-select {
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      color: white;
+      font-size: 13px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .option-select option {
+      background: var(--gray-800);
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .prompt-footer {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .prompt-footer .options-row {
+        justify-content: center;
+      }
+
+      .prompt-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .detail-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      padding: 60px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .section-title span {
+      color: var(--gray-400);
+      font-weight: 400;
+      font-size: 16px;
+      margin-left: 8px;
+    }
+
+    .action-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .action-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid var(--gray-200);
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border-color: var(--primary);
+    }
+
+    .action-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .action-card:hover::before { opacity: 1; }
+
+    .action-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .action-icon.purple { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
+    .action-icon.pink { background: rgba(236, 72, 153, 0.1); color: var(--secondary); }
+    .action-icon.green { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+    .action-icon.orange { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+
+    .action-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .action-card p {
+      color: var(--gray-500);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* File Upload Section */
+    .upload-section {
+      padding: 60px 24px;
+      background: white;
+    }
+
+    .upload-container {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .upload-zone {
+      border: 2px dashed var(--gray-300);
+      border-radius: 16px;
+      padding: 60px 40px;
+      background: var(--gray-50);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.dragover {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .upload-zone i {
+      font-size: 48px;
+      color: var(--gray-400);
+      margin-bottom: 16px;
+    }
+
+    .upload-zone h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .upload-zone p {
+      color: var(--gray-500);
+      margin-bottom: 20px;
+    }
+
+    .upload-formats {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .format-badge {
+      padding: 4px 12px;
+      background: var(--gray-200);
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--gray-600);
+    }
+
+    /* Recent Templates */
+    .templates-section {
+      padding: 60px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .templates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .template-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--gray-200);
+      transition: all 0.3s;
+    }
+
+    .template-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    }
+
+    .template-preview {
+      aspect-ratio: 1;
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .template-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .template-preview .placeholder {
+      font-size: 48px;
+      color: var(--gray-300);
+    }
+
+    .template-info {
+      padding: 16px;
+    }
+
+    .template-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .template-meta {
+      font-size: 13px;
+      color: var(--gray-500);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Generating Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show { display: flex; }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      position: relative;
+      background: white;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 500px;
+      margin: 16px;
+      overflow: hidden;
+    }
+
+    .generating-modal {
+      text-align: center;
+      padding: 60px 40px;
+    }
+
+    .generating-animation {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 32px;
+      position: relative;
+    }
+
+    .generating-animation::before,
+    .generating-animation::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 4px solid transparent;
+      border-top-color: var(--primary);
+      animation: spin 1s linear infinite;
+    }
+
+    .generating-animation::after {
+      inset: 12px;
+      border-top-color: var(--secondary);
+      animation-duration: 0.8s;
+      animation-direction: reverse;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .generating-animation i {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 32px;
+      color: var(--primary);
+    }
+
+    .generating-modal h3 {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .generating-modal p {
+      color: var(--gray-500);
+      margin-bottom: 8px;
+    }
+
+    .generating-steps {
+      margin-top: 24px;
+      text-align: left;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-100);
+      color: var(--gray-400);
+    }
+
+    .step.active { color: var(--gray-900); }
+    .step.done { color: var(--success); }
+
+    .step i {
+      width: 24px;
+      text-align: center;
+    }
+
+    /* Business Select */
+    .business-select-container {
+      padding: 16px 24px;
+      background: white;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .business-select-container label {
+      font-size: 14px;
+      color: var(--gray-600);
+    }
+
+    .business-select {
+      padding: 8px 16px;
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      font-size: 14px;
+      min-width: 200px;
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2000;
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      margin-top: 12px;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast.success { border-left: 4px solid var(--success); }
+    .toast.error { border-left: 4px solid var(--danger); }
+    .toast.info { border-left: 4px solid var(--primary); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 32px; }
+      .hero p { font-size: 16px; }
+      .prompt-input-wrapper { flex-direction: column; }
+      .prompt-btn { width: 100%; justify-content: center; }
+      .nav-links { display: none; }
+      .action-cards { grid-template-columns: 1fr; }
+    }
+
+    /* Hidden file input */
+    #fileInput { display: none; }
+
+    /* File Upload Modal */
+    .upload-modal-content {
+      padding: 0;
+      max-width: 700px;
+    }
+
+    .upload-modal-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .upload-modal-header h3 {
+      font-size: 20px;
+      margin: 0;
+    }
+
+    .upload-modal-body {
+      padding: 24px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+
+    .upload-step {
+      display: none;
+    }
+
+    .upload-step.active {
+      display: block;
+    }
+
+    .file-preview {
+      background: var(--gray-50);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .file-preview-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .file-preview-header i {
+      font-size: 32px;
+      color: var(--success);
+    }
+
+    .file-preview-info h4 {
+      margin: 0 0 4px;
+      font-size: 16px;
+    }
+
+    .file-preview-info p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--gray-500);
+    }
+
+    .data-preview-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .data-preview-table th,
+    .data-preview-table td {
+      padding: 10px 12px;
+      border: 1px solid var(--gray-200);
+      text-align: left;
+    }
+
+    .data-preview-table th {
+      background: var(--gray-100);
+      font-weight: 600;
+    }
+
+    .data-preview-table td {
+      background: white;
+    }
+
+    .template-select-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .template-select-item {
+      border: 2px solid var(--gray-200);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .template-select-item:hover {
+      border-color: var(--primary-light);
+    }
+
+    .template-select-item.selected {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    .template-select-preview {
+      aspect-ratio: 1;
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .template-select-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .template-select-preview i {
+      font-size: 32px;
+      color: var(--gray-300);
+    }
+
+    .template-select-name {
+      padding: 12px;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: center;
+      background: white;
+    }
+
+    .upload-modal-footer {
+      padding: 20px 24px;
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .upload-modal-footer .btn-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .column-mapping {
+      margin-top: 24px;
+    }
+
+    .column-mapping h4 {
+      margin-bottom: 16px;
+      font-size: 15px;
+    }
+
+    .mapping-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .mapping-row label {
+      min-width: 140px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mapping-row label i {
+      color: var(--primary);
+    }
+
+    .mapping-row select {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .no-templates-msg {
+      text-align: center;
+      padding: 40px;
+      color: var(--gray-500);
+    }
+
+    .no-templates-msg i {
+      font-size: 48px;
+      color: var(--gray-300);
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="./" class="logo">
+      <i class="fas fa-wand-magic-sparkles"></i>
+      PostGen AI
+    </a>
+    <nav class="nav-links">
+      <a href="./">Home</a>
+      <a href="templates">Templates</a>
+      <a href="generate">Generate</a>
+      <a href="settings">Settings</a>
+    </nav>
+    <div class="header-actions">
+      <a href="templates" class="btn btn-outline">
+        <i class="fas fa-layer-group"></i> My Templates
+      </a>
+    </div>
+  </header>
+
+  <div class="business-select-container">
+    <label for="businessSelect">Business:</label>
+    <select id="businessSelect" class="business-select">
+      <option value="">Select Business</option>
+    </select>
+  </div>
+
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <i class="fas fa-sparkles"></i>
+        Powered by AI
+      </div>
+      <h1>Create <span>Stunning</span> Social Media Posts in Seconds</h1>
+      <p>Just describe what you want, and our AI will generate a complete template with background and text - ready to customize and publish.</p>
+
+      <div class="prompt-container">
+        <div class="prompt-box expanded">
+          <!-- Main prompt textarea -->
+          <div class="prompt-main">
+            <textarea class="prompt-textarea" id="promptInput" placeholder="Describe your post in detail...&#10;&#10;Example: Create a Diwali sale poster with 50% off discount. Use festive colors like orange, gold and red. Include fireworks and diyas in the background. The main text should say 'MEGA DIWALI SALE' with the discount prominently displayed."></textarea>
+            <div class="prompt-hint">
+              <i class="fas fa-keyboard"></i> Press <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to generate
+            </div>
+          </div>
+
+          <!-- Additional details section -->
+          <div class="prompt-details">
+            <div class="detail-row">
+              <div class="detail-field">
+                <label><i class="fas fa-heading"></i> Headline Text</label>
+                <input type="text" id="headlineInput" placeholder="e.g., MEGA SALE, 50% OFF, New Arrival">
+              </div>
+              <div class="detail-field">
+                <label><i class="fas fa-tag"></i> Subtext / Tagline</label>
+                <input type="text" id="subtextInput" placeholder="e.g., Limited time offer, Shop now">
+              </div>
+            </div>
+
+            <div class="detail-row">
+              <div class="detail-field">
+                <label><i class="fas fa-palette"></i> Color Preference</label>
+                <input type="text" id="colorInput" placeholder="e.g., Blue and white, Festive colors, Dark theme">
+              </div>
+              <div class="detail-field">
+                <label><i class="fas fa-bullseye"></i> Target Audience</label>
+                <input type="text" id="audienceInput" placeholder="e.g., Young professionals, Families, Students">
+              </div>
+            </div>
+
+            <div class="detail-row">
+              <div class="detail-field full-width">
+                <label><i class="fas fa-info-circle"></i> Additional Details</label>
+                <input type="text" id="additionalInput" placeholder="Any specific elements, brand guidelines, or requirements...">
+              </div>
+            </div>
+          </div>
+
+          <!-- Options and Generate button -->
+          <div class="prompt-footer">
+            <div class="options-row">
+              <select class="option-select" id="platformSelect">
+                <option value="instagram">Instagram Post</option>
+                <option value="instagram_story">Instagram Story</option>
+                <option value="facebook">Facebook Post</option>
+                <option value="twitter">Twitter/X Post</option>
+                <option value="linkedin">LinkedIn Post</option>
+              </select>
+              <select class="option-select" id="styleSelect">
+                <option value="vibrant">Vibrant</option>
+                <option value="minimal">Minimal</option>
+                <option value="festive">Festive</option>
+                <option value="corporate">Corporate</option>
+                <option value="nature">Nature</option>
+                <option value="abstract">Abstract</option>
+              </select>
+            </div>
+            <button class="prompt-btn" id="generateBtn" onclick="generateTemplate()">
+              <i class="fas fa-wand-magic-sparkles"></i>
+              Generate with AI
+            </button>
+          </div>
+        </div>
+
+        <div class="prompt-suggestions">
+          <span class="suggestion-chip" onclick="setPromptWithDetails('New Year sale with fireworks and confetti', 'HAPPY NEW YEAR', 'Up to 50% Off')">New Year Sale</span>
+          <span class="suggestion-chip" onclick="setPromptWithDetails('Product launch announcement with modern design', 'NEW ARRIVAL', 'Discover Innovation')">Product Launch</span>
+          <span class="suggestion-chip" onclick="setPromptWithDetails('Motivational quote with gradient background', 'BELIEVE', 'Success starts with you')">Quote Post</span>
+          <span class="suggestion-chip" onclick="setPromptWithDetails('Restaurant special offer with food theme', 'WEEKEND SPECIAL', '20% Off on all items')">Food Special</span>
+          <span class="suggestion-chip" onclick="setPromptWithDetails('Gym fitness promotion with energetic colors', 'GET FIT', 'Join Now - First Month Free')">Fitness Promo</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="quick-actions">
+    <div class="section-header">
+      <h2 class="section-title">Quick Actions</h2>
+    </div>
+    <div class="action-cards">
+      <div class="action-card" onclick="window.location.href='/templates'">
+        <div class="action-icon purple">
+          <i class="fas fa-layer-group"></i>
+        </div>
+        <h3>Browse Templates</h3>
+        <p>View and edit your saved templates, or start from a blank canvas.</p>
+      </div>
+      <div class="action-card" onclick="document.getElementById('fileInput').click()">
+        <div class="action-icon pink">
+          <i class="fas fa-file-csv"></i>
+        </div>
+        <h3>Bulk Generate</h3>
+        <p>Upload a CSV file to generate multiple posts at once from a template.</p>
+      </div>
+      <div class="action-card" onclick="window.open('http://localhost:3001', '_blank')">
+        <div class="action-icon green">
+          <i class="fas fa-image"></i>
+        </div>
+        <h3>AI Backgrounds</h3>
+        <p>Generate custom backgrounds using AI for your social media posts.</p>
+      </div>
+      <div class="action-card" onclick="openBlankEditor()">
+        <div class="action-icon orange">
+          <i class="fas fa-plus"></i>
+        </div>
+        <h3>Create from Scratch</h3>
+        <p>Start with a blank template and design your post manually.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="upload-section">
+    <div class="upload-container">
+      <h2 class="section-title" style="margin-bottom: 32px;">Quick Upload</h2>
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <h3>Drop your data file here</h3>
+        <p>or click to browse - upload CSV to generate posts from a template</p>
+        <div class="upload-formats">
+          <span class="format-badge">CSV</span>
+          <span class="format-badge">Excel</span>
+          <span class="format-badge">JSON</span>
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept=".csv,.xlsx,.json" onchange="handleFileUpload(event)">
+    </div>
+  </section>
+
+  <section class="templates-section" id="templatesSection">
+    <div class="section-header">
+      <h2 class="section-title">Recent Templates <span id="templateCount"></span></h2>
+      <a href="templates" class="btn btn-outline">View All</a>
+    </div>
+    <div class="templates-grid" id="templatesGrid">
+      <!-- Templates will be loaded here -->
+    </div>
+  </section>
+
+  <!-- File Upload Modal -->
+  <div class="modal" id="uploadModal">
+    <div class="modal-backdrop" onclick="closeUploadModal()"></div>
+    <div class="modal-content upload-modal-content">
+      <div class="upload-modal-header">
+        <h3><i class="fas fa-file-csv"></i> Bulk Generate Posts</h3>
+      </div>
+      <div class="upload-modal-body">
+        <!-- Step 1: File Preview -->
+        <div class="upload-step active" id="uploadStep1">
+          <div class="file-preview">
+            <div class="file-preview-header">
+              <i class="fas fa-file-excel"></i>
+              <div class="file-preview-info">
+                <h4 id="uploadFileName">data.csv</h4>
+                <p id="uploadFileInfo">10 rows, 5 columns</p>
+              </div>
+            </div>
+            <div style="overflow-x: auto;">
+              <table class="data-preview-table" id="dataPreviewTable">
+                <thead><tr id="dataPreviewHeader"></tr></thead>
+                <tbody id="dataPreviewBody"></tbody>
+              </table>
+            </div>
+            <p style="margin-top: 12px; font-size: 12px; color: var(--gray-400);">Showing first 5 rows</p>
+          </div>
+        </div>
+
+        <!-- Step 2: Template Selection -->
+        <div class="upload-step" id="uploadStep2">
+          <p style="margin-bottom: 16px; color: var(--gray-600);">Select a template to use for generating posts:</p>
+          <div class="template-select-grid" id="templateSelectGrid">
+            <!-- Templates will be loaded here -->
+          </div>
+        </div>
+
+        <!-- Step 3: Column Mapping -->
+        <div class="upload-step" id="uploadStep3">
+          <p style="margin-bottom: 16px; color: var(--gray-600);">Map your CSV columns to template placeholders:</p>
+          <div class="column-mapping" id="columnMappingContainer">
+            <!-- Mapping rows will be generated here -->
+          </div>
+        </div>
+      </div>
+      <div class="upload-modal-footer">
+        <button class="btn btn-outline" onclick="closeUploadModal()">Cancel</button>
+        <div class="btn-group">
+          <button class="btn btn-outline" id="uploadPrevBtn" onclick="prevUploadStep()" style="display: none;">
+            <i class="fas fa-arrow-left"></i> Back
+          </button>
+          <button class="btn btn-primary" id="uploadNextBtn" onclick="nextUploadStep()">
+            Next <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generating Modal -->
+  <div class="modal" id="generatingModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="generating-modal">
+        <div class="generating-animation">
+          <i class="fas fa-wand-magic-sparkles"></i>
+        </div>
+        <h3>Creating Your Template</h3>
+        <p id="generatingStatus">Analyzing your request...</p>
+        <div class="generating-steps">
+          <div class="step" id="step1">
+            <i class="fas fa-circle-notch fa-spin"></i>
+            <span>Understanding your requirements</span>
+          </div>
+          <div class="step" id="step2">
+            <i class="fas fa-circle"></i>
+            <span>Generating background image</span>
+          </div>
+          <div class="step" id="step3">
+            <i class="fas fa-circle"></i>
+            <span>Creating text elements</span>
+          </div>
+          <div class="step" id="step4">
+            <i class="fas fa-circle"></i>
+            <span>Finalizing template</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // Service URLs
+    const MANAGER_URL = 'http://localhost:3004';
+    const BACKGROUND_ENGINE_URL = 'http://localhost:3001';
+    const POST_GENERATOR_URL = 'http://localhost:3002';
+
+    let currentBusinessId = null;
+    let currentBusinessInfo = null;  // Full business info for template generation
+    let allTemplates = [];
+
+    // File upload state
+    let uploadedData = { headers: [], rows: [] };
+    let selectedTemplateId = null;
+    let selectedTemplate = null;
+    let currentUploadStep = 1;
+    let columnMapping = {};
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadBusinesses();
+      setupDragAndDrop();
+
+      // Ctrl+Enter to generate from textarea
+      document.getElementById('promptInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          generateTemplate();
+        }
+      });
+
+      // Enter key to generate from detail fields
+      ['headlineInput', 'subtextInput', 'colorInput', 'audienceInput', 'additionalInput'].forEach(id => {
+        document.getElementById(id)?.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            generateTemplate();
+          }
+        });
+      });
+    });
+
+    // Load businesses
+    async function loadBusinesses() {
+      try {
+        const res = await fetch(`${MANAGER_URL}/api/businesses`);
+        const data = await res.json();
+        const select = document.getElementById('businessSelect');
+
+        if (data.businesses && data.businesses.length > 0) {
+          // Store all businesses for later lookup
+          window.allBusinesses = data.businesses;
+
+          data.businesses.forEach(b => {
+            const opt = document.createElement('option');
+            opt.value = b.id;
+            opt.textContent = b.name;
+            select.appendChild(opt);
+          });
+          select.value = data.businesses[0].id;
+          currentBusinessId = data.businesses[0].id;
+          // Store full business info for template generation
+          currentBusinessInfo = data.businesses[0];
+          console.log('Current business info:', currentBusinessInfo);
+          loadRecentTemplates();
+        }
+      } catch (err) {
+        console.error('Error loading businesses:', err);
+        showToast('Failed to load businesses', 'error');
+      }
+    }
+
+    // Load recent templates
+    async function loadRecentTemplates() {
+      if (!currentBusinessId) return;
+
+      try {
+        const res = await fetch(`${POST_GENERATOR_URL}/api/templates/${currentBusinessId}`);
+        const data = await res.json();
+        allTemplates = data.templates || [];
+        const templates = allTemplates.slice(0, 4);
+
+        document.getElementById('templateCount').textContent = `(${allTemplates.length})`;
+
+        const grid = document.getElementById('templatesGrid');
+        if (templates.length === 0) {
+          grid.innerHTML = '<p style="color: var(--gray-500); grid-column: 1/-1; text-align: center; padding: 40px;">No templates yet. Create your first one above!</p>';
+          return;
+        }
+
+        grid.innerHTML = templates.map(t => `
+          <div class="template-card" onclick="window.location.href='/editor?id=${t.id}&business=${currentBusinessId}'">
+            <div class="template-preview">
+              ${t.thumbnail
+                ? `<img src="${t.thumbnail}" alt="${t.name}">`
+                : `<i class="fas fa-image placeholder"></i>`
+              }
+            </div>
+            <div class="template-info">
+              <div class="template-name">${t.name}</div>
+              <div class="template-meta">
+                <i class="fab fa-${t.platform === 'twitter' ? 'x-twitter' : t.platform}"></i>
+                ${t.platform} - ${t.width}x${t.height}
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Error loading templates:', err);
+      }
+    }
+
+    // Set prompt from suggestion
+    function setPrompt(text) {
+      document.getElementById('promptInput').value = text;
+      document.getElementById('promptInput').focus();
+    }
+
+    // Set prompt with additional details from suggestion chips
+    function setPromptWithDetails(description, headline, subtext) {
+      document.getElementById('promptInput').value = description;
+      document.getElementById('headlineInput').value = headline || '';
+      document.getElementById('subtextInput').value = subtext || '';
+      document.getElementById('promptInput').focus();
+    }
+
+    // Build comprehensive prompt from all input fields
+    function buildFullPrompt() {
+      const mainPrompt = document.getElementById('promptInput').value.trim();
+      const headline = document.getElementById('headlineInput').value.trim();
+      const subtext = document.getElementById('subtextInput').value.trim();
+      const colors = document.getElementById('colorInput').value.trim();
+      const audience = document.getElementById('audienceInput').value.trim();
+      const additional = document.getElementById('additionalInput').value.trim();
+
+      let fullPrompt = mainPrompt;
+
+      // Add headline and subtext if provided
+      if (headline || subtext) {
+        fullPrompt += '\n\nText elements to include:';
+        if (headline) fullPrompt += `\n- Main headline: "${headline}"`;
+        if (subtext) fullPrompt += `\n- Subtext/tagline: "${subtext}"`;
+      }
+
+      // Add color preferences
+      if (colors) {
+        fullPrompt += `\n\nColor preferences: ${colors}`;
+      }
+
+      // Add target audience
+      if (audience) {
+        fullPrompt += `\n\nTarget audience: ${audience}`;
+      }
+
+      // Add additional details
+      if (additional) {
+        fullPrompt += `\n\nAdditional requirements: ${additional}`;
+      }
+
+      return fullPrompt;
+    }
+
+    // Generate template with AI
+    async function generateTemplate() {
+      const mainPrompt = document.getElementById('promptInput').value.trim();
+      if (!mainPrompt) {
+        showToast('Please enter a description for your post', 'error');
+        document.getElementById('promptInput').focus();
+        return;
+      }
+
+      // Build full prompt with all details
+      const prompt = buildFullPrompt();
+
+      // Get headline and subtext for the template elements
+      const headline = document.getElementById('headlineInput').value.trim();
+      const subtext = document.getElementById('subtextInput').value.trim();
+
+      if (!currentBusinessId) {
+        showToast('Please select a business first', 'error');
+        return;
+      }
+
+      const platform = document.getElementById('platformSelect').value;
+      const style = document.getElementById('styleSelect').value;
+
+      const sizes = {
+        instagram: { width: 1080, height: 1080 },
+        instagram_story: { width: 1080, height: 1920 },
+        facebook: { width: 1200, height: 630 },
+        twitter: { width: 1200, height: 675 },
+        linkedin: { width: 1200, height: 627 }
+      };
+
+      // Show generating modal
+      const modal = document.getElementById('generatingModal');
+      modal.classList.add('show');
+
+      // Update steps
+      updateStep(1, 'active');
+
+      try {
+        // Step 1: Generate complete template
+        document.getElementById('generatingStatus').textContent = 'Analyzing your request...';
+
+        setTimeout(() => {
+          updateStep(1, 'done');
+          updateStep(2, 'active');
+          document.getElementById('generatingStatus').textContent = 'Generating AI background...';
+        }, 1000);
+
+        // Build businessInfo object for template generation
+        // Convert relative logo path to full URL
+        let logoFullUrl = '';
+        const logoPath = currentBusinessInfo?.logo || currentBusinessInfo?.logoUrl;
+        if (logoPath) {
+          // If it's already a full URL, use as-is; otherwise prepend manager URL
+          logoFullUrl = logoPath.startsWith('http') ? logoPath : `${MANAGER_URL}${logoPath}`;
+        }
+
+        const businessInfoForTemplate = currentBusinessInfo ? {
+          name: currentBusinessInfo.name,
+          phone: currentBusinessInfo.phone,
+          email: currentBusinessInfo.email,
+          website: currentBusinessInfo.website,
+          address: currentBusinessInfo.address,
+          logo: logoFullUrl,
+          brand_colors: currentBusinessInfo.brand_colors
+        } : {};
+
+        console.log('Sending businessInfo:', businessInfoForTemplate);
+
+        const response = await fetch(`${BACKGROUND_ENGINE_URL}/api/backgrounds/generate-complete-template`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt,
+            style,
+            headline,
+            subtext,
+            ...sizes[platform],
+            platform,
+            contentType: 'post',
+            generateBackground: true,
+            businessInfo: businessInfoForTemplate
+          })
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to generate template');
+        }
+
+        updateStep(2, 'done');
+        updateStep(3, 'active');
+        document.getElementById('generatingStatus').textContent = 'Creating text elements...';
+
+        await sleep(500);
+
+        updateStep(3, 'done');
+        updateStep(4, 'active');
+        document.getElementById('generatingStatus').textContent = 'Saving template...';
+
+        // Save the template
+        console.log('Template elements to save:', result.elements?.length, 'elements');
+        const logoEl = result.elements?.find(el => el.placeholderKey === 'business_logo' || el.id === 'business_logo');
+        console.log('Logo element:', logoEl ? { id: logoEl.id, src: logoEl.src } : 'NOT FOUND');
+
+        const saveResponse = await fetch(`${POST_GENERATOR_URL}/api/templates`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            business_id: currentBusinessId,
+            name: result.templateName || 'AI Generated Template',
+            platform,
+            content_type: 'post',
+            ...sizes[platform],
+            elements: result.elements || [],
+            background_type: result.background ? 'image' : 'color',
+            background_value: result.background
+              ? JSON.stringify({ url: `${BACKGROUND_ENGINE_URL}${result.background.url}` })
+              : JSON.stringify('#1a1a2e'),
+            placeholders: result.placeholders || {}
+          })
+        });
+
+        const saveResult = await saveResponse.json();
+
+        if (!saveResult.success) {
+          throw new Error('Failed to save template');
+        }
+
+        updateStep(4, 'done');
+        document.getElementById('generatingStatus').textContent = 'Done! Opening editor...';
+
+        await sleep(500);
+
+        // Redirect to editor
+        window.location.href = `/editor?id=${saveResult.template.id}&business=${currentBusinessId}`;
+
+      } catch (error) {
+        console.error('Generation error:', error);
+        modal.classList.remove('show');
+        showToast(error.message || 'Failed to generate template', 'error');
+        resetSteps();
+      }
+    }
+
+    function updateStep(stepNum, status) {
+      const step = document.getElementById(`step${stepNum}`);
+      step.className = `step ${status}`;
+
+      const icon = step.querySelector('i');
+      if (status === 'active') {
+        icon.className = 'fas fa-circle-notch fa-spin';
+      } else if (status === 'done') {
+        icon.className = 'fas fa-check-circle';
+      } else {
+        icon.className = 'fas fa-circle';
+      }
+    }
+
+    function resetSteps() {
+      for (let i = 1; i <= 4; i++) {
+        updateStep(i, '');
+      }
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Open blank editor
+    function openBlankEditor() {
+      if (!currentBusinessId) {
+        showToast('Please select a business first', 'error');
+        return;
+      }
+      window.location.href = `/editor?business=${currentBusinessId}`;
+    }
+
+    // File upload handling
+    function setupDragAndDrop() {
+      const zone = document.getElementById('uploadZone');
+
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('dragover');
+      });
+
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('dragover');
+      });
+
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file) processFile(file);
+      });
+    }
+
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) processFile(file);
+      event.target.value = ''; // Reset input
+    }
+
+    async function processFile(file) {
+      if (!currentBusinessId) {
+        showToast('Please select a business first', 'error');
+        return;
+      }
+
+      const ext = file.name.split('.').pop().toLowerCase();
+
+      if (!['csv', 'xlsx', 'json'].includes(ext)) {
+        showToast('Please upload a CSV, Excel, or JSON file', 'error');
+        return;
+      }
+
+      try {
+        if (ext === 'csv') {
+          const text = await file.text();
+          parseCSV(text);
+        } else if (ext === 'json') {
+          const text = await file.text();
+          const jsonData = JSON.parse(text);
+          parseJSON(jsonData);
+        } else {
+          showToast('Excel support coming soon. Please use CSV format.', 'info');
+          return;
+        }
+
+        // Update file preview
+        document.getElementById('uploadFileName').textContent = file.name;
+        document.getElementById('uploadFileInfo').textContent =
+          `${uploadedData.rows.length} rows, ${uploadedData.headers.length} columns`;
+
+        // Show data preview
+        showDataPreview();
+
+        // Load templates for selection
+        await loadTemplatesForSelection();
+
+        // Open modal
+        openUploadModal();
+
+      } catch (error) {
+        console.error('File parsing error:', error);
+        showToast('Failed to parse file. Please check the format.', 'error');
+      }
+    }
+
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      if (lines.length < 2) {
+        throw new Error('CSV must have at least a header row and one data row');
+      }
+
+      // Parse header
+      uploadedData.headers = parseCSVLine(lines[0]);
+
+      // Parse data rows
+      uploadedData.rows = [];
+      for (let i = 1; i < lines.length; i++) {
+        const values = parseCSVLine(lines[i]);
+        if (values.length > 0) {
+          const row = {};
+          uploadedData.headers.forEach((header, idx) => {
+            row[header] = values[idx] || '';
+          });
+          uploadedData.rows.push(row);
+        }
+      }
+    }
+
+    function parseCSVLine(line) {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      result.push(current.trim());
+      return result;
+    }
+
+    function parseJSON(data) {
+      if (Array.isArray(data)) {
+        if (data.length === 0) throw new Error('JSON array is empty');
+        uploadedData.headers = Object.keys(data[0]);
+        uploadedData.rows = data;
+      } else if (typeof data === 'object' && data.rows) {
+        uploadedData.headers = data.headers || Object.keys(data.rows[0]);
+        uploadedData.rows = data.rows;
+      } else {
+        throw new Error('Invalid JSON format. Expected array or {headers, rows}');
+      }
+    }
+
+    function showDataPreview() {
+      const headerRow = document.getElementById('dataPreviewHeader');
+      const bodyEl = document.getElementById('dataPreviewBody');
+
+      // Headers
+      headerRow.innerHTML = uploadedData.headers.map(h => `<th>${h}</th>`).join('');
+
+      // First 5 rows
+      const previewRows = uploadedData.rows.slice(0, 5);
+      bodyEl.innerHTML = previewRows.map(row => `
+        <tr>
+          ${uploadedData.headers.map(h => `<td>${row[h] || ''}</td>`).join('')}
+        </tr>
+      `).join('');
+    }
+
+    async function loadTemplatesForSelection() {
+      const grid = document.getElementById('templateSelectGrid');
+
+      if (allTemplates.length === 0) {
+        await loadRecentTemplates();
+      }
+
+      if (allTemplates.length === 0) {
+        grid.innerHTML = `
+          <div class="no-templates-msg" style="grid-column: 1/-1;">
+            <i class="fas fa-layer-group"></i>
+            <p>No templates found. Create a template first.</p>
+            <button class="btn btn-primary" onclick="closeUploadModal(); openBlankEditor();" style="margin-top: 16px;">
+              Create Template
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = allTemplates.map(t => `
+        <div class="template-select-item ${selectedTemplateId === t.id ? 'selected' : ''}"
+             onclick="selectTemplate('${t.id}')">
+          <div class="template-select-preview">
+            ${t.thumbnail
+              ? `<img src="${t.thumbnail}" alt="${t.name}">`
+              : `<i class="fas fa-image"></i>`
+            }
+          </div>
+          <div class="template-select-name">${t.name}</div>
+        </div>
+      `).join('');
+    }
+
+    function selectTemplate(templateId) {
+      selectedTemplateId = templateId;
+      selectedTemplate = allTemplates.find(t => t.id === templateId);
+
+      // Update UI
+      document.querySelectorAll('.template-select-item').forEach(item => {
+        item.classList.remove('selected');
+      });
+      event.currentTarget.classList.add('selected');
+    }
+
+    function openUploadModal() {
+      currentUploadStep = 1;
+      updateUploadStepUI();
+      document.getElementById('uploadModal').classList.add('show');
+    }
+
+    function closeUploadModal() {
+      document.getElementById('uploadModal').classList.remove('show');
+      // Reset state
+      currentUploadStep = 1;
+      selectedTemplateId = null;
+      selectedTemplate = null;
+      uploadedData = { headers: [], rows: [] };
+      columnMapping = {};
+    }
+
+    function updateUploadStepUI() {
+      // Update step visibility
+      document.querySelectorAll('.upload-step').forEach((el, idx) => {
+        el.classList.toggle('active', idx + 1 === currentUploadStep);
+      });
+
+      // Update buttons
+      const prevBtn = document.getElementById('uploadPrevBtn');
+      const nextBtn = document.getElementById('uploadNextBtn');
+
+      prevBtn.style.display = currentUploadStep > 1 ? 'inline-flex' : 'none';
+
+      if (currentUploadStep === 3) {
+        nextBtn.innerHTML = '<i class="fas fa-magic"></i> Generate Posts';
+      } else {
+        nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
+      }
+    }
+
+    function nextUploadStep() {
+      if (currentUploadStep === 1) {
+        // Move to template selection
+        currentUploadStep = 2;
+      } else if (currentUploadStep === 2) {
+        // Validate template selection
+        if (!selectedTemplateId) {
+          showToast('Please select a template', 'error');
+          return;
+        }
+        // Build column mapping UI
+        buildColumnMappingUI();
+        currentUploadStep = 3;
+      } else if (currentUploadStep === 3) {
+        // Start generation
+        startBulkGeneration();
+        return;
+      }
+
+      updateUploadStepUI();
+    }
+
+    function prevUploadStep() {
+      if (currentUploadStep > 1) {
+        currentUploadStep--;
+        updateUploadStepUI();
+      }
+    }
+
+    function buildColumnMappingUI() {
+      const container = document.getElementById('columnMappingContainer');
+
+      // Get placeholders from selected template
+      const placeholders = selectedTemplate.placeholders || {};
+      const placeholderKeys = Object.keys(placeholders);
+
+      if (placeholderKeys.length === 0) {
+        container.innerHTML = `
+          <div class="no-templates-msg">
+            <i class="fas fa-info-circle"></i>
+            <p>This template has no placeholders. The same design will be used for all posts.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = placeholderKeys.map(key => {
+        const ph = placeholders[key];
+        const options = uploadedData.headers.map(h =>
+          `<option value="${h}" ${h.toLowerCase() === key.toLowerCase() ? 'selected' : ''}>${h}</option>`
+        ).join('');
+
+        // Auto-map based on name match
+        const autoMatch = uploadedData.headers.find(h =>
+          h.toLowerCase() === key.toLowerCase() ||
+          h.toLowerCase().includes(key.toLowerCase()) ||
+          key.toLowerCase().includes(h.toLowerCase())
+        );
+        if (autoMatch) {
+          columnMapping[key] = autoMatch;
+        }
+
+        return `
+          <div class="mapping-row">
+            <label>
+              <i class="fas fa-tag"></i>
+              ${key}
+            </label>
+            <select onchange="columnMapping['${key}'] = this.value">
+              <option value="">-- Select Column --</option>
+              ${options}
+            </select>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function startBulkGeneration() {
+      closeUploadModal();
+
+      // Store data in sessionStorage for generate page
+      const generateData = {
+        templateId: selectedTemplateId,
+        businessId: currentBusinessId,
+        rows: uploadedData.rows,
+        mapping: columnMapping
+      };
+
+      sessionStorage.setItem('bulkGenerateData', JSON.stringify(generateData));
+
+      // Redirect to generate page
+      window.location.href = `/generate?id=${selectedTemplateId}&business=${currentBusinessId}&bulk=true`;
+    }
+
+    // Business select change
+    document.getElementById('businessSelect').addEventListener('change', (e) => {
+      currentBusinessId = e.target.value;
+      // Update full business info
+      currentBusinessInfo = window.allBusinesses?.find(b => b.id === currentBusinessId) || null;
+      console.log('Business changed to:', currentBusinessInfo);
+      allTemplates = [];
+      loadRecentTemplates();
+    });
+
+    // Toast notification
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+  </script>
+</body>
+</html>

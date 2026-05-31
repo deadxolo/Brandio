@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate Posts - Post Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <!-- Google Fonts - Comprehensive Collection (same as editor) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700;900&family=Open+Sans:wght@300;400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Lato:wght@300;400;700;900&family=Oswald:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Ubuntu:wght@300;400;500;700&family=Nunito:wght@300;400;500;600;700;800;900&family=Bebas+Neue&family=Dancing+Script:wght@400;500;600;700&family=Pacifico&family=Lobster&family=Caveat:wght@400;500;600;700&family=Righteous&family=Abril+Fatface&family=Cinzel:wght@400;500;600;700;800;900&family=Comfortaa:wght@300;400;500;600;700&family=Josefin+Sans:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=Work+Sans:wght@300;400;500;600;700;800;900&family=Source+Sans+Pro:wght@300;400;600;700;900&family=Rubik:wght@300;400;500;600;700;800;900&family=Noto+Sans:wght@300;400;500;600;700;800;900&family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&family=Libre+Baskerville:wght@400;700&family=Crimson+Text:wght@400;600;700&family=Bitter:wght@300;400;500;600;700;800;900&family=Archivo:wght@300;400;500;600;700;800;900&family=Fira+Sans:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Lexend:wght@300;400;500;600;700;800;900&family=Sora:wght@300;400;500;600;700;800&family=Fredoka:wght@300;400;500;600;700&family=Satisfy&family=Great+Vibes&family=Sacramento&family=Tangerine:wght@400;700&family=Kaushan+Script&family=Permanent+Marker&family=Bangers&family=Bungee&family=Staatliches&family=Anton&family=Russo+One&family=Teko:wght@300;400;500;600;700&family=Chakra+Petch:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Press+Start+2P&family=Monoton&family=Shadows+Into+Light&family=Amatic+SC:wght@400;700&family=Special+Elite&family=Indie+Flower&family=Patrick+Hand&family=Gloria+Hallelujah&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/generate.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="templates" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+      <div class="header-info">
+        <h1 id="templateName">Generate Posts</h1>
+        <span class="template-meta" id="templateMeta"></span>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="save-indicator saved" id="saveIndicator">
+        <i class="fas fa-check-circle"></i> Saved
+      </span>
+      <button class="btn btn-outline" id="editTemplateBtn">
+        <i class="fas fa-pen"></i> Edit Template
+      </button>
+      <button class="btn btn-primary" id="generateAllBtn" disabled>
+        <i class="fas fa-magic"></i> Generate <span id="generateCount">0</span> Posts
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="layout">
+      <!-- Left: Preview -->
+      <div class="preview-section">
+        <div class="section-header">
+          <h2><i class="fas fa-eye"></i> Preview</h2>
+          <div class="preview-nav">
+            <button class="btn-icon" id="prevPreview" disabled><i class="fas fa-chevron-left"></i></button>
+            <span id="previewIndex">1 / 1</span>
+            <button class="btn-icon" id="nextPreview" disabled><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+        <div class="canvas-container">
+          <canvas id="previewCanvas"></canvas>
+        </div>
+        <div class="preview-status">
+          <span class="status-text" id="previewStatus">Add data to see preview</span>
+        </div>
+      </div>
+
+      <!-- Right: Data Input -->
+      <div class="data-section">
+        <div class="tabs">
+          <button class="tab active" data-tab="form">
+            <i class="fas fa-list"></i> Form Input
+          </button>
+          <button class="tab" data-tab="csv">
+            <i class="fas fa-file-csv"></i> CSV Import
+          </button>
+          <button class="tab" data-tab="table">
+            <i class="fas fa-table"></i> Data Table
+          </button>
+        </div>
+
+        <!-- Form Input Tab -->
+        <div class="tab-content active" id="tab-form">
+          <div class="data-actions">
+            <button class="btn btn-outline" id="addRowBtn">
+              <i class="fas fa-plus"></i> Add Row
+            </button>
+            <button class="btn btn-outline" id="clearAllBtn">
+              <i class="fas fa-trash"></i> Clear All
+            </button>
+          </div>
+
+          <div class="rows-container" id="rowsContainer">
+            <!-- Data rows will be rendered here -->
+          </div>
+        </div>
+
+        <!-- CSV Import Tab -->
+        <div class="tab-content" id="tab-csv">
+          <div class="csv-upload-area" id="csvDropzone">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <h3>Drop CSV file here</h3>
+            <p>or click to browse</p>
+            <input type="file" id="csvFileInput" accept=".csv" class="hidden">
+          </div>
+
+          <div class="csv-paste-area">
+            <label>Or paste CSV data:</label>
+            <textarea id="csvPasteInput" placeholder="name,price,description&#10;Product 1,$99,Description 1&#10;Product 2,$149,Description 2"></textarea>
+            <button class="btn btn-primary" id="parseCSVBtn">
+              <i class="fas fa-check"></i> Import Data
+            </button>
+          </div>
+
+          <div class="csv-mapping hidden" id="csvMapping">
+            <h3>Map CSV Columns to Placeholders</h3>
+            <div id="mappingFields"></div>
+            <button class="btn btn-primary" id="applyMappingBtn">
+              <i class="fas fa-check"></i> Apply Mapping
+            </button>
+          </div>
+        </div>
+
+        <!-- Data Table Tab -->
+        <div class="tab-content" id="tab-table">
+          <div class="table-container">
+            <table id="dataTable">
+              <thead>
+                <tr id="tableHeaders"></tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+          <div class="table-actions">
+            <button class="btn btn-outline" id="exportCSVBtn">
+              <i class="fas fa-download"></i> Export CSV
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Row Edit Modal -->
+  <div class="modal" id="rowModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Edit Row <span id="rowModalIndex"></span></h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body" id="rowModalForm">
+        <!-- Form fields will be generated here -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" id="saveRowBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generating Modal -->
+  <div class="modal" id="generatingModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content generating-modal">
+      <div class="generating-content">
+        <div class="spinner"></div>
+        <h3>Generating Posts</h3>
+        <div class="progress-bar">
+          <div class="progress-fill" id="generateProgress"></div>
+        </div>
+        <p id="generateStatus">Preparing...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Modal -->
+  <div class="modal" id="resultsModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content results-modal">
+      <div class="modal-header">
+        <h3><i class="fas fa-check-circle text-success"></i> Posts Generated</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="results-grid" id="resultsGrid">
+          <!-- Generated images will be shown here -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-dismiss="modal">Close</button>
+        <button class="btn btn-outline" id="downloadAllBtn">
+          <i class="fas fa-download"></i> Download All (ZIP)
+        </button>
+        <button class="btn btn-outline" id="saveToPostsBtn">
+          <i class="fas fa-save"></i> Save as Draft
+        </button>
+        <button class="btn btn-primary" id="publishNowBtn">
+          <i class="fas fa-paper-plane"></i> Publish Now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Publish Modal -->
+  <div class="modal" id="publishModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content publish-modal">
+      <div class="modal-header">
+        <h3><i class="fas fa-paper-plane"></i> Publish to Social Media</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Platform Selection -->
+        <div class="publish-section">
+          <h4>Select Platforms</h4>
+          <div class="platform-grid" id="platformGrid">
+            <!-- Platforms will be rendered here -->
+          </div>
+        </div>
+
+        <!-- Connected Accounts -->
+        <div class="publish-section">
+          <h4>Connected Accounts</h4>
+          <div class="accounts-list" id="accountsList">
+            <!-- Connected accounts will be shown here -->
+          </div>
+          <button class="btn btn-outline btn-sm" id="connectAccountBtn">
+            <i class="fas fa-plus"></i> Connect Account
+          </button>
+        </div>
+
+        <!-- Caption Editor -->
+        <div class="publish-section">
+          <h4>Caption</h4>
+          <textarea class="form-textarea" id="publishCaption" rows="4" placeholder="Write your caption..."></textarea>
+          <div class="caption-meta">
+            <span class="char-count" id="captionCount">0 / 2200</span>
+          </div>
+        </div>
+
+        <!-- Hashtags -->
+        <div class="publish-section">
+          <h4>Hashtags</h4>
+          <input type="text" class="form-input" id="publishHashtags" placeholder="#marketing #socialmedia">
+          <div class="hashtag-suggestions" id="hashtagSuggestions">
+            <!-- Hashtag suggestions -->
+          </div>
+        </div>
+
+        <!-- Schedule Option -->
+        <div class="publish-section">
+          <div class="schedule-toggle">
+            <label class="toggle-label">
+              <input type="checkbox" id="scheduleToggle">
+              <span class="toggle-text">Schedule for later</span>
+            </label>
+          </div>
+          <div class="schedule-picker hidden" id="schedulePicker">
+            <input type="datetime-local" class="form-input" id="scheduleDateTime">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" id="confirmPublishBtn">
+          <i class="fas fa-paper-plane"></i> <span id="publishBtnText">Publish Now</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Publishing Progress Modal -->
+  <div class="modal" id="publishingProgressModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content publishing-progress-modal">
+      <div class="modal-header">
+        <h3><i class="fas fa-spinner fa-spin"></i> Publishing...</h3>
+      </div>
+      <div class="modal-body">
+        <div class="publishing-status" id="publishingStatus">
+          <!-- Platform status cards will be rendered here -->
+        </div>
+        <div class="publishing-overall">
+          <div class="progress-bar">
+            <div class="progress-fill" id="publishingProgress"></div>
+          </div>
+          <p class="status-text" id="publishingStatusText">Preparing to publish...</p>
+        </div>
+      </div>
+      <div class="modal-footer publishing-footer hidden" id="publishingFooter">
+        <button class="btn btn-outline" id="closePublishingBtn">Close</button>
+        <button class="btn btn-primary hidden" id="retryFailedBtn">
+          <i class="fas fa-redo"></i> Retry Failed
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connect Account Modal -->
+  <div class="modal" id="connectAccountModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content connect-modal">
+      <div class="modal-header">
+        <h3><i class="fas fa-link"></i> Connect Account</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="connect-description">Select a platform to connect your account:</p>
+        <div class="connect-platforms" id="connectPlatforms">
+          <!-- Platforms will be rendered here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Crop Modal -->
+  <div class="modal" id="cropModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content crop-modal">
+      <div class="modal-header">
+        <h3><i class="fas fa-crop-alt"></i> Crop Image</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="crop-container">
+          <div class="crop-canvas-wrapper">
+            <canvas id="cropCanvas"></canvas>
+            <div class="crop-selection" id="cropSelection"></div>
+          </div>
+        </div>
+        <div class="crop-controls">
+          <div class="crop-aspect-ratios">
+            <span class="label">Aspect Ratio:</span>
+            <button class="aspect-btn active" data-aspect="free">Free</button>
+            <button class="aspect-btn" data-aspect="1:1">1:1</button>
+            <button class="aspect-btn" data-aspect="4:3">4:3</button>
+            <button class="aspect-btn" data-aspect="16:9">16:9</button>
+            <button class="aspect-btn" data-aspect="9:16">9:16</button>
+          </div>
+          <div class="crop-actions">
+            <button class="btn btn-outline" id="resetCropBtn">
+              <i class="fas fa-undo"></i> Reset
+            </button>
+            <button class="btn btn-outline" id="rotateCropBtn">
+              <i class="fas fa-sync-alt"></i> Rotate
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" id="applyCropBtn">
+          <i class="fas fa-check"></i> Apply Crop
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/placeholders.js"></script>
+  <script src="js/generate.js"></script>
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto Poster - Schedule & Manage Posts</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="http://localhost:3004/css/brandio-shell.css">
+  <script src="http://localhost:3004/js/brandio-shell.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <a href="http://localhost:3004/dashboard" class="back-link" title="Back to dashboard">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="header-title">
+          <i class="fas fa-bolt"></i>
+          Brandio <span style="color:var(--br-text-2); font-weight:500; margin-left:8px; font-size:13px;">· Auto Poster</span>
+        </h1>
+      </div>
+
+      <div class="header-center">
+        <select id="businessSelect" class="business-select">
+          <option value="">Select Business</option>
+        </select>
+      </div>
+
+      <div class="header-right">
+        <button class="btn btn-outline" id="connectAccountBtn">
+          <i class="fas fa-link"></i>
+          Connect Account
+        </button>
+        <a href="http://localhost:3002" class="btn btn-primary" target="_blank">
+          <i class="fas fa-plus"></i>
+          Create Post
+        </a>
+        <button type="button" class="br-theme-toggle" onclick="window.__brandioShellTheme && window.__brandioShellTheme.toggle()" aria-label="Toggle theme" title="Toggle theme">
+          <i class="fas fa-moon icon-moon"></i>
+          <i class="fas fa-sun icon-sun"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Sidebar Stats -->
+      <aside class="sidebar">
+        <div class="stats-card">
+          <div class="stat-item">
+            <div class="stat-icon blue"><i class="fas fa-clock"></i></div>
+            <div class="stat-info">
+              <span class="stat-value" id="scheduledCount">0</span>
+              <span class="stat-label">Scheduled</span>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-info">
+              <span class="stat-value" id="publishedCount">0</span>
+              <span class="stat-label">Published</span>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon red"><i class="fas fa-exclamation-circle"></i></div>
+            <div class="stat-info">
+              <span class="stat-value" id="failedCount">0</span>
+              <span class="stat-label">Failed</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="connected-accounts">
+          <h3>
+            Connected Accounts
+            <button class="btn-icon" id="refreshAccountsBtn" title="Refresh">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </h3>
+          <ul class="accounts-list" id="accountsList">
+            <li class="account-empty">No accounts connected</li>
+          </ul>
+        </div>
+
+        <div class="upcoming-posts">
+          <h3>Upcoming Posts</h3>
+          <ul class="upcoming-list" id="upcomingList">
+            <li class="upcoming-empty">No scheduled posts</li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Calendar View -->
+      <div class="calendar-section">
+        <div class="calendar-header">
+          <button class="btn btn-icon" id="prevMonth">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <h2 id="calendarTitle">January 2026</h2>
+          <button class="btn btn-icon" id="nextMonth">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+          <div class="view-toggle">
+            <button class="btn-view active" data-view="month">Month</button>
+            <button class="btn-view" data-view="week">Week</button>
+            <button class="btn-view" data-view="list">List</button>
+          </div>
+        </div>
+
+        <div class="calendar-body">
+          <!-- Month View -->
+          <div class="calendar-grid" id="calendarGrid">
+            <div class="calendar-weekdays">
+              <span>Sun</span>
+              <span>Mon</span>
+              <span>Tue</span>
+              <span>Wed</span>
+              <span>Thu</span>
+              <span>Fri</span>
+              <span>Sat</span>
+            </div>
+            <div class="calendar-days" id="calendarDays">
+              <!-- Calendar days will be rendered here -->
+            </div>
+          </div>
+
+          <!-- List View -->
+          <div class="list-view" id="listView" style="display: none;">
+            <div class="list-container" id="listContainer">
+              <!-- Posts list will be rendered here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Connect Account Modal -->
+    <div class="modal" id="connectModal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Connect Social Account</h3>
+          <button class="modal-close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-description">Select a platform to connect via OAuth</p>
+          <div class="platform-options">
+            <!-- Platforms will be loaded dynamically -->
+            <div class="loading-platforms">
+              <i class="fas fa-spinner fa-spin"></i> Loading platforms...
+            </div>
+          </div>
+
+          <div id="manualConnect" style="display: none;"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" data-dismiss="modal">Close</button>
+          <button class="btn btn-primary" id="confirmConnectBtn" style="display: none;">
+            <i class="fas fa-link"></i> Connect
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post Details Modal -->
+    <div class="modal" id="postModal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-lg">
+        <div class="modal-header">
+          <h3 id="postModalTitle">Post Details</h3>
+          <button class="modal-close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="post-details">
+            <div class="post-preview" id="postPreview">
+              <img src="" alt="Post preview" id="postPreviewImage">
+            </div>
+            <div class="post-info">
+              <div class="info-group">
+                <label>Title</label>
+                <p id="postDetailTitle">-</p>
+              </div>
+              <div class="info-group">
+                <label>Caption</label>
+                <p id="postDetailCaption">-</p>
+              </div>
+              <div class="info-group">
+                <label>Platforms</label>
+                <div id="postDetailPlatforms" class="platform-badges"></div>
+              </div>
+              <div class="info-group">
+                <label>Scheduled For</label>
+                <p id="postDetailSchedule">-</p>
+              </div>
+              <div class="info-group">
+                <label>Status</label>
+                <span id="postDetailStatus" class="status-badge">-</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" data-dismiss="modal">Close</button>
+          <button class="btn btn-outline" id="editPostBtn">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button class="btn btn-danger" id="cancelPostBtn">
+            <i class="fas fa-times"></i> Cancel Schedule
+          </button>
+          <button class="btn btn-primary" id="sharePostBtn">
+            <i class="fas fa-share-alt"></i> Share
+          </button>
+          <button class="btn btn-success" id="postNowBtn">
+            <i class="fas fa-paper-plane"></i> Post Now
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="modal" id="shareModal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-lg">
+        <div class="modal-header">
+          <h3><i class="fas fa-share-alt"></i> Share to Social Media</h3>
+          <button class="modal-close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <!-- Post Preview -->
+          <div class="share-preview">
+            <div class="share-preview-image" id="sharePreviewImage"></div>
+            <div class="share-preview-info">
+              <h4 id="sharePreviewTitle">Post Title</h4>
+              <p id="sharePreviewCaption">Caption text...</p>
+            </div>
+          </div>
+
+          <!-- Platform Selection -->
+          <div class="share-section">
+            <h4>Select Platforms</h4>
+            <div class="share-platforms" id="sharePlatforms">
+              <!-- Platforms will be rendered here -->
+            </div>
+            <p class="help-text" id="noPlatformsMsg" style="display: none;">
+              No accounts connected. <a href="#" id="connectFromShare">Connect an account</a> to share.
+            </p>
+          </div>
+
+          <!-- Caption Editor -->
+          <div class="share-section">
+            <h4>Caption</h4>
+            <textarea class="share-caption" id="shareCaption" rows="3" placeholder="Write your caption..."></textarea>
+            <div class="caption-counter">
+              <span id="captionCount">0</span> / <span id="captionLimit">2200</span>
+            </div>
+          </div>
+
+          <!-- Hashtags -->
+          <div class="share-section">
+            <h4>Hashtags</h4>
+            <input type="text" class="share-hashtags" id="shareHashtags" placeholder="#marketing #socialmedia #business">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" id="confirmShareBtn" disabled>
+            <i class="fas fa-paper-plane"></i> Share Now
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Share Progress Modal -->
+    <div class="modal" id="shareProgressModal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="fas fa-spinner fa-spin"></i> Sharing...</h3>
+        </div>
+        <div class="modal-body">
+          <div class="share-progress-list" id="shareProgressList">
+            <!-- Platform progress items will be rendered here -->
+          </div>
+          <div class="share-progress-bar">
+            <div class="progress-fill" id="shareProgressFill"></div>
+          </div>
+          <p class="share-progress-text" id="shareProgressText">Preparing to share...</p>
+        </div>
+        <div class="modal-footer share-progress-footer" id="shareProgressFooter" style="display: none;">
+          <button class="btn btn-outline" id="closeShareProgressBtn">Close</button>
+          <button class="btn btn-primary" id="retryShareBtn" style="display: none;">
+            <i class="fas fa-redo"></i> Retry Failed
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

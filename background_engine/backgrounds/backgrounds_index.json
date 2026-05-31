@@ -1,0 +1,48 @@
+{
+  "backgrounds": [
+    {
+      "id": "78609d13-1d0b-42b7-a4b0-2fbd85b6c2b9",
+      "filename": "uploadedbackground_1768205345037",
+      "imagePath": "uploadedbackground_1768205345037.jpg",
+      "prompt": "birthday",
+      "category": "general",
+      "occasion": "birthday",
+      "tags": [],
+      "createdAt": "2026-01-12T08:09:05.043Z"
+    },
+    {
+      "id": "257952e8-7c58-425a-88d1-799df344e07e",
+      "filename": "a_professional_and_dynamic_background_for_a_visa_s_1776895210692",
+      "imagePath": "a_professional_and_dynamic_background_for_a_visa_s_1776895210692.png",
+      "prompt": "A professional and dynamic background for a visa service. A photorealistic, dark blue passport lies open at an angle in the lower-left, showing a page with a shimmering, gold foil visa stamp. A sleek, modern white airplane with gold accents appears to fly out from behind the passport, its wingtip dramatically crossing into the foreground. A large, semi-transparent frosted glass (glassmorphic) panel cuts diagonally across the composition from top-left to bottom-right. The main background is a deep blue (#3b82f6) to white gradient with subtle, ghosted world map patterns. Soft, ambient lighting from the top right highlights the edges of the airplane and passport, giving a premium feel.",
+      "category": "instagram",
+      "occasion": "",
+      "tags": [
+        "modern",
+        "professional"
+      ],
+      "createdAt": "2026-04-22T22:00:10.698Z"
+    },
+    {
+      "id": "bdff6c65-09c8-4a09-b818-1283d04c2d10",
+      "filename": "test_1776899270167",
+      "imagePath": "test_1776899270167.png",
+      "prompt": "test",
+      "category": "general",
+      "occasion": "",
+      "tags": [],
+      "createdAt": "2026-04-22T23:07:50.171Z"
+    },
+    {
+      "id": "e19cd1c0-c82a-48a1-86f1-ab55a23d19f6",
+      "filename": "uploadedbackground_1776899413873",
+      "imagePath": "uploadedbackground_1776899413873.png",
+      "prompt": "../../../POS_plateform/frontend/.env",
+      "category": "test",
+      "occasion": "",
+      "tags": [],
+      "createdAt": "2026-04-22T23:10:13.875Z"
+    }
+  ],
+  "lastUpdated": "2026-04-22T23:10:13.876Z"
+}

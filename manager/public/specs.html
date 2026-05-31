@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BRANDIO — Tech Specs · The All-in-One Marketing Tool</title>
+  <meta name="description" content="API reference and service map for the Brandio marketing toolkit." />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --paper:   #f4ecd8;
+      --paper-2: #ede3c6;
+      --ink:     #0a0a0a;
+      --pink:    #ff3d7f;
+      --cyan:    #00d4ff;
+      --yellow:  #ffea00;
+      --lime:    #c6ff3d;
+      --orange:  #ff7a00;
+      --shadow:  6px 6px 0 0 var(--ink);
+      --shadow-lg: 10px 10px 0 0 var(--ink);
+      --shadow-xl: 14px 14px 0 0 var(--ink);
+      --border:  3px solid var(--ink);
+      --border-thick: 4px solid var(--ink);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.06) 1px, transparent 0);
+      background-size: 14px 14px;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
+
+    /* ====== TOP STRIP ====== */
+    .top-strip {
+      background: var(--ink);
+      color: var(--paper);
+      border-bottom: var(--border-thick);
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .top-strip-inner {
+      display: flex; justify-content: space-between; align-items: center; height: 36px;
+    }
+
+    /* ====== NAV ====== */
+    .nav { background: var(--paper); border-bottom: var(--border-thick); position: sticky; top: 0; z-index: 50; }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark {
+      width: 40px; height: 40px;
+      background: var(--pink);
+      border: var(--border);
+      box-shadow: 4px 4px 0 0 var(--ink);
+      display: grid; place-items: center;
+      font-size: 16px;
+      transform: rotate(-3deg);
+    }
+    .brand-name { font-family: 'Archivo Black', sans-serif; font-size: 22px; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 32px; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .nav-links a:hover { background: var(--yellow); padding: 4px 6px; transform: rotate(-1deg); }
+    .nav-cta { display: flex; gap: 10px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 20px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 14px; letter-spacing: 0.02em; text-transform: uppercase;
+      border: var(--border);
+      background: var(--paper); color: var(--ink);
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      white-space: nowrap;
+    }
+    .btn:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 0 var(--ink); }
+    .btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 0 var(--ink); }
+    .btn-ink { background: var(--ink); color: var(--paper); }
+    .btn-yellow { background: var(--yellow); color: var(--ink); }
+
+    /* ====== MASTHEAD ====== */
+    .head {
+      padding: 48px 0 40px;
+      border-bottom: 4px solid var(--ink);
+    }
+    .head-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: end;
+    }
+    .head .kicker {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      border-bottom: 2px solid var(--ink);
+    }
+    .head h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(56px, 9vw, 120px);
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+    }
+    .head h1 em { font-style: italic; color: var(--pink); }
+    .head .lede {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      margin-top: 16px;
+      max-width: 640px;
+    }
+    .head .meta {
+      border: var(--border);
+      background: var(--cyan);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      min-width: 220px;
+    }
+    .head .meta .row {
+      display: flex; justify-content: space-between;
+      border-bottom: 1px dashed var(--ink);
+      padding: 3px 0;
+    }
+    .head .meta .row:last-child { border-bottom: 0; }
+    .head .meta .k { font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* ====== SECTION HEAD ====== */
+    .section-head {
+      display: flex; align-items: end; justify-content: space-between;
+      margin: 60px 0 24px;
+      padding-bottom: 12px;
+      border-bottom: 4px solid var(--ink);
+    }
+    .section-head .left { display: flex; align-items: end; gap: 16px; }
+    .section-head .pg-num {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 42px; line-height: 0.9;
+      background: var(--ink); color: var(--paper);
+      padding: 4px 12px;
+    }
+    .section-head h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .section-head .right {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+      text-align: right;
+    }
+
+    /* ====== SERVICES GRID ====== */
+    .svc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .svc {
+      border: var(--border-thick);
+      background: var(--paper);
+      box-shadow: var(--shadow-lg);
+      padding: 24px;
+    }
+    .svc:nth-child(1) { background: var(--paper); }
+    .svc:nth-child(2) { background: var(--lime); }
+    .svc:nth-child(3) { background: var(--cyan); }
+    .svc:nth-child(4) { background: var(--yellow); }
+    .svc-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .svc-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      line-height: 1;
+    }
+    .svc-port {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      padding: 4px 8px;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      letter-spacing: 0.1em;
+    }
+    .svc-desc {
+      font-size: 14.5px;
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+      border-bottom: 2px dashed var(--ink);
+    }
+    .svc-url {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      padding: 8px 10px;
+      background: var(--ink);
+      color: var(--paper);
+      display: inline-block;
+    }
+    .svc-status {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 4px 8px;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+      margin-left: 8px;
+    }
+    .svc-status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink); }
+    .svc-status.up .dot { background: #1aa260; }
+    .svc-status.down .dot { background: var(--pink); }
+
+    /* ====== ENDPOINTS ====== */
+    .ep-group {
+      border: var(--border-thick);
+      background: var(--paper);
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .ep-group-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 22px;
+      background: var(--ink); color: var(--paper);
+      border-bottom: var(--border-thick);
+      font-family: 'Archivo Black', sans-serif;
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .ep-group-head .badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      padding: 4px 8px;
+      background: var(--yellow); color: var(--ink);
+      border: 2px solid var(--paper);
+    }
+    .ep-row {
+      display: grid;
+      grid-template-columns: 90px 1.2fr 2fr;
+      gap: 18px;
+      align-items: center;
+      padding: 14px 22px;
+      border-bottom: 2px solid var(--ink);
+    }
+    .ep-row:last-child { border-bottom: 0; }
+    .ep-row:hover { background: var(--yellow); }
+    .ep-method {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      padding: 6px 10px;
+      text-align: center;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+    }
+    .ep-method.GET    { background: var(--cyan); }
+    .ep-method.POST   { background: var(--lime); }
+    .ep-method.PUT    { background: var(--yellow); }
+    .ep-method.DELETE { background: var(--pink); color: var(--paper); }
+    .ep-path {
+      font-family: 'Space Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      word-break: break-all;
+    }
+    .ep-desc {
+      font-size: 14px;
+    }
+
+    /* ====== QUICKSTART ====== */
+    .quick {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .card {
+      border: var(--border-thick);
+      background: var(--paper);
+      box-shadow: var(--shadow-lg);
+      padding: 24px;
+    }
+    .card.dark { background: var(--ink); color: var(--paper); }
+    .card h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+    .card p { font-size: 14.5px; margin-bottom: 12px; }
+    .code {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      background: #0a0a0a;
+      color: #c6ff3d;
+      padding: 16px;
+      border: 2px solid var(--ink);
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.6;
+    }
+    .card.dark .code { border-color: var(--paper); }
+
+    /* ====== FOOTER ====== */
+    footer {
+      margin-top: 60px;
+      border-top: var(--border-thick);
+      background: var(--ink);
+      color: var(--paper);
+      padding: 30px 0;
+    }
+    .footer-inner {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .footer-inner a:hover { background: var(--pink); padding: 0 4px; }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .head-grid { grid-template-columns: 1fr; }
+      .svc-grid, .quick { grid-template-columns: 1fr; }
+      .ep-row { grid-template-columns: 80px 1fr; gap: 12px; }
+      .ep-row .ep-desc { grid-column: 1 / -1; }
+    }
+    @media (max-width: 560px) {
+      .container { padding: 0 18px; }
+      .ep-row { grid-template-columns: 1fr; }
+      .ep-method { justify-self: start; }
+      .section-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== TICKER ====== -->
+  <div class="top-strip">
+    <div class="container top-strip-inner">
+      <div>※ TECH SPECS · API REFERENCE · ISSUE 01</div>
+      <div>v1.0.0 · REST · JSON</div>
+    </div>
+  </div>
+
+  <!-- ====== NAV ====== -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="/landing">
+        <span class="brand-mark"><i class="fas fa-bolt"></i></span>
+        <span class="brand-name">BRANDIO</span>
+      </a>
+      <div class="nav-links">
+        <a href="/landing#contents">Contents</a>
+        <a href="#services">Services</a>
+        <a href="#endpoints">Endpoints</a>
+        <a href="#quickstart">Quick Start</a>
+      </div>
+      <div class="nav-cta">
+        <a href="/dashboard" class="btn btn-ink">Dashboard <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ====== HEAD ====== -->
+  <header class="head">
+    <div class="container">
+      <div class="head-grid">
+        <div>
+          <div class="kicker">Back of the book · Tech Specs · Page 08</div>
+          <h1>The <em>Specs.</em></h1>
+          <p class="lede">
+            Everything under the hood — four cooperating services, one REST surface, zero magic.
+            Wire up your own clients, scripts, or CI; the API speaks plain JSON.
+          </p>
+        </div>
+        <div class="meta">
+          <div class="row"><span class="k">Service</span><span>Manager</span></div>
+          <div class="row"><span class="k">Version</span><span id="m-ver">1.0.0</span></div>
+          <div class="row"><span class="k">Protocol</span><span>HTTP · REST</span></div>
+          <div class="row"><span class="k">Format</span><span>JSON</span></div>
+          <div class="row"><span class="k">Auth</span><span>Bearer / Token</span></div>
+          <div class="row"><span class="k">Health</span>
+            <span id="m-health"><span class="svc-status"><span class="dot"></span> Checking…</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====== SERVICES ====== -->
+  <section class="container" id="services">
+    <div class="section-head">
+      <div class="left">
+        <span class="pg-num">01</span>
+        <h2>Services.</h2>
+      </div>
+      <div class="right">Map · 4 Endpoints</div>
+    </div>
+
+    <div class="svc-grid" id="svc-grid">
+      <!-- filled by JS -->
+    </div>
+  </section>
+
+  <!-- ====== ENDPOINTS ====== -->
+  <section class="container" id="endpoints">
+    <div class="section-head">
+      <div class="left">
+        <span class="pg-num">02</span>
+        <h2>Endpoints.</h2>
+      </div>
+      <div class="right">REST · JSON</div>
+    </div>
+
+    <div id="ep-list"><!-- filled by JS --></div>
+  </section>
+
+  <!-- ====== QUICKSTART ====== -->
+  <section class="container" id="quickstart">
+    <div class="section-head">
+      <div class="left">
+        <span class="pg-num">03</span>
+        <h2>Quick Start.</h2>
+      </div>
+      <div class="right">Copy · Paste · Ship</div>
+    </div>
+
+    <div class="quick">
+      <div class="card">
+        <h3>List your brands</h3>
+        <p>Every workspace lives in its own brand. Pull the full list to start wiring things up.</p>
+        <div class="code">curl http://localhost:3004/api/businesses \
+  -H "Content-Type: application/json"</div>
+      </div>
+      <div class="card dark">
+        <h3>Create a new brand</h3>
+        <p>Spin up a new isolated workspace — assets, schedules, and analytics all scoped to it.</p>
+        <div class="code">curl -X POST http://localhost:3004/api/businesses \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Acme Co","industry":"SaaS"}'</div>
+      </div>
+      <div class="card">
+        <h3>Check service health</h3>
+        <p>Each service exposes /api/health. Useful for uptime checks and CI.</p>
+        <div class="code">curl http://localhost:3004/api/health</div>
+      </div>
+      <div class="card dark">
+        <h3>Get raw service map</h3>
+        <p>Need the original JSON for tooling? It's still at the root API path.</p>
+        <div class="code">curl http://localhost:3004/api | jq</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer>
+    <div class="container footer-inner">
+      <span>© <span id="yr"></span> BRANDIO — Vol. MMXXVI · No. 01</span>
+      <div style="display:flex; gap:18px;">
+        <a href="/landing">Cover</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/api">Raw JSON</a>
+      </div>
+      <span>Back cover · End of issue</span>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // Service descriptions / colors
+    const ICONS = {
+      manager:           'fa-gauge-high',
+      background_engine: 'fa-palette',
+      post_generator:    'fa-wand-magic-sparkles',
+      auto_poster:       'fa-paper-plane'
+    };
+    const PRETTY = {
+      manager:           'Command Center',
+      background_engine: 'Creative Engine',
+      post_generator:    'Content Studio',
+      auto_poster:       'Distribution Engine'
+    };
+
+    function badge(method) {
+      return `<span class="ep-method ${method}">${method}</span>`;
+    }
+
+    function row(method, path, desc) {
+      return `<div class="ep-row">
+        ${badge(method)}
+        <div class="ep-path">${path}</div>
+        <div class="ep-desc">${desc}</div>
+      </div>`;
+    }
+
+    function group(title, badgeText, rows) {
+      return `<div class="ep-group">
+        <div class="ep-group-head">
+          <span>※ ${title}</span>
+          <span class="badge">${badgeText}</span>
+        </div>
+        ${rows}
+      </div>`;
+    }
+
+    // Fetch live API map and render
+    async function render() {
+      let api = null;
+      try {
+        const res = await fetch('/api');
+        api = await res.json();
+      } catch (e) {
+        document.getElementById('svc-grid').innerHTML =
+          '<div class="svc"><div class="svc-name">Couldn\'t reach /api</div><p class="svc-desc">Is the manager service running on port 3004?</p></div>';
+        return;
+      }
+
+      // Version + health
+      if (api.version) document.getElementById('m-ver').textContent = api.version;
+
+      try {
+        const h = await fetch('/api/health');
+        const hj = await h.json();
+        const ok = hj.status === 'healthy';
+        document.getElementById('m-health').innerHTML =
+          `<span class="svc-status ${ok ? 'up' : 'down'}"><span class="dot"></span> ${ok ? 'Healthy' : 'Degraded'}</span>`;
+      } catch {
+        document.getElementById('m-health').innerHTML =
+          `<span class="svc-status down"><span class="dot"></span> Offline</span>`;
+      }
+
+      // Services grid
+      const svcs = api.linkedServices || {};
+      const svcHtml = Object.entries(svcs).map(([key, s]) => {
+        const icon = ICONS[key] || 'fa-cube';
+        const pretty = PRETTY[key] || s.name;
+        return `<div class="svc">
+          <div class="svc-top">
+            <div>
+              <div class="svc-name"><i class="fas ${icon}"></i> ${pretty}</div>
+              <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; margin-top:4px;">${s.name}</div>
+            </div>
+            <div class="svc-port">PORT :${s.port}</div>
+          </div>
+          <div class="svc-desc">${s.description || '—'}</div>
+          <a href="${s.baseUrl}" target="_blank" class="svc-url">${s.baseUrl}</a>
+        </div>`;
+      }).join('');
+      document.getElementById('svc-grid').innerHTML = svcHtml || '<div class="svc"><div class="svc-desc">No services registered.</div></div>';
+
+      // Endpoints groups
+      const eps = api.endpoints || {};
+      const epHtml = Object.entries(eps).map(([groupName, methods]) => {
+        const rows = Object.entries(methods).map(([action, spec]) => {
+          // spec like "POST /api/businesses"
+          const m = String(spec).match(/^(GET|POST|PUT|DELETE|PATCH)\s+(.+)$/);
+          if (!m) return row('GET', spec, action);
+          return row(m[1], m[2], action.charAt(0).toUpperCase() + action.slice(1));
+        }).join('');
+        return group(groupName, `${Object.keys(methods).length} ops`, rows);
+      }).join('');
+
+      // Also add health + meta endpoints
+      const healthRows =
+        row('GET', '/api/health',   'Service health check') +
+        row('GET', '/api/services', 'Live service registry & ports') +
+        row('GET', '/api',          'Root API info (JSON)');
+      const epFooter = group('System', '3 ops', healthRows);
+
+      document.getElementById('ep-list').innerHTML = epHtml + epFooter;
+    }
+    render();
+  </script>
+</body>
+</html>

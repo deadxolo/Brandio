@@ -1,0 +1,2662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Templates - Post Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <!-- Google Fonts - Comprehensive Collection -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700;900&family=Open+Sans:wght@300;400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Lato:wght@300;400;700;900&family=Oswald:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Ubuntu:wght@300;400;500;700&family=Nunito:wght@300;400;500;600;700;800;900&family=Bebas+Neue&family=Dancing+Script:wght@400;500;600;700&family=Pacifico&family=Lobster&family=Caveat:wght@400;500;600;700&family=Righteous&family=Abril+Fatface&family=Cinzel:wght@400;500;600;700;800;900&family=Comfortaa:wght@300;400;500;600;700&family=Josefin+Sans:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=Work+Sans:wght@300;400;500;600;700;800;900&family=Source+Sans+Pro:wght@300;400;600;700;900&family=Rubik:wght@300;400;500;600;700;800;900&family=Noto+Sans:wght@300;400;500;600;700;800;900&family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&family=Libre+Baskerville:wght@400;700&family=Crimson+Text:wght@400;600;700&family=Bitter:wght@300;400;500;600;700;800;900&family=Archivo:wght@300;400;500;600;700;800;900&family=Fira+Sans:wght@300;400;500;600;700;800;900&family=Barlow:wght@300;400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Lexend:wght@300;400;500;600;700;800;900&family=Sora:wght@300;400;500;600;700;800&family=Fredoka:wght@300;400;500;600;700&family=Satisfy&family=Great+Vibes&family=Sacramento&family=Tangerine:wght@400;700&family=Kaushan+Script&family=Permanent+Marker&family=Bangers&family=Bungee&family=Staatliches&family=Anton&family=Russo+One&family=Teko:wght@300;400;500;600;700&family=Chakra+Petch:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Press+Start+2P&family=Monoton&family=Shadows+Into+Light&family=Amatic+SC:wght@400;700&family=Special+Elite&family=Indie+Flower&family=Patrick+Hand&family=Gloria+Hallelujah&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #3B82F6;
+      --primary-dark: #1E40AF;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-600: #4B5563;
+      --gray-700: #374151;
+      --gray-800: #1F2937;
+      --gray-900: #111827;
+      --bg-primary: #ffffff;
+      --bg-secondary: #F9FAFB;
+      --border-color: #E5E7EB;
+      --radius: 6px;
+      --radius-lg: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-secondary);
+      color: var(--gray-900);
+      line-height: 1.5;
+      font-size: 13px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 50px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-link {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-500);
+      text-decoration: none;
+      border-radius: var(--radius);
+    }
+
+    .back-link:hover {
+      background: var(--gray-100);
+      color: var(--gray-900);
+    }
+
+    .header-title {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-title i { color: var(--primary); }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .business-select {
+      padding: 6px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      font-size: 13px;
+      min-width: 180px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--gray-700);
+    }
+
+    .btn-outline:hover {
+      background: var(--gray-100);
+    }
+
+    .main-content {
+      padding: 16px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .filter-bar select {
+      padding: 6px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      font-size: 13px;
+    }
+
+    .templates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .template-card {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .template-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+
+    .template-preview {
+      aspect-ratio: 1;
+      background: var(--gray-100);
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .template-preview img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .template-preview canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #e8e8e8 25%, transparent 25%),
+        linear-gradient(-45deg, #e8e8e8 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e8e8e8 75%),
+        linear-gradient(-45deg, transparent 75%, #e8e8e8 75%);
+      background-size: 10px 10px;
+      background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+      background-color: #f5f5f5;
+    }
+
+    .template-preview canvas.loading {
+      animation: pulse-bg 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-bg {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .template-preview .placeholder {
+      color: var(--gray-400);
+      font-size: 48px;
+    }
+
+    .template-actions {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      gap: 4px;
+    }
+
+    .template-actions button {
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.9);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--gray-600);
+      transition: all 0.2s;
+    }
+
+    .template-actions button:hover {
+      background: white;
+      color: var(--primary);
+      transform: scale(1.1);
+    }
+
+    .template-actions button.delete:hover {
+      color: var(--danger);
+    }
+
+    .template-actions button.generate {
+      background: var(--primary);
+      color: white;
+    }
+
+    .template-actions button.generate:hover {
+      background: var(--primary-dark);
+      color: white;
+    }
+
+    .template-actions button.edit {
+      background: var(--success);
+      color: white;
+    }
+
+    .template-actions button.edit:hover {
+      background: #059669;
+      color: white;
+    }
+
+    .template-footer {
+      display: flex;
+      gap: 8px;
+      padding: 10px 12px;
+      border-top: 1px solid var(--border-color);
+      background: var(--gray-50);
+    }
+
+    .template-footer .btn {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .template-footer .btn-edit {
+      background: var(--primary);
+      color: white;
+    }
+
+    .template-footer .btn-edit:hover {
+      background: var(--primary-dark);
+    }
+
+    .template-footer .btn-delete {
+      background: transparent;
+      border: 1px solid var(--danger);
+      color: var(--danger);
+    }
+
+    .template-footer .btn-delete:hover {
+      background: var(--danger);
+      color: white;
+    }
+
+    .template-footer .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+    }
+
+    .template-footer .btn-primary:hover {
+      background: linear-gradient(135deg, #5a6fd6 0%, #6a4193 100%);
+      transform: translateY(-1px);
+    }
+
+    .template-badge {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      display: flex;
+      gap: 4px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 500;
+      background: rgba(59, 130, 246, 0.9);
+      color: white;
+    }
+
+    .badge i {
+      font-size: 9px;
+    }
+
+    .template-info {
+      padding: 12px;
+    }
+
+    .template-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-primary);
+    }
+
+    .template-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--gray-500);
+    }
+
+    .template-platform {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gray-500);
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      color: var(--gray-300);
+      margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+      font-size: 18px;
+      color: var(--gray-700);
+      margin-bottom: 8px;
+    }
+
+    .empty-state p {
+      margin-bottom: 20px;
+    }
+
+    /* AI Prompt Section */
+    .ai-prompt-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+      color: white;
+    }
+
+    .ai-prompt-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .ai-prompt-header i {
+      font-size: 24px;
+    }
+
+    .ai-prompt-header h3 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .ai-prompt-header p {
+      font-size: 13px;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+
+    .ai-prompt-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .ai-prompt-main {
+      display: flex;
+      gap: 12px;
+    }
+
+    .ai-prompt-main textarea {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      font-size: 14px;
+      resize: none;
+      min-height: 60px;
+    }
+
+    .ai-prompt-main textarea::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+
+    .ai-prompt-main textarea:focus {
+      outline: none;
+      border-color: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.15);
+    }
+
+    .ai-prompt-btn {
+      padding: 12px 24px;
+      background: white;
+      color: #764ba2;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .ai-prompt-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .ai-prompt-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .ai-prompt-extras {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .ai-prompt-extras input,
+    .ai-prompt-extras select {
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      font-size: 12px;
+    }
+
+    .ai-prompt-extras input::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+
+    .ai-prompt-extras select {
+      cursor: pointer;
+    }
+
+    .ai-prompt-extras select option {
+      background: var(--gray-800);
+      color: white;
+    }
+
+    .ai-prompt-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .ai-prompt-toggle:hover {
+      text-decoration: underline;
+    }
+
+    .ai-extras-expanded {
+      display: none;
+    }
+
+    .ai-extras-expanded.show {
+      display: grid;
+    }
+
+    /* Generation Progress Modal */
+    .modal-lg {
+      max-width: 500px;
+    }
+
+    .generation-progress {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .generation-spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid var(--gray-200);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .generation-steps {
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .generation-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .generation-step:last-child {
+      border-bottom: none;
+    }
+
+    .step-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      background: var(--gray-100);
+      color: var(--gray-400);
+    }
+
+    .step-icon.active {
+      background: var(--primary);
+      color: white;
+      animation: pulse 1s infinite;
+    }
+
+    .step-icon.done {
+      background: var(--success);
+      color: white;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .step-text {
+      flex: 1;
+      font-size: 13px;
+    }
+
+    .step-text.active {
+      font-weight: 500;
+      color: var(--primary);
+    }
+
+    .step-text.done {
+      color: var(--success);
+    }
+
+    .generation-error {
+      color: var(--danger);
+      padding: 16px;
+      background: #FEE2E2;
+      border-radius: var(--radius);
+      margin-top: 16px;
+      text-align: left;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      position: relative;
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 400px;
+      margin: 16px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-header h3 {
+      font-size: 16px;
+    }
+
+    .modal-close {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      color: var(--gray-400);
+      cursor: pointer;
+      border-radius: var(--radius);
+    }
+
+    .modal-body {
+      padding: 16px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      font-size: 13px;
+    }
+
+    .toast-container {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      z-index: 2000;
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--bg-primary);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-left: 3px solid var(--primary);
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .toast.success { border-color: var(--success); }
+    .toast.error { border-color: var(--danger); }
+
+    @media (max-width: 768px) {
+      .header { height: 48px; padding: 0 12px; }
+      .business-select { min-width: 140px; }
+      .templates-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    }
+
+    @media (max-width: 480px) {
+      .templates-grid { grid-template-columns: 1fr; }
+      .filter-bar { flex-wrap: wrap; }
+    }
+
+    /* ======================= */
+    /* GENERATE POSTS PANEL */
+    /* ======================= */
+    .generate-panel-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .generate-panel-overlay.show {
+      display: block;
+    }
+
+    .generate-panel {
+      position: fixed;
+      top: 0;
+      right: -800px;
+      width: 800px;
+      max-width: 100%;
+      height: 100vh;
+      background: var(--bg-primary);
+      z-index: 501;
+      display: flex;
+      flex-direction: column;
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
+      transition: right 0.3s ease;
+    }
+
+    .generate-panel.show {
+      right: 0;
+    }
+
+    .generate-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-primary);
+    }
+
+    .generate-panel-header h2 {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .generate-panel-header h2 i {
+      color: var(--primary);
+    }
+
+    .generate-panel-header .template-info-badge {
+      font-size: 12px;
+      color: var(--gray-500);
+      font-weight: 400;
+      margin-left: 8px;
+    }
+
+    .generate-panel-close {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      color: var(--gray-400);
+      cursor: pointer;
+      border-radius: var(--radius);
+      transition: all 0.15s;
+    }
+
+    .generate-panel-close:hover {
+      background: var(--gray-100);
+      color: var(--gray-700);
+    }
+
+    .generate-panel-body {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .generate-preview-section {
+      width: 45%;
+      background: linear-gradient(45deg, #e8e8e8 25%, transparent 25%),
+        linear-gradient(-45deg, #e8e8e8 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e8e8e8 75%),
+        linear-gradient(-45deg, transparent 75%, #e8e8e8 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      border-right: 1px solid var(--border-color);
+    }
+
+    .generate-preview-section canvas {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .preview-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+      color: var(--gray-600);
+      font-size: 13px;
+    }
+
+    .preview-nav button {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      cursor: pointer;
+      color: var(--gray-600);
+      transition: all 0.15s;
+    }
+
+    .preview-nav button:hover:not(:disabled) {
+      background: var(--gray-100);
+      color: var(--gray-900);
+    }
+
+    .preview-nav button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .generate-data-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .generate-data-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--gray-50);
+    }
+
+    .generate-data-header h3 {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .generate-data-header h3 i {
+      color: var(--primary);
+    }
+
+    .generate-rows-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .generate-row-card {
+      background: var(--gray-50);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      transition: all 0.15s;
+    }
+
+    .generate-row-card:hover {
+      border-color: var(--primary);
+    }
+
+    .generate-row-card.active {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .generate-row-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+    }
+
+    .generate-row-header:hover {
+      background: var(--gray-100);
+    }
+
+    .generate-row-number {
+      font-weight: 600;
+      color: var(--gray-600);
+      font-size: 13px;
+    }
+
+    .generate-row-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .generate-row-actions button {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      color: var(--gray-400);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .generate-row-actions button:hover {
+      background: var(--gray-200);
+      color: var(--gray-700);
+    }
+
+    .generate-row-actions button.delete:hover {
+      color: var(--danger);
+    }
+
+    .generate-row-content {
+      padding: 14px;
+    }
+
+    .generate-field {
+      margin-bottom: 12px;
+    }
+
+    .generate-field:last-child {
+      margin-bottom: 0;
+    }
+
+    .generate-field label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-600);
+      margin-bottom: 6px;
+    }
+
+    .generate-field label i {
+      color: var(--primary);
+      width: 14px;
+      text-align: center;
+    }
+
+    .generate-field input,
+    .generate-field textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+
+    .generate-field input:focus,
+    .generate-field textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .generate-field textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .generate-panel-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-primary);
+    }
+
+    .generate-panel-footer .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .generate-empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      text-align: center;
+      color: var(--gray-500);
+    }
+
+    .generate-empty-state i {
+      font-size: 48px;
+      color: var(--gray-300);
+      margin-bottom: 16px;
+    }
+
+    .generate-empty-state h4 {
+      font-size: 16px;
+      color: var(--gray-700);
+      margin-bottom: 8px;
+    }
+
+    .generate-empty-state p {
+      margin-bottom: 16px;
+    }
+
+    /* Quick Generate Results Modal */
+    .results-modal .modal-content {
+      max-width: 700px;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 4px;
+    }
+
+    .result-item {
+      aspect-ratio: 1;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 2px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .result-item:hover {
+      border-color: var(--primary);
+      transform: scale(1.02);
+    }
+
+    .result-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @media (max-width: 900px) {
+      .generate-panel {
+        width: 100%;
+        right: -100%;
+      }
+
+      .generate-panel-body {
+        flex-direction: column;
+      }
+
+      .generate-preview-section {
+        width: 100%;
+        height: 300px;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="http://localhost:3004" class="back-link"><i class="fas fa-arrow-left"></i></a>
+      <h1 class="header-title"><i class="fas fa-layer-group"></i> Templates</h1>
+    </div>
+    <div class="header-right">
+      <select id="businessSelect" class="business-select">
+        <option value="">Select Business</option>
+      </select>
+      <button class="btn btn-primary" onclick="createTemplate()">
+        <i class="fas fa-plus"></i> New Template
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- AI Template Generation Section -->
+    <div class="ai-prompt-section">
+      <div class="ai-prompt-header">
+        <i class="fas fa-magic"></i>
+        <div>
+          <h3>Create Template with AI</h3>
+          <p>Describe what you want and let AI generate a complete template with background and elements</p>
+        </div>
+      </div>
+      <div class="ai-prompt-form">
+        <div class="ai-prompt-main">
+          <textarea id="aiPrompt" placeholder="Describe your template... e.g., 'A festive Diwali sale post with bold headline, discount text, and decorative elements'" rows="2"></textarea>
+          <button class="ai-prompt-btn" id="generateAiBtn" onclick="generateAITemplate()">
+            <i class="fas fa-wand-magic-sparkles"></i>
+            Generate
+          </button>
+        </div>
+        <div class="ai-prompt-toggle" onclick="toggleAiExtras()">
+          <i class="fas fa-sliders" id="extrasIcon"></i>
+          <span id="extrasText">More options</span>
+        </div>
+        <div class="ai-prompt-extras ai-extras-expanded" id="aiExtras">
+          <input type="text" id="aiHeadline" placeholder="Headline text (optional)">
+          <input type="text" id="aiSubtext" placeholder="Subtext/tagline (optional)">
+          <input type="text" id="aiColors" placeholder="Color preference (e.g., red and gold)">
+          <input type="text" id="aiAudience" placeholder="Target audience (optional)">
+          <select id="aiPlatform">
+            <option value="instagram">Instagram Post</option>
+            <option value="instagram_story">Instagram Story</option>
+            <option value="facebook">Facebook Post</option>
+            <option value="twitter">Twitter Post</option>
+            <option value="linkedin">LinkedIn Post</option>
+          </select>
+          <select id="aiStyle">
+            <option value="vibrant">Vibrant</option>
+            <option value="minimal">Minimal</option>
+            <option value="festive">Festive</option>
+            <option value="corporate">Corporate</option>
+            <option value="nature">Nature</option>
+            <option value="abstract">Abstract</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <h2 class="page-title">Your Templates</h2>
+    </div>
+
+    <div class="filter-bar">
+      <select id="platformFilter">
+        <option value="">All Platforms</option>
+        <option value="instagram">Instagram</option>
+        <option value="facebook">Facebook</option>
+        <option value="twitter">Twitter</option>
+        <option value="linkedin">LinkedIn</option>
+      </select>
+    </div>
+
+    <div id="templatesContainer" class="templates-grid">
+      <div class="empty-state">
+        <i class="fas fa-layer-group"></i>
+        <h3>No templates yet</h3>
+        <p>Create your first template to get started</p>
+        <button class="btn btn-primary" onclick="createTemplate()">
+          <i class="fas fa-plus"></i> Create Template
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Create Template Modal -->
+  <div id="createModal" class="modal">
+    <div class="modal-backdrop" onclick="closeModal()"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>New Template</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Template Name</label>
+          <input type="text" id="templateName" placeholder="My Template">
+        </div>
+        <div class="form-group">
+          <label>Platform</label>
+          <select id="templatePlatform">
+            <option value="instagram">Instagram Post (1080x1080)</option>
+            <option value="instagram_story">Instagram Story (1080x1920)</option>
+            <option value="facebook">Facebook Post (1200x630)</option>
+            <option value="twitter">Twitter Post (1200x675)</option>
+            <option value="linkedin">LinkedIn Post (1200x627)</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveNewTemplate()">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Generation Progress Modal -->
+  <div id="generationModal" class="modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h3><i class="fas fa-magic"></i> Generating Template</h3>
+      </div>
+      <div class="modal-body">
+        <div class="generation-progress">
+          <div class="generation-spinner" id="genSpinner"></div>
+          <p id="genStatus">Starting AI generation...</p>
+        </div>
+        <div class="generation-steps">
+          <div class="generation-step" id="step1">
+            <div class="step-icon" id="step1Icon"><i class="fas fa-brain"></i></div>
+            <span class="step-text" id="step1Text">Understanding your requirements</span>
+          </div>
+          <div class="generation-step" id="step2">
+            <div class="step-icon" id="step2Icon"><i class="fas fa-image"></i></div>
+            <span class="step-text" id="step2Text">Generating background image</span>
+          </div>
+          <div class="generation-step" id="step3">
+            <div class="step-icon" id="step3Icon"><i class="fas fa-font"></i></div>
+            <span class="step-text" id="step3Text">Creating text elements</span>
+          </div>
+          <div class="generation-step" id="step4">
+            <div class="step-icon" id="step4Icon"><i class="fas fa-check"></i></div>
+            <span class="step-text" id="step4Text">Finalizing template</span>
+          </div>
+        </div>
+        <div class="generation-error" id="genError" style="display: none;"></div>
+      </div>
+      <div class="modal-footer" id="genFooter" style="display: none;">
+        <button class="btn btn-outline" onclick="closeGenerationModal()">Close</button>
+        <button class="btn btn-primary" id="openEditorBtn" onclick="openGeneratedTemplate()">
+          <i class="fas fa-pen"></i> Open in Editor
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generate Posts Panel (Slide-over) -->
+  <div class="generate-panel-overlay" id="generatePanelOverlay" onclick="closeGeneratePanel()"></div>
+  <div class="generate-panel" id="generatePanel">
+    <div class="generate-panel-header">
+      <h2>
+        <i class="fas fa-magic"></i>
+        Generate Posts
+        <span class="template-info-badge" id="genTemplateName"></span>
+      </h2>
+      <button class="generate-panel-close" onclick="closeGeneratePanel()">&times;</button>
+    </div>
+    <div class="generate-panel-body">
+      <div class="generate-preview-section">
+        <canvas id="genPreviewCanvas" width="400" height="400"></canvas>
+        <div class="preview-nav">
+          <button id="genPrevBtn" disabled><i class="fas fa-chevron-left"></i></button>
+          <span id="genPreviewIndex">1 / 1</span>
+          <button id="genNextBtn" disabled><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+      <div class="generate-data-section">
+        <div class="generate-data-header">
+          <h3><i class="fas fa-list"></i> Data Rows</h3>
+          <div>
+            <button class="btn btn-outline" onclick="addGenerateRow()">
+              <i class="fas fa-plus"></i> Add Row
+            </button>
+          </div>
+        </div>
+        <div class="generate-rows-container" id="genRowsContainer">
+          <!-- Rows will be rendered here -->
+        </div>
+      </div>
+    </div>
+    <div class="generate-panel-footer">
+      <span id="genRowCount" style="color: var(--gray-500); font-size: 13px;">0 rows</span>
+      <div class="btn-group">
+        <button class="btn btn-outline" onclick="closeGeneratePanel()">Cancel</button>
+        <button class="btn btn-outline" onclick="openFullGeneratePage()">
+          <i class="fas fa-expand"></i> Full View
+        </button>
+        <button class="btn btn-primary" id="genGenerateBtn" onclick="executeGeneration()" disabled>
+          <i class="fas fa-magic"></i> Generate Posts
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Generate Results Modal -->
+  <div id="quickResultsModal" class="modal">
+    <div class="modal-backdrop" onclick="closeQuickResultsModal()"></div>
+    <div class="modal-content results-modal" style="max-width: 700px;">
+      <div class="modal-header">
+        <h3><i class="fas fa-check-circle" style="color: var(--success);"></i> Posts Generated</h3>
+        <button class="modal-close" onclick="closeQuickResultsModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="results-grid" id="quickResultsGrid">
+          <!-- Generated images will be shown here -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeQuickResultsModal()">Close</button>
+        <button class="btn btn-outline" id="downloadAllQuickBtn">
+          <i class="fas fa-download"></i> Download All
+        </button>
+        <button class="btn btn-primary" onclick="openFullGeneratePage()">
+          <i class="fas fa-expand"></i> Open Full View
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generating Progress Modal -->
+  <div id="generatingProgressModal" class="modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+      <div class="modal-body" style="padding: 40px;">
+        <div class="generation-spinner"></div>
+        <h3 style="margin-bottom: 16px;">Generating Posts</h3>
+        <div style="background: var(--gray-100); border-radius: 4px; height: 8px; overflow: hidden; margin-bottom: 12px;">
+          <div id="genProgressBar" style="background: var(--primary); height: 100%; width: 0%; transition: width 0.3s;"></div>
+        </div>
+        <p id="genProgressText" style="color: var(--gray-500);">Preparing...</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    let currentBusinessId = null;
+    let currentBusiness = null;
+    let businesses = [];
+    let templates = [];
+    let generatedTemplateId = null;
+    const BACKGROUND_ENGINE_URL = 'http://localhost:3001';
+
+    // Load businesses
+    async function loadBusinesses() {
+      try {
+        const res = await fetch('http://localhost:3004/api/businesses');
+        const data = await res.json();
+        const select = document.getElementById('businessSelect');
+
+        if (data.businesses && data.businesses.length > 0) {
+          businesses = data.businesses;
+          data.businesses.forEach(b => {
+            const opt = document.createElement('option');
+            opt.value = b.id;
+            opt.textContent = b.name;
+            select.appendChild(opt);
+          });
+          // Auto-select first business
+          select.value = data.businesses[0].id;
+          currentBusinessId = data.businesses[0].id;
+          currentBusiness = data.businesses[0];
+          loadTemplates();
+        }
+      } catch (err) {
+        console.error('Error loading businesses:', err);
+      }
+    }
+
+    // Load templates
+    async function loadTemplates() {
+      if (!currentBusinessId) return;
+
+      try {
+        const platform = document.getElementById('platformFilter').value;
+        let url = `/api/templates/${currentBusinessId}`;
+        if (platform) url += `?platform=${platform}`;
+
+        const res = await fetch(url);
+        const data = await res.json();
+        templates = data.templates || [];
+        renderTemplates();
+      } catch (err) {
+        console.error('Error loading templates:', err);
+      }
+    }
+
+    // Render templates grid
+    function renderTemplates() {
+      const container = document.getElementById('templatesContainer');
+
+      if (templates.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state" style="grid-column: 1/-1">
+            <i class="fas fa-layer-group"></i>
+            <h3>No templates yet</h3>
+            <p>Create your first template to get started</p>
+            <button class="btn btn-primary" onclick="createTemplate()">
+              <i class="fas fa-plus"></i> Create Template
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = templates.map(t => {
+        const placeholderCount = t.placeholders ? Object.keys(t.placeholders).length : 0;
+        return `
+        <div class="template-card" data-template-id="${t.id}">
+          <div class="template-preview" onclick="editTemplate('${t.id}')">
+            ${t.thumbnail
+              ? `<img src="${t.thumbnail}" alt="${t.name}">`
+              : `<canvas class="template-canvas" data-template-id="${t.id}" width="220" height="220"></canvas>`
+            }
+            <div class="template-actions">
+              ${placeholderCount > 0 ? `
+                <button class="generate" onclick="event.stopPropagation(); generatePosts('${t.id}')" title="Generate Posts">
+                  <i class="fas fa-magic"></i>
+                </button>
+              ` : ''}
+              <button class="edit" onclick="event.stopPropagation(); editTemplate('${t.id}')" title="Edit Template">
+                <i class="fas fa-pen"></i>
+              </button>
+              <button onclick="event.stopPropagation(); duplicateTemplate('${t.id}')" title="Duplicate">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            ${placeholderCount > 0 ? `
+              <div class="template-badge">
+                <span class="badge"><i class="fas fa-link"></i> ${placeholderCount} placeholder${placeholderCount > 1 ? 's' : ''}</span>
+              </div>
+            ` : ''}
+          </div>
+          <div class="template-info">
+            <div class="template-name">${t.name}</div>
+            <div class="template-meta">
+              <span class="template-platform">
+                <i class="fab fa-${getPlatformIcon(t.platform)}"></i>
+                ${t.platform}
+              </span>
+              <span>${t.width}x${t.height}</span>
+            </div>
+          </div>
+          <div class="template-footer">
+            ${placeholderCount > 0 ? `
+              <button class="btn btn-primary" onclick="generatePosts('${t.id}')" style="flex: 2;">
+                <i class="fas fa-magic"></i> Generate
+              </button>
+            ` : ''}
+            <button class="btn btn-edit" onclick="editTemplate('${t.id}')">
+              <i class="fas fa-pen"></i> Edit
+            </button>
+            <button class="btn btn-delete" onclick="deleteTemplate('${t.id}')">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      `}).join('');
+
+      // Render canvas previews after DOM update
+      setTimeout(() => renderCanvasPreviews(), 50);
+    }
+
+    // Render template previews on canvases
+    async function renderCanvasPreviews() {
+      const canvases = document.querySelectorAll('.template-canvas');
+
+      for (const canvas of canvases) {
+        canvas.classList.add('loading');
+        try {
+          const templateId = canvas.dataset.templateId;
+          const templateData = templates.find(t => t.id === templateId);
+          if (templateData) {
+            await renderTemplatePreview(canvas, templateData);
+          }
+        } catch (err) {
+          console.error('Error rendering preview:', err);
+        } finally {
+          canvas.classList.remove('loading');
+        }
+      }
+    }
+
+    // Render a single template preview on canvas
+    async function renderTemplatePreview(canvas, template) {
+      const ctx = canvas.getContext('2d');
+
+      // Get actual canvas size from DOM (may be scaled by CSS)
+      const rect = canvas.getBoundingClientRect();
+      const canvasSize = Math.max(rect.width, rect.height, 220);
+
+      // Set canvas resolution to match display size for crisp rendering
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = canvasSize * dpr;
+      canvas.height = canvasSize * dpr;
+      ctx.scale(dpr, dpr);
+
+      // Calculate scale to fit template in canvas
+      const scaleX = canvasSize / (template.width || 1080);
+      const scaleY = canvasSize / (template.height || 1080);
+      const scale = Math.min(scaleX, scaleY);
+
+      // Center the preview
+      const offsetX = (canvasSize - template.width * scale) / 2;
+      const offsetY = (canvasSize - template.height * scale) / 2;
+
+      // Clear canvas with neutral background
+      ctx.fillStyle = '#e5e7eb';
+      ctx.fillRect(0, 0, canvasSize, canvasSize);
+
+      // Draw background
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(offsetX, offsetY, template.width * scale, template.height * scale);
+      ctx.clip();
+
+      const bgType = template.background_type || 'color';
+      let bgValue = template.background_value || '#ffffff';
+
+      // Parse background_value if it's a JSON string
+      if (typeof bgValue === 'string' && bgValue.startsWith('{')) {
+        try {
+          const parsed = JSON.parse(bgValue);
+          bgValue = parsed.url || parsed.value || bgValue;
+        } catch (e) {
+          // Keep original value if parsing fails
+        }
+      }
+
+      if (bgType === 'color') {
+        ctx.fillStyle = bgValue;
+        ctx.fillRect(offsetX, offsetY, template.width * scale, template.height * scale);
+      } else if (bgType === 'gradient') {
+        // Simple gradient fallback
+        ctx.fillStyle = '#667eea';
+        ctx.fillRect(offsetX, offsetY, template.width * scale, template.height * scale);
+      } else if (bgType === 'image' && bgValue) {
+        try {
+          const img = await loadPreviewImage(bgValue);
+          ctx.drawImage(img, offsetX, offsetY, template.width * scale, template.height * scale);
+        } catch (e) {
+          // Draw gradient placeholder if image fails
+          drawGradientPlaceholder(ctx, offsetX, offsetY, template.width * scale, template.height * scale);
+        }
+      } else {
+        // Default fallback
+        ctx.fillStyle = '#f5f5f5';
+        ctx.fillRect(offsetX, offsetY, template.width * scale, template.height * scale);
+      }
+
+      ctx.restore();
+
+      // Draw elements (sorted by zIndex if available)
+      const elements = (template.elements || []).slice().sort((a, b) => (a.zIndex || 0) - (b.zIndex || 0));
+      for (const element of elements) {
+        try {
+          if (element.visible !== false) {
+            await renderPreviewElement(ctx, element, scale, offsetX, offsetY);
+          }
+        } catch (e) {
+          console.warn('Error rendering element:', element.id, e);
+        }
+      }
+    }
+
+    // Render a single element on the preview canvas
+    async function renderPreviewElement(ctx, element, scale, offsetX, offsetY) {
+      const x = element.x * scale + offsetX;
+      const y = element.y * scale + offsetY;
+      const width = (element.width || 100) * scale;
+      const height = (element.height || 100) * scale;
+
+      ctx.save();
+      // Handle opacity (might be 0-100 or 0-1)
+      let opacity = element.opacity !== undefined ? element.opacity : 1;
+      if (opacity > 1) opacity = opacity / 100;
+      ctx.globalAlpha = opacity;
+
+      if (element.rotation) {
+        const centerX = x + width / 2;
+        const centerY = y + height / 2;
+        ctx.translate(centerX, centerY);
+        ctx.rotate((element.rotation * Math.PI) / 180);
+        ctx.translate(-centerX, -centerY);
+      }
+
+      if (element.type === 'text') {
+        const fontSize = Math.max(8, (element.fontSize || 24) * scale);
+        const fontFamily = element.fontFamily || 'Inter';
+        const fontWeight = element.fontWeight || 400;
+
+        ctx.font = `${fontWeight} ${fontSize}px "${fontFamily}", sans-serif`;
+        ctx.fillStyle = element.color || '#000000';
+        ctx.textAlign = element.textAlign || 'left';
+        ctx.textBaseline = 'top';
+
+        const text = element.text || '';
+        const drawX = element.textAlign === 'center' ? x + width / 2 :
+                     element.textAlign === 'right' ? x + width : x;
+
+        // Simple text drawing (no word wrap for preview)
+        ctx.fillText(text, drawX, y);
+
+      } else if (element.type === 'image' && element.src) {
+        try {
+          const img = await loadPreviewImage(element.src);
+          ctx.drawImage(img, x, y, width, height);
+        } catch (e) {
+          ctx.fillStyle = '#e0e0e0';
+          ctx.fillRect(x, y, width, height);
+        }
+      } else if (element.type === 'shape') {
+        ctx.fillStyle = element.fill || '#cccccc';
+        if (element.shapeType === 'circle' || element.shapeType === 'ellipse') {
+          ctx.beginPath();
+          ctx.ellipse(x + width / 2, y + height / 2, width / 2, height / 2, 0, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillRect(x, y, width, height);
+        }
+      }
+
+      ctx.restore();
+    }
+
+    // Load image for preview (with caching)
+    const imageCache = new Map();
+    function loadPreviewImage(src) {
+      if (!src) return Promise.reject(new Error('No source'));
+
+      if (imageCache.has(src)) {
+        return Promise.resolve(imageCache.get(src));
+      }
+
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          imageCache.set(src, img);
+          resolve(img);
+        };
+        img.onerror = (e) => {
+          console.warn('Failed to load image:', src);
+          reject(e);
+        };
+        // Add timeout for slow loading images
+        setTimeout(() => reject(new Error('Image load timeout')), 5000);
+        img.src = src;
+      });
+    }
+
+    // Draw a gradient placeholder when image fails
+    function drawGradientPlaceholder(ctx, x, y, width, height, color1 = '#667eea', color2 = '#764ba2') {
+      const gradient = ctx.createLinearGradient(x, y, x + width, y + height);
+      gradient.addColorStop(0, color1);
+      gradient.addColorStop(1, color2);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(x, y, width, height);
+    }
+
+    function getPlatformIcon(platform) {
+      const icons = {
+        instagram: 'instagram',
+        instagram_story: 'instagram',
+        facebook: 'facebook',
+        twitter: 'twitter',
+        linkedin: 'linkedin'
+      };
+      return icons[platform] || 'image';
+    }
+
+    // Create template
+    function createTemplate() {
+      if (!currentBusinessId) {
+        showToast('Please select a business first', 'error');
+        return;
+      }
+      document.getElementById('createModal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('createModal').classList.remove('show');
+    }
+
+    async function saveNewTemplate() {
+      const name = document.getElementById('templateName').value || 'Untitled Template';
+      const platform = document.getElementById('templatePlatform').value;
+
+      const sizes = {
+        instagram: { width: 1080, height: 1080 },
+        instagram_story: { width: 1080, height: 1920 },
+        facebook: { width: 1200, height: 630 },
+        twitter: { width: 1200, height: 675 },
+        linkedin: { width: 1200, height: 627 }
+      };
+
+      try {
+        const res = await fetch('/api/templates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            business_id: currentBusinessId,
+            name,
+            platform,
+            ...sizes[platform],
+            elements: []
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          closeModal();
+          // Open editor with new template
+          window.location.href = `/?template=${data.template.id}&business=${currentBusinessId}`;
+        } else {
+          showToast('Error creating template', 'error');
+        }
+      } catch (err) {
+        console.error('Error creating template:', err);
+        showToast('Error creating template', 'error');
+      }
+    }
+
+    // Edit template
+    function editTemplate(id) {
+      window.location.href = `http://localhost:3002/?id=${id}&business=${currentBusinessId}`;
+    }
+
+    // Generate posts from template
+    function generatePosts(id) {
+      window.location.href = `http://localhost:3002/generate.html?template=${id}&business=${currentBusinessId}`;
+    }
+
+    // Duplicate template
+    async function duplicateTemplate(id) {
+      try {
+        const res = await fetch(`/api/templates/${id}/duplicate`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Template duplicated', 'success');
+          loadTemplates();
+        }
+      } catch (err) {
+        console.error('Error duplicating template:', err);
+      }
+    }
+
+    // Delete template
+    async function deleteTemplate(id) {
+      if (!confirm('Delete this template?')) return;
+
+      try {
+        const res = await fetch(`/api/templates/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Template deleted', 'success');
+          loadTemplates();
+        }
+      } catch (err) {
+        console.error('Error deleting template:', err);
+      }
+    }
+
+    // Toast notification
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i> ${message}`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Toggle AI extras
+    function toggleAiExtras() {
+      const extras = document.getElementById('aiExtras');
+      const icon = document.getElementById('extrasIcon');
+      const text = document.getElementById('extrasText');
+
+      extras.classList.toggle('show');
+      if (extras.classList.contains('show')) {
+        icon.className = 'fas fa-chevron-up';
+        text.textContent = 'Less options';
+      } else {
+        icon.className = 'fas fa-sliders';
+        text.textContent = 'More options';
+      }
+    }
+
+    // AI Template Generation
+    async function generateAITemplate() {
+      const prompt = document.getElementById('aiPrompt').value.trim();
+
+      if (!prompt) {
+        showToast('Please describe what template you want', 'error');
+        return;
+      }
+
+      if (!currentBusinessId) {
+        showToast('Please select a business first', 'error');
+        return;
+      }
+
+      // Get additional options
+      const headline = document.getElementById('aiHeadline').value.trim();
+      const subtext = document.getElementById('aiSubtext').value.trim();
+      const colors = document.getElementById('aiColors').value.trim();
+      const audience = document.getElementById('aiAudience').value.trim();
+      const platform = document.getElementById('aiPlatform').value;
+      const style = document.getElementById('aiStyle').value;
+
+      // Get dimensions based on platform
+      const sizes = {
+        instagram: { width: 1080, height: 1080 },
+        instagram_story: { width: 1080, height: 1920 },
+        facebook: { width: 1200, height: 630 },
+        twitter: { width: 1200, height: 675 },
+        linkedin: { width: 1200, height: 627 }
+      };
+      const { width, height } = sizes[platform];
+
+      // Build business info for template generation
+      const businessInfo = currentBusiness ? {
+        name: currentBusiness.name || '',
+        logo: currentBusiness.logo || '',
+        phone: currentBusiness.phone || '',
+        email: currentBusiness.email || '',
+        website: currentBusiness.website || '',
+        address: currentBusiness.address || '',
+        social_links: currentBusiness.social_links || {},
+        brand_colors: currentBusiness.brand_colors || {}
+      } : {};
+
+      // Show progress modal
+      showGenerationModal();
+
+      try {
+        // Step 1: Understanding requirements
+        updateGenerationStep(1);
+        await sleep(500);
+
+        // Step 2: Call AI to generate template
+        updateGenerationStep(2);
+
+        const response = await fetch(`${BACKGROUND_ENGINE_URL}/api/integration/generate-complete-template`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt,
+            headline,
+            subtext,
+            colorPreference: colors,
+            audience,
+            platform,
+            style,
+            width,
+            height,
+            generateBackground: true,
+            businessInfo
+          })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.error || 'AI generation failed');
+        }
+
+        // Step 3: Creating elements
+        updateGenerationStep(3);
+        await sleep(500);
+
+        // Step 4: Save template to database
+        updateGenerationStep(4);
+
+        // Determine background type and value
+        let bgType = 'color';
+        let bgValue = '#1a1a2e';
+
+        if (data.template.background) {
+          bgType = data.template.background.type || 'color';
+          bgValue = data.template.background.value || '#1a1a2e';
+        }
+
+        const templateData = {
+          business_id: currentBusinessId,
+          name: data.template.name || 'AI Generated Template',
+          platform,
+          width,
+          height,
+          elements: data.template.elements || [],
+          background_type: bgType,
+          background_value: bgValue,
+          placeholders: data.template.placeholders || {}
+        };
+
+        const saveResponse = await fetch('/api/templates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(templateData)
+        });
+
+        const saveData = await saveResponse.json();
+
+        if (!saveData.success) {
+          throw new Error('Failed to save template');
+        }
+
+        generatedTemplateId = saveData.template.id;
+
+        // Show success
+        showGenerationSuccess();
+
+      } catch (error) {
+        console.error('AI generation error:', error);
+        showGenerationError(error.message);
+      }
+    }
+
+    function showGenerationModal() {
+      document.getElementById('generationModal').classList.add('show');
+      document.getElementById('genSpinner').style.display = 'block';
+      document.getElementById('genError').style.display = 'none';
+      document.getElementById('genFooter').style.display = 'none';
+      document.getElementById('genStatus').textContent = 'Starting AI generation...';
+
+      // Reset all steps
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`step${i}Icon`).className = 'step-icon';
+        document.getElementById(`step${i}Text`).className = 'step-text';
+      }
+    }
+
+    function closeGenerationModal() {
+      document.getElementById('generationModal').classList.remove('show');
+      generatedTemplateId = null;
+    }
+
+    function updateGenerationStep(step) {
+      const stepTexts = {
+        1: 'Understanding your requirements',
+        2: 'Generating background image',
+        3: 'Creating text elements',
+        4: 'Finalizing template'
+      };
+
+      document.getElementById('genStatus').textContent = stepTexts[step] + '...';
+
+      // Mark previous steps as done
+      for (let i = 1; i < step; i++) {
+        document.getElementById(`step${i}Icon`).className = 'step-icon done';
+        document.getElementById(`step${i}Text`).className = 'step-text done';
+      }
+
+      // Mark current step as active
+      document.getElementById(`step${step}Icon`).className = 'step-icon active';
+      document.getElementById(`step${step}Text`).className = 'step-text active';
+    }
+
+    function showGenerationSuccess() {
+      // Mark all steps as done
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`step${i}Icon`).className = 'step-icon done';
+        document.getElementById(`step${i}Text`).className = 'step-text done';
+      }
+
+      document.getElementById('genSpinner').style.display = 'none';
+      document.getElementById('genStatus').textContent = 'Template generated successfully!';
+      document.getElementById('genFooter').style.display = 'flex';
+
+      // Reload templates list
+      loadTemplates();
+    }
+
+    function showGenerationError(message) {
+      document.getElementById('genSpinner').style.display = 'none';
+      document.getElementById('genStatus').textContent = 'Generation failed';
+      document.getElementById('genError').style.display = 'block';
+      document.getElementById('genError').innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+      document.getElementById('genFooter').style.display = 'flex';
+      document.getElementById('openEditorBtn').style.display = 'none';
+    }
+
+    function openGeneratedTemplate() {
+      if (generatedTemplateId) {
+        window.location.href = `/?id=${generatedTemplateId}&business=${currentBusinessId}`;
+      }
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Event listeners
+    document.getElementById('businessSelect').addEventListener('change', (e) => {
+      currentBusinessId = e.target.value;
+      currentBusiness = businesses.find(b => b.id === currentBusinessId) || null;
+      loadTemplates();
+    });
+
+    document.getElementById('platformFilter').addEventListener('change', loadTemplates);
+
+    // =============================================
+    // GENERATE POSTS PANEL FUNCTIONALITY
+    // =============================================
+    let currentGenerateTemplate = null;
+    let generateDataRows = [];
+    let currentGenPreviewIndex = 0;
+    let genCanvas = null;
+    let genCtx = null;
+    let generatedImages = [];
+
+    // Open generate panel for a template
+    async function generatePosts(templateId) {
+      // Show panel
+      document.getElementById('generatePanelOverlay').classList.add('show');
+      document.getElementById('generatePanel').classList.add('show');
+
+      // Reset state
+      generateDataRows = [];
+      currentGenPreviewIndex = 0;
+      generatedImages = [];
+
+      // Initialize canvas
+      genCanvas = document.getElementById('genPreviewCanvas');
+      genCtx = genCanvas.getContext('2d');
+
+      // Load template
+      try {
+        const res = await fetch(`/api/templates/item/${templateId}`);
+        const data = await res.json();
+        if (data.success && data.template) {
+          currentGenerateTemplate = data.template;
+          document.getElementById('genTemplateName').textContent = `- ${currentGenerateTemplate.name}`;
+
+          // Set canvas dimensions
+          const maxWidth = 350;
+          const scale = Math.min(1, maxWidth / currentGenerateTemplate.width);
+          genCanvas.width = currentGenerateTemplate.width * scale;
+          genCanvas.height = currentGenerateTemplate.height * scale;
+          genCanvas.style.width = `${genCanvas.width}px`;
+          genCanvas.style.height = `${genCanvas.height}px`;
+
+          // Add first empty row
+          addGenerateRow();
+
+          // Render initial preview
+          renderGenPreview();
+        } else {
+          showToast('Failed to load template', 'error');
+          closeGeneratePanel();
+        }
+      } catch (err) {
+        console.error('Error loading template:', err);
+        showToast('Error loading template', 'error');
+        closeGeneratePanel();
+      }
+    }
+
+    // Close generate panel
+    function closeGeneratePanel() {
+      document.getElementById('generatePanelOverlay').classList.remove('show');
+      document.getElementById('generatePanel').classList.remove('show');
+      currentGenerateTemplate = null;
+      generateDataRows = [];
+    }
+
+    // Open full generate page
+    function openFullGeneratePage() {
+      if (currentGenerateTemplate) {
+        window.location.href = `http://localhost:3002/generate.html?template=${currentGenerateTemplate.id}&business=${currentBusinessId}`;
+      }
+    }
+
+    // Add a new data row
+    function addGenerateRow() {
+      if (!currentGenerateTemplate || !currentGenerateTemplate.placeholders) return;
+
+      const placeholders = currentGenerateTemplate.placeholders;
+      const rowData = {};
+
+      // Initialize with empty values
+      Object.keys(placeholders).forEach(key => {
+        rowData[key] = '';
+      });
+
+      generateDataRows.push(rowData);
+      renderGenerateRows();
+      updateGenRowCount();
+      updateGenPreviewNav();
+    }
+
+    // Remove a data row
+    function removeGenerateRow(index) {
+      generateDataRows.splice(index, 1);
+      if (currentGenPreviewIndex >= generateDataRows.length) {
+        currentGenPreviewIndex = Math.max(0, generateDataRows.length - 1);
+      }
+      renderGenerateRows();
+      updateGenRowCount();
+      updateGenPreviewNav();
+      renderGenPreview();
+    }
+
+    // Render all data rows
+    function renderGenerateRows() {
+      const container = document.getElementById('genRowsContainer');
+      const placeholders = currentGenerateTemplate?.placeholders || {};
+
+      if (generateDataRows.length === 0 || Object.keys(placeholders).length === 0) {
+        container.innerHTML = `
+          <div class="generate-empty-state">
+            <i class="fas fa-database"></i>
+            <h4>No Placeholders</h4>
+            <p>This template has no dynamic placeholders.<br>Add placeholders in the editor first.</p>
+            <button class="btn btn-primary" onclick="editTemplate('${currentGenerateTemplate?.id}')">
+              <i class="fas fa-pen"></i> Edit Template
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = generateDataRows.map((row, index) => {
+        const isActive = index === currentGenPreviewIndex;
+        return `
+          <div class="generate-row-card ${isActive ? 'active' : ''}" onclick="selectGenRow(${index})">
+            <div class="generate-row-header">
+              <span class="generate-row-number">Row ${index + 1}</span>
+              <div class="generate-row-actions">
+                <button onclick="event.stopPropagation(); removeGenerateRow(${index})" class="delete" title="Remove">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="generate-row-content">
+              ${Object.entries(placeholders).map(([key, placeholder]) => {
+                const value = row[key] || '';
+                const type = placeholder.type || 'text';
+                const icon = getPlaceholderIcon(type);
+                return `
+                  <div class="generate-field">
+                    <label><i class="fas fa-${icon}"></i> ${key}</label>
+                    ${type === 'text' || type === 'string' ? `
+                      <input type="text" value="${escapeHtml(value)}"
+                             onchange="updateGenRowValue(${index}, '${key}', this.value)"
+                             oninput="updateGenRowValue(${index}, '${key}', this.value)"
+                             placeholder="Enter ${key}...">
+                    ` : type === 'color' ? `
+                      <input type="color" value="${value || '#000000'}"
+                             onchange="updateGenRowValue(${index}, '${key}', this.value)">
+                    ` : type === 'image' ? `
+                      <input type="text" value="${escapeHtml(value)}"
+                             onchange="updateGenRowValue(${index}, '${key}', this.value)"
+                             placeholder="Enter image URL...">
+                    ` : `
+                      <input type="text" value="${escapeHtml(value)}"
+                             onchange="updateGenRowValue(${index}, '${key}', this.value)"
+                             oninput="updateGenRowValue(${index}, '${key}', this.value)"
+                             placeholder="Enter ${key}...">
+                    `}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Get icon for placeholder type
+    function getPlaceholderIcon(type) {
+      const icons = {
+        text: 'font',
+        string: 'font',
+        color: 'palette',
+        image: 'image',
+        number: 'hashtag',
+        date: 'calendar'
+      };
+      return icons[type] || 'tag';
+    }
+
+    // Escape HTML
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      })[char]);
+    }
+
+    // Update row value
+    function updateGenRowValue(rowIndex, key, value) {
+      if (generateDataRows[rowIndex]) {
+        generateDataRows[rowIndex][key] = value;
+        if (rowIndex === currentGenPreviewIndex) {
+          renderGenPreview();
+        }
+      }
+    }
+
+    // Select a row for preview
+    function selectGenRow(index) {
+      currentGenPreviewIndex = index;
+      renderGenerateRows();
+      updateGenPreviewNav();
+      renderGenPreview();
+    }
+
+    // Update row count display
+    function updateGenRowCount() {
+      const count = generateDataRows.length;
+      document.getElementById('genRowCount').textContent = `${count} row${count !== 1 ? 's' : ''}`;
+      document.getElementById('genGenerateBtn').disabled = count === 0;
+    }
+
+    // Update preview navigation
+    function updateGenPreviewNav() {
+      const count = generateDataRows.length;
+      document.getElementById('genPreviewIndex').textContent = count > 0 ? `${currentGenPreviewIndex + 1} / ${count}` : '0 / 0';
+      document.getElementById('genPrevBtn').disabled = currentGenPreviewIndex <= 0;
+      document.getElementById('genNextBtn').disabled = currentGenPreviewIndex >= count - 1;
+    }
+
+    // Preview navigation
+    document.getElementById('genPrevBtn')?.addEventListener('click', () => {
+      if (currentGenPreviewIndex > 0) {
+        currentGenPreviewIndex--;
+        renderGenerateRows();
+        updateGenPreviewNav();
+        renderGenPreview();
+      }
+    });
+
+    document.getElementById('genNextBtn')?.addEventListener('click', () => {
+      if (currentGenPreviewIndex < generateDataRows.length - 1) {
+        currentGenPreviewIndex++;
+        renderGenerateRows();
+        updateGenPreviewNav();
+        renderGenPreview();
+      }
+    });
+
+    // Render preview canvas
+    async function renderGenPreview() {
+      if (!genCanvas || !genCtx || !currentGenerateTemplate) return;
+
+      const template = currentGenerateTemplate;
+      const rowData = generateDataRows[currentGenPreviewIndex] || {};
+      const scale = genCanvas.width / template.width;
+
+      // Clear canvas
+      genCtx.clearRect(0, 0, genCanvas.width, genCanvas.height);
+
+      // Draw background
+      await drawGenBackground(template, scale);
+
+      // Draw elements
+      for (const element of (template.elements || [])) {
+        await drawGenElement(element, rowData, scale);
+      }
+    }
+
+    // Draw background
+    async function drawGenBackground(template, scale) {
+      const bgType = template.background_type || 'color';
+      const bgValue = template.background_value || '#ffffff';
+
+      if (bgType === 'color') {
+        genCtx.fillStyle = bgValue;
+        genCtx.fillRect(0, 0, genCanvas.width, genCanvas.height);
+      } else if (bgType === 'gradient') {
+        // Simple gradient parsing
+        genCtx.fillStyle = bgValue.includes('linear') ? '#667eea' : bgValue;
+        genCtx.fillRect(0, 0, genCanvas.width, genCanvas.height);
+      } else if (bgType === 'image' && bgValue) {
+        try {
+          const img = await loadImage(bgValue);
+          genCtx.drawImage(img, 0, 0, genCanvas.width, genCanvas.height);
+        } catch (e) {
+          genCtx.fillStyle = '#f0f0f0';
+          genCtx.fillRect(0, 0, genCanvas.width, genCanvas.height);
+        }
+      }
+    }
+
+    // Draw element
+    async function drawGenElement(element, rowData, scale) {
+      const x = element.x * scale;
+      const y = element.y * scale;
+      const width = element.width * scale;
+      const height = element.height * scale;
+
+      genCtx.save();
+
+      // Apply rotation if needed
+      if (element.rotation) {
+        const centerX = x + width / 2;
+        const centerY = y + height / 2;
+        genCtx.translate(centerX, centerY);
+        genCtx.rotate((element.rotation * Math.PI) / 180);
+        genCtx.translate(-centerX, -centerY);
+      }
+
+      // Apply opacity
+      genCtx.globalAlpha = element.opacity !== undefined ? element.opacity : 1;
+
+      if (element.type === 'text') {
+        // Get text value - check for placeholder replacement
+        let text = element.text || '';
+        if (element.isDynamic && element.placeholder && rowData[element.placeholder]) {
+          text = rowData[element.placeholder];
+        }
+
+        const fontSize = (element.fontSize || 24) * scale;
+        const fontFamily = element.fontFamily || 'Inter';
+        const fontWeight = element.fontWeight || 400;
+
+        genCtx.font = `${fontWeight} ${fontSize}px "${fontFamily}", sans-serif`;
+        genCtx.fillStyle = element.color || '#000000';
+        genCtx.textAlign = element.textAlign || 'left';
+        genCtx.textBaseline = 'top';
+
+        // Word wrap
+        const words = text.split(' ');
+        let line = '';
+        let lineY = y;
+        const lineHeight = fontSize * (element.lineHeight || 1.2);
+
+        for (let n = 0; n < words.length; n++) {
+          const testLine = line + words[n] + ' ';
+          const metrics = genCtx.measureText(testLine);
+          if (metrics.width > width && n > 0) {
+            const drawX = element.textAlign === 'center' ? x + width / 2 :
+                         element.textAlign === 'right' ? x + width : x;
+            genCtx.fillText(line.trim(), drawX, lineY);
+            line = words[n] + ' ';
+            lineY += lineHeight;
+          } else {
+            line = testLine;
+          }
+        }
+        const drawX = element.textAlign === 'center' ? x + width / 2 :
+                     element.textAlign === 'right' ? x + width : x;
+        genCtx.fillText(line.trim(), drawX, lineY);
+
+      } else if (element.type === 'image') {
+        let src = element.src;
+        if (element.isDynamic && element.placeholder && rowData[element.placeholder]) {
+          src = rowData[element.placeholder];
+        }
+
+        if (src) {
+          try {
+            const img = await loadImage(src);
+            genCtx.drawImage(img, x, y, width, height);
+          } catch (e) {
+            // Draw placeholder
+            genCtx.fillStyle = '#e0e0e0';
+            genCtx.fillRect(x, y, width, height);
+          }
+        }
+      } else if (element.type === 'shape') {
+        genCtx.fillStyle = element.fill || '#cccccc';
+        if (element.shapeType === 'circle' || element.shapeType === 'ellipse') {
+          genCtx.beginPath();
+          genCtx.ellipse(x + width / 2, y + height / 2, width / 2, height / 2, 0, 0, Math.PI * 2);
+          genCtx.fill();
+        } else {
+          genCtx.fillRect(x, y, width, height);
+        }
+      }
+
+      genCtx.restore();
+    }
+
+    // Load image helper
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    }
+
+    // Execute generation
+    async function executeGeneration() {
+      if (generateDataRows.length === 0 || !currentGenerateTemplate) return;
+
+      // Show progress modal
+      document.getElementById('generatingProgressModal').classList.add('show');
+      document.getElementById('genProgressBar').style.width = '0%';
+      document.getElementById('genProgressText').textContent = 'Preparing...';
+
+      generatedImages = [];
+      const total = generateDataRows.length;
+
+      // Create a temporary full-size canvas for generation
+      const fullCanvas = document.createElement('canvas');
+      fullCanvas.width = currentGenerateTemplate.width;
+      fullCanvas.height = currentGenerateTemplate.height;
+      const fullCtx = fullCanvas.getContext('2d');
+
+      try {
+        for (let i = 0; i < total; i++) {
+          document.getElementById('genProgressText').textContent = `Generating post ${i + 1} of ${total}...`;
+          document.getElementById('genProgressBar').style.width = `${((i + 1) / total) * 100}%`;
+
+          // Render at full size
+          await renderFullSizePost(fullCanvas, fullCtx, generateDataRows[i]);
+
+          // Convert to data URL
+          const dataUrl = fullCanvas.toDataURL('image/png');
+          generatedImages.push({
+            index: i + 1,
+            dataUrl: dataUrl
+          });
+
+          // Small delay for UI feedback
+          await sleep(100);
+        }
+
+        // Close progress modal
+        document.getElementById('generatingProgressModal').classList.remove('show');
+
+        // Show results
+        showQuickResults();
+
+      } catch (error) {
+        console.error('Generation error:', error);
+        document.getElementById('generatingProgressModal').classList.remove('show');
+        showToast('Error generating posts', 'error');
+      }
+    }
+
+    // Render full size post
+    async function renderFullSizePost(canvas, ctx, rowData) {
+      const template = currentGenerateTemplate;
+
+      // Clear
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Background
+      const bgType = template.background_type || 'color';
+      const bgValue = template.background_value || '#ffffff';
+
+      if (bgType === 'color') {
+        ctx.fillStyle = bgValue;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      } else if (bgType === 'image' && bgValue) {
+        try {
+          const img = await loadImage(bgValue);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        } catch (e) {
+          ctx.fillStyle = '#f0f0f0';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+
+      // Elements
+      for (const element of (template.elements || [])) {
+        await drawFullElement(ctx, element, rowData);
+      }
+    }
+
+    // Draw full size element
+    async function drawFullElement(ctx, element, rowData) {
+      ctx.save();
+
+      if (element.rotation) {
+        const centerX = element.x + element.width / 2;
+        const centerY = element.y + element.height / 2;
+        ctx.translate(centerX, centerY);
+        ctx.rotate((element.rotation * Math.PI) / 180);
+        ctx.translate(-centerX, -centerY);
+      }
+
+      ctx.globalAlpha = element.opacity !== undefined ? element.opacity : 1;
+
+      if (element.type === 'text') {
+        let text = element.text || '';
+        if (element.isDynamic && element.placeholder && rowData[element.placeholder]) {
+          text = rowData[element.placeholder];
+        }
+
+        const fontSize = element.fontSize || 24;
+        ctx.font = `${element.fontWeight || 400} ${fontSize}px "${element.fontFamily || 'Inter'}", sans-serif`;
+        ctx.fillStyle = element.color || '#000000';
+        ctx.textAlign = element.textAlign || 'left';
+        ctx.textBaseline = 'top';
+
+        const words = text.split(' ');
+        let line = '';
+        let lineY = element.y;
+        const lineHeight = fontSize * (element.lineHeight || 1.2);
+
+        for (let n = 0; n < words.length; n++) {
+          const testLine = line + words[n] + ' ';
+          const metrics = ctx.measureText(testLine);
+          if (metrics.width > element.width && n > 0) {
+            const drawX = element.textAlign === 'center' ? element.x + element.width / 2 :
+                         element.textAlign === 'right' ? element.x + element.width : element.x;
+            ctx.fillText(line.trim(), drawX, lineY);
+            line = words[n] + ' ';
+            lineY += lineHeight;
+          } else {
+            line = testLine;
+          }
+        }
+        const drawX = element.textAlign === 'center' ? element.x + element.width / 2 :
+                     element.textAlign === 'right' ? element.x + element.width : element.x;
+        ctx.fillText(line.trim(), drawX, lineY);
+
+      } else if (element.type === 'image') {
+        let src = element.src;
+        if (element.isDynamic && element.placeholder && rowData[element.placeholder]) {
+          src = rowData[element.placeholder];
+        }
+        if (src) {
+          try {
+            const img = await loadImage(src);
+            ctx.drawImage(img, element.x, element.y, element.width, element.height);
+          } catch (e) {
+            ctx.fillStyle = '#e0e0e0';
+            ctx.fillRect(element.x, element.y, element.width, element.height);
+          }
+        }
+      } else if (element.type === 'shape') {
+        ctx.fillStyle = element.fill || '#cccccc';
+        if (element.shapeType === 'circle' || element.shapeType === 'ellipse') {
+          ctx.beginPath();
+          ctx.ellipse(element.x + element.width / 2, element.y + element.height / 2,
+                     element.width / 2, element.height / 2, 0, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillRect(element.x, element.y, element.width, element.height);
+        }
+      }
+
+      ctx.restore();
+    }
+
+    // Show quick results modal
+    function showQuickResults() {
+      const grid = document.getElementById('quickResultsGrid');
+      grid.innerHTML = generatedImages.map((img, i) => `
+        <div class="result-item" onclick="downloadSingleImage(${i})">
+          <img src="${img.dataUrl}" alt="Post ${img.index}">
+        </div>
+      `).join('');
+
+      document.getElementById('quickResultsModal').classList.add('show');
+    }
+
+    // Close quick results modal
+    function closeQuickResultsModal() {
+      document.getElementById('quickResultsModal').classList.remove('show');
+    }
+
+    // Download single image
+    function downloadSingleImage(index) {
+      const img = generatedImages[index];
+      if (img) {
+        const link = document.createElement('a');
+        link.download = `post-${img.index}.png`;
+        link.href = img.dataUrl;
+        link.click();
+      }
+    }
+
+    // Download all images
+    document.getElementById('downloadAllQuickBtn')?.addEventListener('click', async () => {
+      // Simple download all one by one
+      for (const img of generatedImages) {
+        const link = document.createElement('a');
+        link.download = `post-${img.index}.png`;
+        link.href = img.dataUrl;
+        link.click();
+        await sleep(300); // Small delay between downloads
+      }
+    });
+
+    // Init
+    loadBusinesses();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BRANDIO — Issue No. 01 · The All-in-One Marketing Tool</title>
+  <meta name="description" content="Generate, schedule, and publish social posts across Meta, Twitter, and LinkedIn — powered by AI." />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --paper:   #f4ecd8;
+      --paper-2: #ede3c6;
+      --ink:     #0a0a0a;
+      --pink:    #ff3d7f;     /* hot pink */
+      --cyan:    #00d4ff;     /* sky blue / cyan */
+      --yellow:  #ffea00;     /* neon yellow */
+      --lime:    #c6ff3d;     /* lime green */
+      --orange:  #ff7a00;
+      --shadow:  6px 6px 0 0 var(--ink);
+      --shadow-lg: 10px 10px 0 0 var(--ink);
+      --shadow-xl: 14px 14px 0 0 var(--ink);
+      --border:  3px solid var(--ink);
+      --border-thick: 4px solid var(--ink);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(circle at 1px 1px, rgba(0,0,0,0.06) 1px, transparent 0);
+      background-size: 14px 14px;
+    }
+    a { color: inherit; text-decoration: none; }
+    .serif { font-family: 'DM Serif Display', Georgia, serif; }
+    .mono  { font-family: 'Space Mono', 'Courier New', monospace; }
+    .black { font-family: 'Archivo Black', sans-serif; letter-spacing: -0.01em; }
+
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
+
+    /* ============= TOP STRIP (masthead bar) ============= */
+    .top-strip {
+      background: var(--ink);
+      color: var(--paper);
+      border-bottom: var(--border-thick);
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .top-strip-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 36px;
+    }
+    .ticker {
+      display: flex;
+      gap: 28px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .ticker span::before { content: "★ "; color: var(--yellow); }
+
+    /* ============= NAV ============= */
+    .nav {
+      background: var(--paper);
+      border-bottom: var(--border-thick);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      background: var(--pink);
+      border: var(--border);
+      box-shadow: 4px 4px 0 0 var(--ink);
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      transform: rotate(-3deg);
+    }
+    .brand-name {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+    .nav-links { display: flex; gap: 32px; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .nav-links a { position: relative; padding: 4px 0; }
+    .nav-links a:hover { background: var(--yellow); padding: 4px 6px; transform: rotate(-1deg); }
+    .nav-cta { display: flex; gap: 10px; }
+
+    /* ============= BUTTONS ============= */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      border: var(--border);
+      background: var(--paper);
+      color: var(--ink);
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      white-space: nowrap;
+    }
+    .btn:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 0 var(--ink); }
+    .btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 0 var(--ink); }
+    .btn-pink   { background: var(--pink);   color: var(--paper); }
+    .btn-yellow { background: var(--yellow); color: var(--ink); }
+    .btn-cyan   { background: var(--cyan);   color: var(--ink); }
+    .btn-ink    { background: var(--ink);    color: var(--paper); }
+    .btn-lg     { padding: 16px 28px; font-size: 16px; }
+
+    /* ============= COVER / MASTHEAD ============= */
+    .cover {
+      padding: 36px 0 60px;
+      position: relative;
+    }
+    .cover-grid {
+      display: grid;
+      grid-template-columns: 1fr 3fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+    .cover-meta-l, .cover-meta-r {
+      border: var(--border);
+      background: var(--paper);
+      padding: 18px;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      box-shadow: var(--shadow);
+    }
+    .cover-meta-l { background: var(--lime); }
+    .cover-meta-r { background: var(--cyan); }
+    .meta-row { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--ink); padding: 4px 0; }
+    .meta-row:last-child { border-bottom: 0; }
+    .meta-row .k { font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    .meta-block { margin-bottom: 14px; }
+    .meta-block h5 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      padding-bottom: 4px;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .masthead {
+      text-align: center;
+      position: relative;
+    }
+    .masthead .kicker {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+      border-bottom: 2px solid var(--ink);
+    }
+    .masthead h1.title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(64px, 12vw, 180px);
+      line-height: 0.88;
+      letter-spacing: -0.04em;
+      margin: 0;
+      position: relative;
+      display: inline-block;
+    }
+    .masthead h1.title .dot { color: var(--pink); }
+    .masthead .subtitle {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: clamp(20px, 2.4vw, 28px);
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 2px solid var(--ink);
+    }
+
+    .cover-headline {
+      margin-top: 56px;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 28px;
+      align-items: end;
+    }
+    .cover-headline .lead-art {
+      border: var(--border-thick);
+      background: var(--yellow);
+      box-shadow: var(--shadow-xl);
+      padding: 40px;
+      position: relative;
+      min-height: 360px;
+      overflow: hidden;
+    }
+    .cover-headline .lead-art .scribble {
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(45deg, transparent 0 18px, rgba(0,0,0,0.08) 18px 19px);
+      pointer-events: none;
+    }
+    .cover-headline .lead-art h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      position: relative;
+    }
+    .cover-headline .lead-art h2 em {
+      font-style: italic;
+      background: var(--ink);
+      color: var(--paper);
+      padding: 2px 10px;
+      display: inline-block;
+      transform: rotate(-2deg);
+    }
+    .cover-headline .lead-art .byline {
+      position: absolute;
+      bottom: 20px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding-top: 14px;
+      border-top: 2px solid var(--ink);
+    }
+
+    .standfirst {
+      border: var(--border-thick);
+      background: var(--paper);
+      box-shadow: var(--shadow-lg);
+      padding: 28px;
+    }
+    .standfirst .label {
+      display: inline-block;
+      background: var(--pink);
+      color: var(--paper);
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: var(--border);
+      margin-bottom: 14px;
+      transform: rotate(-2deg);
+    }
+    .standfirst p {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      line-height: 1.3;
+      margin-bottom: 18px;
+    }
+    .standfirst .cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* sticker */
+    .sticker {
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: var(--pink);
+      border: var(--border-thick);
+      box-shadow: var(--shadow);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      transform: rotate(-12deg);
+      font-family: 'Archivo Black', sans-serif;
+      color: var(--paper);
+      font-size: 13px;
+      line-height: 1.1;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      z-index: 5;
+    }
+
+    /* ============= TOC / CONTENTS ============= */
+    .toc {
+      margin-top: 60px;
+      border: var(--border-thick);
+      background: var(--paper);
+      box-shadow: var(--shadow-xl);
+    }
+    .toc-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      border-bottom: var(--border-thick);
+      background: var(--ink);
+      color: var(--paper);
+      font-family: 'Archivo Black', sans-serif;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .toc-item {
+      padding: 22px 24px;
+      border-right: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .toc-item:nth-child(4n) { border-right: 0; }
+    .toc-item:nth-last-child(-n+4) { border-bottom: 0; }
+    .toc-item .num {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 36px;
+      line-height: 1;
+    }
+    .toc-item .title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+    .toc-item .pg {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: auto;
+    }
+    .toc-item:hover { background: var(--yellow); }
+
+    /* ============= SECTION HEAD ============= */
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      margin: 80px 0 28px;
+      padding-bottom: 14px;
+      border-bottom: 4px solid var(--ink);
+    }
+    .section-head .left {
+      display: flex;
+      align-items: end;
+      gap: 18px;
+    }
+    .section-head .pg-num {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 48px;
+      line-height: 0.9;
+      background: var(--ink);
+      color: var(--paper);
+      padding: 4px 12px;
+    }
+    .section-head h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(36px, 5vw, 56px);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .section-head .right {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: right;
+    }
+
+    /* ============= EDITORIAL BODY ============= */
+    .editorial {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1fr;
+      gap: 28px;
+      margin-bottom: 40px;
+    }
+    .editorial .col {
+      font-size: 15.5px;
+      line-height: 1.6;
+    }
+    .editorial .col p { margin-bottom: 14px; }
+    .editorial .col-lead p:first-child::first-letter {
+      font-family: 'DM Serif Display', serif;
+      float: left;
+      font-size: 84px;
+      line-height: 0.85;
+      padding: 6px 10px 0 0;
+      color: var(--pink);
+    }
+    .editorial .col-mid {
+      border-left: 2px dashed var(--ink);
+      border-right: 2px dashed var(--ink);
+      padding: 0 20px;
+    }
+
+    /* ============= FEATURES (numbered listicle) ============= */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0;
+      border: var(--border-thick);
+      box-shadow: var(--shadow-xl);
+      background: var(--paper);
+    }
+    .feature {
+      grid-column: span 2;
+      padding: 28px;
+      border-right: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      background: var(--paper);
+      position: relative;
+      min-height: 220px;
+    }
+    .feature:nth-child(3n) { border-right: 0; }
+    .feature:nth-last-child(-n+3) { border-bottom: 0; }
+    .feature .f-num {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 60px;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      -webkit-text-stroke: 2px var(--ink);
+      color: transparent;
+      margin-bottom: 14px;
+    }
+    .feature h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+    .feature p { font-size: 14.5px; }
+    .feature .f-tag {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border: 2px solid var(--ink);
+    }
+    .feature:nth-child(1) { background: var(--paper); }
+    .feature:nth-child(2) { background: var(--lime); }
+    .feature:nth-child(3) { background: var(--paper); }
+    .feature:nth-child(4) { background: var(--cyan); }
+    .feature:nth-child(5) { background: var(--paper); }
+    .feature:nth-child(6) { background: var(--yellow); }
+    .feature:hover { background: var(--pink); color: var(--paper); }
+    .feature:hover .f-num { -webkit-text-stroke-color: var(--paper); }
+    .feature:hover .f-tag { border-color: var(--paper); }
+
+    /* ============= PULL QUOTE ============= */
+    .pullquote {
+      margin: 60px 0;
+      padding: 56px 48px;
+      border: var(--border-thick);
+      background: var(--ink);
+      color: var(--paper);
+      box-shadow: var(--shadow-xl);
+      position: relative;
+    }
+    .pullquote::before {
+      content: '“';
+      position: absolute;
+      top: -40px;
+      left: 30px;
+      font-family: 'DM Serif Display', serif;
+      font-size: 200px;
+      line-height: 1;
+      color: var(--pink);
+      background: var(--ink);
+      padding: 0 12px;
+    }
+    .pullquote q {
+      quotes: none;
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.2;
+      display: block;
+    }
+    .pullquote q::before, .pullquote q::after { content: ''; }
+    .pullquote cite {
+      display: block;
+      margin-top: 24px;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-style: normal;
+      color: var(--yellow);
+    }
+
+    /* ============= STEPS / HOW IT WORKS ============= */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .step {
+      border: var(--border-thick);
+      background: var(--paper);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .step:nth-child(1) { background: var(--pink); color: var(--paper); transform: rotate(-1deg); }
+    .step:nth-child(2) { background: var(--cyan); transform: rotate(1deg); }
+    .step:nth-child(3) { background: var(--yellow); transform: rotate(-1deg); }
+    .step:nth-child(4) { background: var(--lime); transform: rotate(1deg); }
+    .step:hover { transform: rotate(0) translate(-3px, -3px); box-shadow: var(--shadow-lg); }
+    .step .step-num {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 56px;
+      line-height: 0.9;
+      margin-bottom: 12px;
+    }
+    .step h4 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+    .step p { font-size: 14.5px; }
+
+    /* ============= MODULES (photo spread) ============= */
+    .modules {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+    }
+    .module {
+      border: var(--border-thick);
+      background: var(--paper);
+      box-shadow: var(--shadow-lg);
+      padding: 28px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 260px;
+    }
+    .module:hover { transform: translate(-3px, -3px); box-shadow: var(--shadow-xl); }
+    .module .m-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .module .m-icon {
+      width: 56px; height: 56px;
+      border: var(--border);
+      display: grid; place-items: center;
+      font-size: 22px;
+      box-shadow: 4px 4px 0 0 var(--ink);
+    }
+    .module .m-port {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      padding: 4px 8px;
+      border: 2px solid var(--ink);
+      background: var(--paper);
+    }
+    .module h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      line-height: 1;
+      margin: 18px 0 8px;
+    }
+    .module p { font-size: 15px; margin-bottom: 16px; }
+    .module .m-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      border: var(--border);
+      background: var(--ink);
+      color: var(--paper);
+      align-self: flex-start;
+      box-shadow: 4px 4px 0 0 var(--ink);
+    }
+    .module .m-cta:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 0 var(--ink); }
+    .module.span-7 { grid-column: span 7; background: var(--pink); color: var(--paper); }
+    .module.span-7 .m-icon { background: var(--paper); }
+    .module.span-7 .m-port { background: var(--paper); }
+    .module.span-7 .m-cta { background: var(--paper); color: var(--ink); }
+    .module.span-5 { grid-column: span 5; background: var(--cyan); }
+    .module.span-5 .m-icon { background: var(--paper); }
+    .module.span-6 { grid-column: span 6; background: var(--yellow); }
+    .module.span-6 .m-icon { background: var(--paper); }
+    .module.span-6.var-2 { background: var(--lime); }
+
+    /* ============= STATS / BY THE NUMBERS ============= */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: var(--border-thick);
+      box-shadow: var(--shadow-xl);
+      background: var(--paper);
+    }
+    .stat {
+      padding: 36px 24px;
+      text-align: center;
+      border-right: 3px solid var(--ink);
+      position: relative;
+    }
+    .stat:last-child { border-right: 0; }
+    .stat:nth-child(odd) { background: var(--paper); }
+    .stat:nth-child(even) { background: var(--paper-2); }
+    .stat .num {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 64px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .stat .num .accent { color: var(--pink); }
+    .stat .label {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    /* ============= CENTERFOLD AD / CTA ============= */
+    .ad {
+      margin: 80px 0;
+      border: 6px solid var(--ink);
+      background: var(--pink);
+      color: var(--paper);
+      box-shadow: 16px 16px 0 0 var(--ink);
+      padding: 60px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .ad::before {
+      content: 'ADVERTISEMENT';
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      opacity: 0.5;
+    }
+    .ad-inner {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+    .ad h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(40px, 6vw, 76px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin-bottom: 18px;
+    }
+    .ad h2 em { font-style: italic; background: var(--yellow); color: var(--ink); padding: 0 12px; }
+    .ad p {
+      font-size: 18px;
+      max-width: 480px;
+      margin-bottom: 24px;
+    }
+    .ad-stamp {
+      width: 200px;
+      height: 200px;
+      border: 4px solid var(--paper);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      transform: rotate(8deg);
+      padding: 16px;
+      font-family: 'Archivo Black', sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      justify-self: end;
+    }
+    .ad-stamp .big {
+      font-size: 36px;
+      display: block;
+      line-height: 1;
+      color: var(--yellow);
+    }
+
+    /* ============= FOOTER / BACK COVER ============= */
+    footer {
+      margin-top: 60px;
+      border-top: var(--border-thick);
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .footer-top {
+      padding: 40px 0;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 28px;
+      border-bottom: 2px solid var(--paper);
+    }
+    .footer-top h5 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      color: var(--yellow);
+    }
+    .footer-top ul { list-style: none; font-size: 14px; line-height: 1.9; }
+    .footer-top ul a:hover { background: var(--pink); padding: 0 4px; }
+    .footer-brand p {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      font-style: italic;
+      margin-top: 12px;
+      max-width: 360px;
+    }
+    .footer-bottom {
+      padding: 18px 0;
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .barcode {
+      width: 120px;
+      height: 36px;
+      background: repeating-linear-gradient(90deg, var(--paper) 0 2px, transparent 2px 4px, var(--paper) 4px 5px, transparent 5px 9px, var(--paper) 9px 11px, transparent 11px 14px);
+    }
+
+    /* ============= RESPONSIVE ============= */
+    @media (max-width: 1000px) {
+      .nav-links { display: none; }
+      .cover-grid { grid-template-columns: 1fr; }
+      .cover-headline { grid-template-columns: 1fr; }
+      .toc-grid { grid-template-columns: repeat(2, 1fr); }
+      .toc-item:nth-child(4n) { border-right: 2px solid var(--ink); }
+      .toc-item:nth-child(2n) { border-right: 0; }
+      .toc-item:nth-last-child(-n+4) { border-bottom: 2px solid var(--ink); }
+      .toc-item:nth-last-child(-n+2) { border-bottom: 0; }
+      .editorial { grid-template-columns: 1fr; }
+      .editorial .col-mid { border: 0; padding: 0; border-top: 2px dashed var(--ink); border-bottom: 2px dashed var(--ink); padding: 20px 0; }
+      .features { grid-template-columns: repeat(2, 1fr); }
+      .feature { grid-column: span 1; border-right: 2px solid var(--ink); }
+      .feature:nth-child(3n) { border-right: 2px solid var(--ink); }
+      .feature:nth-child(2n) { border-right: 0; }
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .modules { grid-template-columns: 1fr; }
+      .module.span-7, .module.span-5, .module.span-6 { grid-column: span 12; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .stat:nth-child(2) { border-right: 0; }
+      .ad-inner { grid-template-columns: 1fr; }
+      .ad-stamp { justify-self: start; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .container { padding: 0 18px; }
+      .ticker span:nth-child(n+3) { display: none; }
+      .features { grid-template-columns: 1fr; }
+      .feature { border-right: 0 !important; }
+      .steps, .stats { grid-template-columns: 1fr; }
+      .stat { border-right: 0; border-bottom: 3px solid var(--ink); }
+      .stat:last-child { border-bottom: 0; }
+      .footer-top { grid-template-columns: 1fr; }
+      .section-head { flex-direction: column; align-items: flex-start; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============= TOP TICKER STRIP ============= -->
+  <div class="top-strip">
+    <div class="container top-strip-inner">
+      <div class="ticker">
+        <span>ISSUE 01</span>
+        <span>VOL. MMXXVI</span>
+        <span>ALL-IN-ONE MARKETING TOOLKIT</span>
+        <span>POWERED BY GEMINI AI</span>
+        <span>SELF-HOSTED · YOURS FOREVER</span>
+      </div>
+      <div>EST. 2026</div>
+    </div>
+  </div>
+
+  <!-- ============= NAV ============= -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#">
+        <span class="brand-mark"><i class="fas fa-bolt"></i></span>
+        <span class="brand-name">BRANDIO</span>
+      </a>
+      <div class="nav-links">
+        <a href="#contents">Contents</a>
+        <a href="#feature">Feature</a>
+        <a href="#how">How-To</a>
+        <a href="#modules">Sections</a>
+      </div>
+      <div class="nav-cta">
+        <a href="/dashboard" class="btn btn-ink">Dashboard <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============= COVER ============= -->
+  <header class="cover">
+    <div class="container">
+      <div class="cover-grid">
+
+        <!-- Left meta column -->
+        <div class="cover-meta-l">
+          <div class="meta-block">
+            <h5>Inside</h5>
+            <div>→ AI Creative Studio</div>
+            <div>→ Brand Asset Library</div>
+            <div>→ Campaign Scheduler</div>
+            <div>→ Multi-Channel Publishing</div>
+            <div>→ Multi-Brand Workspaces</div>
+          </div>
+          <div class="meta-block">
+            <h5>Filed Under</h5>
+            <div>Marketing Ops</div>
+            <div>Creative Automation</div>
+            <div>AI Platforms</div>
+          </div>
+          <div class="meta-block" style="margin-bottom:0;">
+            <h5>Edition</h5>
+            <div>No. 01 / 2026</div>
+            <div>Self-Hosted</div>
+          </div>
+        </div>
+
+        <!-- Masthead -->
+        <div class="masthead">
+          <div class="kicker">The All-in-One Marketing Tool · Issue No. 01 · 2026</div>
+          <h1 class="title serif">BRANDIO<span class="dot">.</span></h1>
+          <div class="subtitle">— Publish like you mean it. —</div>
+        </div>
+
+        <!-- Right meta column -->
+        <div class="cover-meta-r">
+          <div class="meta-block">
+            <h5>Stats</h5>
+            <div class="meta-row"><span class="k">Tools</span><span>04</span></div>
+            <div class="meta-row"><span class="k">Channels</span><span>05+</span></div>
+            <div class="meta-row"><span class="k">Brands</span><span>∞</span></div>
+            <div class="meta-row"><span class="k">Cost</span><span>$0</span></div>
+          </div>
+          <div class="meta-block" style="margin-bottom:0;">
+            <h5>Today's Date</h5>
+            <div id="dateline">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cover headline / lead art + standfirst -->
+      <div class="cover-headline">
+        <div class="lead-art">
+          <div class="scribble"></div>
+          <h2>
+            Run your marketing,<br/>
+            on <em>autopilot.</em>
+          </h2>
+          <div class="byline">
+            <span>By the Editors</span>
+            <span>Read time · 4 min</span>
+          </div>
+          <!-- sticker -->
+          <div class="sticker">
+            <div>New<br/>Issue<br/>★ 01 ★</div>
+          </div>
+        </div>
+
+        <div class="standfirst">
+          <span class="label">Standfirst</span>
+          <p>
+            Produce on-brand creative, draft copy that fits the channel, organise brand assets, and ship campaigns across every channel — all from one cockpit. No SaaS bills. No vendor lock-in.
+          </p>
+          <div class="cta-row">
+            <a href="/dashboard" class="btn btn-ink btn-lg">Open Dashboard <i class="fas fa-arrow-right"></i></a>
+            <a href="#feature" class="btn btn-yellow btn-lg"><i class="fas fa-play"></i> Read More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============= TABLE OF CONTENTS ============= -->
+  <section class="container" id="contents">
+    <div class="toc">
+      <div class="toc-head">
+        <span>※ Table of Contents</span>
+        <span>Pages 01 — 08</span>
+      </div>
+      <div class="toc-grid">
+        <a href="#feature" class="toc-item">
+          <span class="num">01</span>
+          <span class="title">The Cover Story</span>
+          <span class="pg">Page 02 · Feature</span>
+        </a>
+        <a href="#how" class="toc-item">
+          <span class="num">02</span>
+          <span class="title">How It Works</span>
+          <span class="pg">Page 03 · How-To</span>
+        </a>
+        <a href="#listicle" class="toc-item">
+          <span class="num">03</span>
+          <span class="title">Six Reasons Why</span>
+          <span class="pg">Page 04 · Listicle</span>
+        </a>
+        <a href="#modules" class="toc-item">
+          <span class="num">04</span>
+          <span class="title">The Stack</span>
+          <span class="pg">Page 05 · Spread</span>
+        </a>
+        <a href="#numbers" class="toc-item">
+          <span class="num">05</span>
+          <span class="title">By the Numbers</span>
+          <span class="pg">Page 06 · Stats</span>
+        </a>
+        <a href="#quote" class="toc-item">
+          <span class="num">06</span>
+          <span class="title">Op-Ed</span>
+          <span class="pg">Page 07 · Quote</span>
+        </a>
+        <a href="#cta" class="toc-item">
+          <span class="num">07</span>
+          <span class="title">Subscribe</span>
+          <span class="pg">Page 08 · Ad</span>
+        </a>
+        <a href="/dashboard" class="toc-item">
+          <span class="num">08</span>
+          <span class="title">Open Dashboard</span>
+          <span class="pg">Back · Launch</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============= FEATURE / EDITORIAL ============= -->
+  <section class="container" id="feature">
+    <div class="section-head">
+      <div class="left">
+        <span class="pg-num">02</span>
+        <h2>The Cover Story.</h2>
+      </div>
+      <div class="right">Feature · 4 min read<br/>By the Editors</div>
+    </div>
+
+    <div class="editorial">
+      <div class="col col-lead">
+        <p>
+          Modern marketing used to mean five tabs, three logins, and a Notes app full of half-written copy. Brandio puts an end to that small, daily indignity. One cockpit. Four focused tools. A scheduler that runs while you sleep, and a creative engine that drafts a week of campaigns before your coffee cools.
+        </p>
+        <p>
+          It is, in short, the marketing room you wish your team had — built once, owned forever, hosted on your own metal.
+        </p>
+      </div>
+      <div class="col col-mid">
+        <p>
+          The pitch is straightforward. Brief the AI on a campaign; get visuals, copy, and channel-ready layouts back in seconds. Tweak. Queue. Walk away. The delivery engine wakes up every minute to push the next piece live, signed with credentials you encrypted yourself.
+        </p>
+        <p>
+          No subscription tiers. No "you've reached your monthly limit" sad-trombone modal. Just the toolkit, the code, and the keys.
+        </p>
+      </div>
+      <div class="col">
+        <p>
+          Underneath, four services hum: a <strong>Creative Engine</strong> powered by Gemini, a <strong>Content Studio</strong> with templates and an editor, a <strong>Distribution Engine</strong> wired into every channel, and a <strong>Command Center</strong> that ties it all together with multi-brand support.
+        </p>
+        <p>
+          Each one runs independently. Scale the one you need. Ignore the ones you don't.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============= STEPS / HOW-TO ============= -->
+  <section class="container" id="how">
+    <div class="section-head">
+      <div class="left">
+        <span class="pg-num">03</span>
+        <h2>How-To.</h2>
+      </div>
+      <div class="right">Step-by-Step · 4 Moves</div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h4>Brief</h4>
+        <p>Tell the AI what the campaign is about and which channels it's headed for.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h4>Create</h4>
+        <p>Get visuals, copy, and channel-ready layouts tailored to every audience — instantly.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h4>Refine</h4>
+        <p>Tweak copy, swap creative, and approve in the studio until it feels right.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h4>Distribute</h4>
+        <p>Pick a time. Hit publish. The distribution engine takes it from there.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============= FEATURES LISTICLE ============= -->
+  <section class="container" id="listicle">
+    <div class="section-head">
+      <div class="left">
+        <span class="pg-num">04</span>
+        <h2>Six Reasons Why.</h2>
+      </div>
+      <div class="right">Listicle · The Goods</div>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <div class="f-tag">No. 01</div>
+        <div class="f-num">01</div>
+        <h3>AI creative studio.</h3>
+        <p>Brief it once. Get on-brand visuals, layouts, and variants in seconds — powered by Gemini.</p>
+      </div>
+      <div class="feature">
+        <div class="f-tag">No. 02</div>
+        <div class="f-num">02</div>
+        <h3>Copy for every channel.</h3>
+        <p>Tight headlines. Warm social. Buttoned-up sales. Drafts auto-tuned to the channel and audience.</p>
+      </div>
+      <div class="feature">
+        <div class="f-tag">No. 03</div>
+        <div class="f-num">03</div>
+        <h3>One queue, every channel.</h3>
+        <p>Plan campaigns once. The distribution engine pushes each piece to the right channel, on time.</p>
+      </div>
+      <div class="feature">
+        <div class="f-tag">No. 04</div>
+        <div class="f-num">04</div>
+        <h3>Templates &amp; brand assets.</h3>
+        <p>Reuse your best-performing layouts and a tidy asset library across every campaign and brand.</p>
+      </div>
+      <div class="feature">
+        <div class="f-tag">No. 05</div>
+        <div class="f-num">05</div>
+        <h3>Multi-brand by default.</h3>
+        <p>Every client or brand lives in its own workspace — isolated assets, schedules, and analytics.</p>
+      </div>
+      <div class="feature">
+        <div class="f-tag">No. 06</div>
+        <div class="f-num">06</div>
+        <h3>Yours. Forever.</h3>
+        <p>Self-hosted. Encrypted credentials. Run it on your laptop, your server, your cloud.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============= PULL QUOTE ============= -->
+  <section class="container" id="quote">
+    <div class="pullquote">
+      <q>The best marketing tool is the one that disappears once you've set it up — and only resurfaces when something breaks. Brandio is that tool.</q>
+      <cite>— A satisfied user, probably</cite>
+    </div>
+  </section>
+
+  <!-- ============= MODULES / THE STACK ============= -->
+  <section class="container" id="modules">
+    <div class="section-head">
+      <div class="left">
+        <span class="pg-num">05</span>
+        <h2>The Stack.</h2>
+      </div>
+      <div class="right">Photo Spread · 4 Pieces</div>
+    </div>
+    <div class="modules">
+      <div class="module span-7">
+        <div class="m-top">
+          <div class="m-icon" style="background: var(--paper); color: var(--ink);"><i class="fas fa-gauge-high"></i></div>
+          <div class="m-port">PORT :3004</div>
+        </div>
+        <div>
+          <h3>Command Center.</h3>
+          <p>The control room for brands, campaigns, assets, and analytics. The page you bookmark first.</p>
+          <a href="/dashboard" class="m-cta">Open Dashboard <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="module span-5">
+        <div class="m-top">
+          <div class="m-icon"><i class="fas fa-palette"></i></div>
+          <div class="m-port">PORT :3001</div>
+        </div>
+        <div>
+          <h3>Creative Engine.</h3>
+          <p>AI-generated visuals via Gemini. Cached, searchable, and brand-aware out of the box.</p>
+          <a href="/backgrounds/" class="m-cta">Browse <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="module span-6">
+        <div class="m-top">
+          <div class="m-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
+          <div class="m-port">PORT :3002</div>
+        </div>
+        <div>
+          <h3>Content Studio.</h3>
+          <p>Templates, an editor, and AI copy — the creative workbench behind every campaign you ship.</p>
+          <a href="/generator/" class="m-cta">Open Editor <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="module span-6 var-2">
+        <div class="m-top">
+          <div class="m-icon"><i class="fas fa-paper-plane"></i></div>
+          <div class="m-port">PORT :3003</div>
+        </div>
+        <div>
+          <h3>Distribution Engine.</h3>
+          <p>Queues and ships campaigns to every connected channel. Wakes up every minute.</p>
+          <a href="/poster/" class="m-cta">View Scheduler <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============= STATS ============= -->
+  <section class="container" id="numbers">
+    <div class="section-head">
+      <div class="left">
+        <span class="pg-num">06</span>
+        <h2>By the Numbers.</h2>
+      </div>
+      <div class="right">Stats · Receipts</div>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <div class="num"><span class="accent">04</span></div>
+        <div class="label">Integrated Tools</div>
+      </div>
+      <div class="stat">
+        <div class="num"><span class="accent">05</span>+</div>
+        <div class="label">Channels Connected</div>
+      </div>
+      <div class="stat">
+        <div class="num">∞</div>
+        <div class="label">Brands &amp; Campaigns</div>
+      </div>
+      <div class="stat">
+        <div class="num"><span class="accent">01</span><span style="font-size:32px;">min</span></div>
+        <div class="label">Delivery Tick</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============= CTA / CENTERFOLD AD ============= -->
+  <section class="container" id="cta">
+    <div class="ad">
+      <div class="ad-inner">
+        <div>
+          <h2>Stop marketing<br/>by <em>hand.</em></h2>
+          <p>Open the dashboard and ship your first AI-generated campaign in under a minute. No credit card. No marketing email. Just the toolkit.</p>
+          <div class="cta-row" style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a href="/dashboard" class="btn btn-yellow btn-lg">Open Dashboard <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+        <div class="ad-stamp">
+          <div>
+            Self<br/>
+            <span class="big">Hosted</span>
+            For<br/>Life.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============= FOOTER / BACK COVER ============= -->
+  <footer>
+    <div class="container footer-top">
+      <div class="footer-brand">
+        <div class="brand">
+          <span class="brand-mark" style="background: var(--yellow);"><i class="fas fa-bolt" style="color: var(--ink);"></i></span>
+          <span class="brand-name" style="color: var(--paper);">BRANDIO</span>
+        </div>
+        <p>The all-in-one marketing toolkit that disappears once you've set it up — and only resurfaces when something breaks.</p>
+      </div>
+      <div>
+        <h5>Sections</h5>
+        <ul>
+          <li><a href="/dashboard">Dashboard</a></li>
+          <li><a href="/generator/">Generator</a></li>
+          <li><a href="/poster/">Scheduler</a></li>
+          <li><a href="/backgrounds/">Backgrounds</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Specs</h5>
+        <ul>
+          <li><a href="/api">REST API</a></li>
+          <li><a href="/api/health">Health</a></li>
+          <li><a href="/api/services">Services</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Issue</h5>
+        <ul>
+          <li>No. 01 / 2026</li>
+          <li>Self-Hosted Edition</li>
+          <li>Free Forever</li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© <span id="yr"></span> BRANDIO — Vol. MMXXVI · No. 01</span>
+      <div class="barcode" title="ISSN 0000-0001"></div>
+      <span>Printed on cream-tone HTML</span>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+    const d = new Date();
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    document.getElementById('dateline').textContent =
+      months[d.getMonth()] + ' ' + String(d.getDate()).padStart(2,'0') + ', ' + d.getFullYear();
+  </script>
+</body>
+</html>
