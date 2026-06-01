@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../shared/db/database');
+const requireBusinessOwnership = require('../../shared/middleware/ownership');
+
+// Enforce business ownership for authenticated users (lenient: skips service/dev calls)
+router.param('businessId', requireBusinessOwnership.param(db));
+router.use(requireBusinessOwnership(db));
 
 // Get posts for a specific month
 router.get('/:businessId/:year/:month', (req, res) => {
@@ -142,35 +147,69 @@ router.get('/:businessId/day/:date', (req, res) => {
   }
 });
 
-// Get best times to post (based on historical data - placeholder)
+// Get best times to post — computed from this business's published-post
+// history, with general recommendations where there isn't enough data yet.
 router.get('/:businessId/best-times', (req, res) => {
-  // In production, this would analyze engagement data
-  // For now, return common best posting times
+  try {
+    const { businessId } = req.params;
 
-  const bestTimes = {
-    instagram: {
-      weekdays: ['09:00', '12:00', '18:00', '21:00'],
-      weekends: ['11:00', '14:00', '19:00']
-    },
-    facebook: {
-      weekdays: ['09:00', '13:00', '16:00'],
-      weekends: ['12:00', '15:00']
-    },
-    twitter: {
-      weekdays: ['08:00', '12:00', '17:00', '20:00'],
-      weekends: ['10:00', '15:00']
-    },
-    linkedin: {
-      weekdays: ['07:30', '12:00', '17:00'],
-      weekends: []
+    // General fallback recommendations.
+    const defaults = {
+      instagram: { weekdays: ['09:00', '12:00', '18:00', '21:00'], weekends: ['11:00', '14:00', '19:00'] },
+      facebook: { weekdays: ['09:00', '13:00', '16:00'], weekends: ['12:00', '15:00'] },
+      twitter: { weekdays: ['08:00', '12:00', '17:00', '20:00'], weekends: ['10:00', '15:00'] },
+      linkedin: { weekdays: ['07:30', '12:00', '17:00'], weekends: [] }
+    };
+
+    const posts = db.getPostsByBusiness(businessId, 'published', 1000);
+
+    // Tally publish hours per platform, split weekday vs weekend.
+    const tally = {};
+    for (const p of posts) {
+      const when = p.published_at || p.scheduled_at;
+      if (!when) continue;
+      const d = new Date(when);
+      if (isNaN(d.getTime())) continue;
+      const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+      const hour = `${String(d.getHours()).padStart(2, '0')}:00`;
+      const platforms = Array.isArray(p.platforms) ? p.platforms : [];
+      for (const plat of platforms) {
+        tally[plat] = tally[plat] || { weekday: {}, weekends: {} };
+        const bucket = isWeekend ? tally[plat].weekends : tally[plat].weekday;
+        bucket[hour] = (bucket[hour] || 0) + 1;
+      }
     }
-  };
 
-  res.json({
-    success: true,
-    bestTimes,
-    note: 'These are general recommendations. Actual best times may vary based on your audience.'
-  });
+    const topHours = (obj, n = 4) =>
+      Object.entries(obj).sort((a, b) => b[1] - a[1]).slice(0, n).map((e) => e[0]).sort();
+    const sum = (obj) => Object.values(obj).reduce((a, b) => a + b, 0);
+    const MIN_SAMPLES = 3;
+
+    const bestTimes = {};
+    const dataDriven = {};
+    for (const plat of Object.keys(defaults)) {
+      const t = tally[plat] || { weekday: {}, weekends: {} };
+      const wd = sum(t.weekday);
+      const we = sum(t.weekends);
+      bestTimes[plat] = {
+        weekdays: wd >= MIN_SAMPLES ? topHours(t.weekday) : defaults[plat].weekdays,
+        weekends: we >= MIN_SAMPLES ? topHours(t.weekends) : defaults[plat].weekends
+      };
+      dataDriven[plat] = { weekdays: wd >= MIN_SAMPLES, weekends: we >= MIN_SAMPLES };
+    }
+
+    res.json({
+      success: true,
+      bestTimes,
+      dataDriven,
+      sampleSize: posts.length,
+      note: posts.length < MIN_SAMPLES
+        ? 'Not enough published history yet — showing general recommendations.'
+        : 'Computed from your published-post history; general recommendations are used where data is sparse.'
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
 
 // Get upcoming posts preview

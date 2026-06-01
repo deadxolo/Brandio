@@ -49,8 +49,36 @@ function validateApiKey(apiKey) {
 }
 
 /**
- * Simple JWT validation (for internal service-to-service communication)
- * For production, use a proper JWT library like jsonwebtoken
+ * Sign a JWT (HS256) using the configured JWT_SECRET.
+ * Built on Node's crypto so no external dependency is required.
+ * @param {Object} payload - claims to embed (e.g. { sub, email })
+ * @param {Object} options - { expiresInSec }
+ */
+function signJwt(payload, options = {}) {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET is not configured');
+  }
+  const enc = (obj) => Buffer.from(JSON.stringify(obj)).toString('base64url');
+  const now = Math.floor(Date.now() / 1000);
+  const header = { alg: 'HS256', typ: 'JWT' };
+  const body = { iat: now, ...payload };
+  if (options.expiresInSec) {
+    body.exp = now + options.expiresInSec;
+  }
+  const signingInput = `${enc(header)}.${enc(body)}`;
+  const signature = crypto
+    .createHmac('sha256', secret)
+    .update(signingInput)
+    .digest('base64url');
+  return `${signingInput}.${signature}`;
+}
+
+/**
+ * JWT validation with HS256 signature verification.
+ * Falls back to development-mode acceptance only when no JWT_SECRET is set
+ * (so local dev keeps working); when a secret IS configured, the signature
+ * is always verified.
  */
 function validateJwt(token) {
   const secret = process.env.JWT_SECRET;
@@ -63,14 +91,24 @@ function validateJwt(token) {
   }
 
   try {
-    // Basic JWT structure validation
     const parts = token.split('.');
     if (parts.length !== 3) {
       return { valid: false, reason: 'invalid-token-format' };
     }
+    const [headerB64, payloadB64, signatureB64] = parts;
 
-    // Decode payload (for production, properly verify signature)
-    const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString());
+    // Verify HS256 signature with a timing-safe comparison.
+    const expected = crypto
+      .createHmac('sha256', secret)
+      .update(`${headerB64}.${payloadB64}`)
+      .digest('base64url');
+    const sigBuf = Buffer.from(signatureB64);
+    const expBuf = Buffer.from(expected);
+    if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
+      return { valid: false, reason: 'invalid-signature' };
+    }
+
+    const payload = JSON.parse(Buffer.from(payloadB64, 'base64url').toString());
 
     // Check expiration
     if (payload.exp && Date.now() >= payload.exp * 1000) {
@@ -113,8 +151,13 @@ function createAuthMiddleware(options = {}) {
   const additionalPublicPaths = options.additionalPublicPaths || [];
 
   return (req, res, next) => {
+    // When this middleware is mounted with app.use('/api/', ...), Express strips
+    // the mount prefix from req.path. Reconstruct the full path so public-path
+    // matching (and the "/api/" prefix check) work correctly.
+    const fullPath = `${req.baseUrl || ''}${req.path || ''}` || req.path;
+
     // Check if path is public
-    if (isPublicPath(req.path, req.method) || additionalPublicPaths.includes(req.path)) {
+    if (isPublicPath(fullPath, req.method) || additionalPublicPaths.includes(fullPath)) {
       return next();
     }
 
@@ -192,6 +235,25 @@ function requireAuth(type = 'any') {
 }
 
 /**
+ * Require an authenticated end-user (populated from a verified JWT).
+ * Normalises req.user.id from the token's `sub`/`id` claim and rejects
+ * requests that have no valid user token.
+ */
+function requireUser(req, res, next) {
+  const user = req.user;
+  const id = user && (user.id || user.sub);
+  if (id) {
+    req.user.id = id;
+    return next();
+  }
+  return res.status(401).json({
+    success: false,
+    error: 'Unauthorized',
+    message: 'Login required'
+  });
+}
+
+/**
  * Rate limiting middleware (basic implementation)
  * For production, use express-rate-limit or similar
  */
@@ -259,9 +321,11 @@ function generateServiceToken() {
 module.exports = {
   createAuthMiddleware,
   requireAuth,
+  requireUser,
   createRateLimiter,
   validateApiKey,
   validateJwt,
+  signJwt,
   generateApiKey,
   generateServiceToken,
   AUTH_CONFIG

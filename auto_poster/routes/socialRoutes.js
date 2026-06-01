@@ -275,22 +275,9 @@ router.get('/platforms', (req, res) => {
   });
 });
 
-// OAuth callback handler (placeholder)
-router.get('/auth/:platform/callback', (req, res) => {
-  const { platform } = req.params;
-  const { code, state } = req.query;
-
-  // In production, this would:
-  // 1. Exchange code for tokens
-  // 2. Get user info from platform
-  // 3. Save account to database
-  // 4. Redirect back to app
-
-  res.json({
-    success: true,
-    message: `OAuth callback for ${platform}`,
-    note: 'This is a placeholder. In production, implement actual OAuth flow.'
-  });
-});
+// NOTE: The real OAuth callback flow lives in routes/oauthRoutes.js
+// (/api/oauth/:platform/callback) with full token exchange, encryption and
+// account persistence. A former placeholder handler here has been removed to
+// avoid confusion.
 
 module.exports = router;

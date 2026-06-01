@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../shared/db/database');
+const requireBusinessOwnership = require('../../shared/middleware/ownership');
+const { validateBody } = require('../../shared/middleware/validate');
 const { v4: uuidv4 } = require('uuid');
+
+// Enforce business ownership for authenticated users (lenient: skips service/dev calls)
+router.param('businessId', requireBusinessOwnership.param(db));
+router.use(requireBusinessOwnership(db));
 
 // Get templates for a business
 router.get('/:businessId', (req, res) => {
@@ -38,7 +44,11 @@ router.get('/item/:id', (req, res) => {
 });
 
 // Create template
-router.post('/', (req, res) => {
+router.post('/', validateBody({
+  business_id: { required: true, type: 'string' },
+  name: { required: true, type: 'string', maxLength: 200 },
+  platform: { required: true, type: 'string' }
+}), (req, res) => {
   try {
     const {
       business_id,

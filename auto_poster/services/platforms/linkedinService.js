@@ -334,6 +334,14 @@ class LinkedInService {
     // Just return success
     return { success: true };
   }
+
+  // Fetch engagement insights for a UGC post. LinkedIn organic post analytics
+  // require additional partner permissions (socialActions /
+  // organizationalEntityShareStatistics), so this returns null until those
+  // scopes are granted. Wire the real call here when available.
+  async getInsights(platformPostId, opts = {}) {
+    return null;
+  }
 }
 
 module.exports = new LinkedInService();

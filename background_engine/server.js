@@ -12,11 +12,17 @@ const settingsRoutes = require('./routes/settingsRoutes');
 const storageService = require('./services/storageService');
 const geminiService = require('./services/geminiService');
 const { createAuthMiddleware, createRateLimiter } = require('../shared/middleware/auth');
+const { corsOptions } = require('../shared/config/corsOptions');
+const { validateEnv } = require('../shared/config/validateEnv');
+const { initObservability, logError } = require('../shared/observability');
+
+validateEnv();
+initObservability('background_engine');
 
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions()));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
@@ -36,6 +42,8 @@ app.use('/api/', createAuthMiddleware({
 
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, 'public')));
+// Shared front-end assets (service-config.js, etc.)
+app.use('/shared', express.static(path.join(__dirname, '..', 'shared', 'public')));
 
 // Serve background images
 app.use('/backgrounds', express.static(config.storage.backgroundsPath));
@@ -171,7 +179,7 @@ app.get('/', (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('Server error:', err);
+  logError(err, { service: 'background_engine', method: req.method, path: req.originalUrl });
   res.status(500).json({
     success: false,
     error: 'Internal server error',

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/shared/service-config.js"></script>
+  <script src="/shared/auth-guard.js"></script>
+  <script src="/js/brandio-shell.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics · Brandio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/brandio-shell.css" />
+  <style>
+    /* Analytics-specific layout built on the shared design tokens so it
+       matches the dashboard (light + dark). */
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-secondary); color: var(--text-primary); }
+    .an-header {
+      background: var(--bg-primary); border-bottom: 1px solid var(--border-color);
+      padding: 16px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .an-header h1 { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+    .an-header h1 i { color: var(--primary); }
+    .spacer { flex: 1; }
+    .muted { color: var(--text-tertiary); font-size: 13px; }
+    select, .btn {
+      font: inherit; font-size: 14px; padding: 9px 14px; border-radius: var(--radius);
+      border: 1px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); cursor: pointer;
+      transition: background .15s, border-color .15s, box-shadow .15s;
+    }
+    select:hover, .btn:hover { border-color: var(--border-strong); }
+    .btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+    .btn.primary:hover { background: var(--primary-dark); }
+    .btn.primary:disabled { opacity: .6; cursor: not-allowed; }
+    .btn.ghost { background: transparent; }
+    a.btn { text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+
+    /* Our header is sticky/in-flow, so cancel the dashboard's fixed-header offset. */
+    .main-content { margin-top: 0 !important; }
+    .content-area { flex: 1; min-width: 0; padding: 24px; max-width: 1180px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; }
+    .card {
+      background: var(--bg-primary); border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow-xs);
+    }
+    .card .label { font-size: 13px; color: var(--text-secondary); font-weight: 600; }
+    .card .value { font-size: 28px; font-weight: 800; margin-top: 6px; }
+    .card .sub { font-size: 12px; color: var(--text-tertiary); margin-top: 4px; }
+    .card .value i { font-size: 18px; color: var(--primary); margin-right: 4px; }
+
+    section { margin-top: 28px; }
+    section h2 { font-size: 14px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 12px; }
+    .platform-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .pcard { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-xs); }
+    .pcard .phead { font-weight: 700; text-transform: capitalize; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .pcard .phead .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .pcard .pstats { font-size: 13px; line-height: 1.9; color: var(--text-secondary); }
+    .pcard .pstats b { color: var(--text-primary); }
+
+    table { width: 100%; border-collapse: collapse; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-xs); }
+    th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
+    th { background: var(--bg-secondary); color: var(--text-secondary); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; font-weight: 600; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .pill { display: inline-block; padding: 2px 10px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 600; background: var(--primary-50); color: var(--primary-dark); text-transform: capitalize; }
+
+    .empty { background: var(--bg-primary); border: 1px dashed var(--border-strong); border-radius: var(--radius-lg); padding: 44px; text-align: center; color: var(--text-secondary); }
+    .empty i { font-size: 32px; color: var(--text-tertiary); margin-bottom: 12px; display: block; }
+    .empty h3 { color: var(--text-primary); margin-bottom: 8px; }
+    .note { font-size: 13px; color: var(--text-tertiary); margin-top: 10px; }
+
+    .banner { margin-top: 16px; padding: 12px 16px; border-radius: var(--radius); font-size: 14px; display: none; border: 1px solid transparent; }
+    .banner.show { display: block; }
+    .banner.info { background: var(--primary-50); color: var(--primary-dark); border-color: var(--primary-100); }
+    .banner.warn { background: #FEF3C7; color: #92400E; border-color: #FDE68A; }
+  </style>
+</head>
+<body>
+  <header class="an-header">
+    <h1><i class="fas fa-chart-pie"></i> Analytics</h1>
+    <select id="bizSelect" aria-label="Business"></select>
+    <div class="spacer"></div>
+    <span id="lastUpdated" class="muted"></span>
+    <a href="/dashboard" class="btn ghost"><i class="fas fa-arrow-left"></i> Dashboard</a>
+    <button class="btn primary" id="refreshBtn"><i class="fas fa-rotate"></i> Refresh from platforms</button>
+    <button class="btn ghost" id="logoutBtn">Sign out</button>
+  </header>
+
+  <main class="main-content">
+    <!-- Sidebar (matches the dashboard) -->
+    <nav class="sidebar">
+      <ul class="nav-menu">
+        <li class="nav-item" onclick="location.href='/dashboard'">
+          <i class="fas fa-chart-line"></i><span>Dashboard</span>
+        </li>
+        <li class="nav-item" onclick="location.href='/dashboard#posts'">
+          <i class="fas fa-images"></i><span>Posts</span>
+        </li>
+        <li class="nav-item" onclick="location.href='/dashboard#templates'">
+          <i class="fas fa-layer-group"></i><span>Templates</span>
+        </li>
+        <li class="nav-item" onclick="location.href='/dashboard#schedule'">
+          <i class="fas fa-calendar-alt"></i><span>Schedule</span>
+        </li>
+        <li class="nav-item active">
+          <i class="fas fa-chart-pie"></i><span>Analytics</span>
+        </li>
+        <li class="nav-item" onclick="location.href='/dashboard#assets'">
+          <i class="fas fa-folder-open"></i><span>Assets</span>
+        </li>
+        <li class="nav-item" onclick="location.href='/dashboard#settings'">
+          <i class="fas fa-cog"></i><span>Settings</span>
+        </li>
+      </ul>
+
+      <div class="service-links">
+        <h4>Quick Links</h4>
+        <a href="/backgrounds/" class="service-link"><i class="fas fa-image"></i> Background Engine</a>
+        <a href="/generator/" class="service-link"><i class="fas fa-wand-magic-sparkles"></i> Post Generator</a>
+        <a href="/poster/" class="service-link"><i class="fas fa-clock"></i> Auto Poster</a>
+      </div>
+    </nav>
+
+    <div class="content-area">
+    <div id="banner" class="banner"></div>
+
+    <div id="content" style="display:none">
+      <div class="cards" id="cards"></div>
+
+      <section>
+        <h2>By platform</h2>
+        <div class="platform-grid" id="platformGrid"></div>
+      </section>
+
+      <section>
+        <h2>Top posts</h2>
+        <div id="postsWrap"></div>
+      </section>
+    </div>
+
+    <div id="emptyState" class="empty" style="display:none">
+      <i class="fas fa-chart-line"></i>
+      <h3>No analytics yet</h3>
+      <p>Connect your social accounts, publish posts, then click <strong>Refresh from platforms</strong> to pull engagement metrics here.</p>
+      <p class="note" id="emptyNote"></p>
+    </div>
+
+    <div id="noBiz" class="empty" style="display:none">
+      <i class="fas fa-briefcase"></i>
+      <h3>No businesses found</h3>
+      <p>Create a business first, then come back to see its analytics.</p>
+    </div>
+    </div><!-- /.content-area -->
+  </main>
+
+  <script>
+    (function () {
+      var PLATFORM_COLORS = { instagram: '#E1306C', facebook: '#1877F2', twitter: '#1DA1F2', linkedin: '#0A66C2' };
+      var bizSelect = document.getElementById('bizSelect');
+      var refreshBtn = document.getElementById('refreshBtn');
+      var banner = document.getElementById('banner');
+      var content = document.getElementById('content');
+      var emptyState = document.getElementById('emptyState');
+      var noBiz = document.getElementById('noBiz');
+
+      document.getElementById('logoutBtn').addEventListener('click', function () {
+        if (window.Brandio) window.Brandio.logout(); else window.location.href = '/login';
+      });
+
+      var fmt = function (n) { return (n || 0).toLocaleString(); };
+      function showBanner(msg, kind) { banner.textContent = msg; banner.className = 'banner show ' + (kind || 'info'); }
+      function hideBanner() { banner.className = 'banner'; }
+
+      async function getJSON(url, opts) {
+        var r = await fetch(url, opts);
+        if (r.status === 401) { if (window.Brandio) window.Brandio.logout(); throw new Error('Unauthorized'); }
+        return r.json();
+      }
+
+      async function loadBusinesses() {
+        var data = await getJSON('/api/businesses');
+        var list = (data && data.businesses) || [];
+        if (!list.length) { noBiz.style.display = 'block'; return; }
+        bizSelect.innerHTML = list.map(function (b) {
+          return '<option value="' + b.id + '">' + escapeHtml(b.name || 'Untitled') + '</option>';
+        }).join('');
+        await loadAnalytics(list[0].id);
+      }
+
+      function metricCard(label, value, sub) {
+        return '<div class="card"><div class="label">' + label + '</div><div class="value">' + value +
+          '</div>' + (sub ? '<div class="sub">' + sub + '</div>' : '') + '</div>';
+      }
+
+      async function loadAnalytics(businessId) {
+        hideBanner();
+        var summary = await getJSON('/api/analytics/' + businessId + '/summary');
+        var t = summary.totals || {};
+        document.getElementById('lastUpdated').textContent =
+          summary.lastUpdated ? ('Updated ' + new Date(summary.lastUpdated).toLocaleString()) : '';
+
+        if (!summary.trackedPosts) {
+          content.style.display = 'none';
+          emptyState.style.display = 'block';
+          document.getElementById('emptyNote').textContent =
+            summary.publishedPosts ? (summary.publishedPosts + ' published post(s) detected — refresh to pull their metrics.')
+                                   : 'No published posts detected yet.';
+          return;
+        }
+
+        emptyState.style.display = 'none';
+        content.style.display = 'block';
+
+        document.getElementById('cards').innerHTML = [
+          metricCard('Impressions', '<i class="fas fa-eye"></i>' + fmt(t.impressions)),
+          metricCard('Reach', '<i class="fas fa-users"></i>' + fmt(t.reach)),
+          metricCard('Engagement', '<i class="fas fa-heart"></i>' + fmt(summary.engagement), 'likes + comments + shares + saves'),
+          metricCard('Engagement rate', summary.engagementRate + '%', 'of impressions'),
+          metricCard('Tracked posts', fmt(summary.trackedPosts), summary.publishedPosts + ' published')
+        ].join('');
+
+        var bp = summary.byPlatform || {};
+        document.getElementById('platformGrid').innerHTML = Object.keys(bp).map(function (plat) {
+          var m = bp[plat];
+          var color = PLATFORM_COLORS[plat] || 'var(--primary)';
+          return '<div class="pcard"><div class="phead"><span class="dot" style="background:' + color + '"></span>' +
+            plat + ' · ' + m.posts + ' posts</div><div class="pstats">' +
+            '<b>' + fmt(m.impressions) + '</b> impressions &nbsp;·&nbsp; <b>' + fmt(m.likes) + '</b> likes<br>' +
+            '<b>' + fmt(m.comments) + '</b> comments &nbsp;·&nbsp; <b>' + fmt(m.shares) + '</b> shares</div></div>';
+        }).join('') || '<p class="muted">No per-platform data.</p>';
+
+        var posts = (await getJSON('/api/analytics/' + businessId + '/posts')).posts || [];
+        var rows = posts.map(function (p) {
+          var m = p.metrics;
+          return '<tr><td>' + escapeHtml(p.title) + '</td>' +
+            '<td><span class="pill">' + p.platform + '</span></td>' +
+            '<td class="num">' + fmt(m.impressions) + '</td>' +
+            '<td class="num">' + fmt(m.likes) + '</td>' +
+            '<td class="num">' + fmt(m.comments) + '</td>' +
+            '<td class="num">' + fmt(m.shares) + '</td></tr>';
+        }).join('');
+        document.getElementById('postsWrap').innerHTML =
+          '<table><thead><tr><th>Post</th><th>Platform</th><th class="num">Impr.</th><th class="num">Likes</th><th class="num">Comments</th><th class="num">Shares</th></tr></thead><tbody>' +
+          rows + '</tbody></table>';
+      }
+
+      function escapeHtml(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+
+      bizSelect.addEventListener('change', function () { loadAnalytics(bizSelect.value); });
+
+      refreshBtn.addEventListener('click', async function () {
+        if (!bizSelect.value) return;
+        refreshBtn.disabled = true; refreshBtn.innerHTML = '<i class="fas fa-rotate fa-spin"></i> Refreshing…';
+        try {
+          var r = await getJSON('/api/analytics/' + bizSelect.value + '/refresh', { method: 'POST' });
+          showBanner(r.note || 'Refresh complete.', r.refreshed ? 'info' : 'warn');
+          await loadAnalytics(bizSelect.value);
+        } catch (e) {
+          showBanner('Refresh failed: ' + e.message, 'warn');
+        } finally {
+          refreshBtn.disabled = false; refreshBtn.innerHTML = '<i class="fas fa-rotate"></i> Refresh from platforms';
+        }
+      });
+
+      loadBusinesses().catch(function (e) { showBanner('Failed to load: ' + e.message, 'warn'); });
+    })();
+  </script>
+</body>
+</html>

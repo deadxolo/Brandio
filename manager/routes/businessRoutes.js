@@ -34,13 +34,10 @@ const upload = multer({
   }
 });
 
-// Demo user ID (in production, this would come from auth)
-const DEMO_USER_ID = 'user_demo_001';
-
 // Get all businesses for current user
 router.get('/', (req, res) => {
   try {
-    const businesses = db.getBusinessesByUser(DEMO_USER_ID);
+    const businesses = db.getBusinessesByUser(req.user.id);
     res.json({
       success: true,
       businesses,
@@ -76,7 +73,7 @@ router.post('/', upload.single('logo'), (req, res) => {
     }
 
     const businessData = {
-      user_id: DEMO_USER_ID,
+      user_id: req.user.id,
       name,
       description: description || null,
       logo: req.file ? `/uploads/logos/${req.file.filename}` : null,
@@ -107,7 +104,7 @@ router.get('/:id', (req, res) => {
   try {
     const business = db.getBusiness(req.params.id);
 
-    if (!business) {
+    if (!business || business.user_id !== req.user.id) {
       return res.status(404).json({ success: false, error: 'Business not found' });
     }
 
@@ -130,7 +127,7 @@ router.get('/:id', (req, res) => {
 router.put('/:id', upload.single('logo'), (req, res) => {
   try {
     const existing = db.getBusiness(req.params.id);
-    if (!existing) {
+    if (!existing || existing.user_id !== req.user.id) {
       return res.status(404).json({ success: false, error: 'Business not found' });
     }
 
@@ -176,7 +173,7 @@ router.put('/:id', upload.single('logo'), (req, res) => {
 router.delete('/:id', (req, res) => {
   try {
     const existing = db.getBusiness(req.params.id);
-    if (!existing) {
+    if (!existing || existing.user_id !== req.user.id) {
       return res.status(404).json({ success: false, error: 'Business not found' });
     }
 
@@ -195,7 +192,7 @@ router.delete('/:id', (req, res) => {
 router.put('/:id/brand', (req, res) => {
   try {
     const existing = db.getBusiness(req.params.id);
-    if (!existing) {
+    if (!existing || existing.user_id !== req.user.id) {
       return res.status(404).json({ success: false, error: 'Business not found' });
     }
 
@@ -221,7 +218,7 @@ router.put('/:id/brand', (req, res) => {
 router.put('/:id/social-links', (req, res) => {
   try {
     const existing = db.getBusiness(req.params.id);
-    if (!existing) {
+    if (!existing || existing.user_id !== req.user.id) {
       return res.status(404).json({ success: false, error: 'Business not found' });
     }
 

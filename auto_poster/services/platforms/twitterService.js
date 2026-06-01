@@ -309,6 +309,27 @@ class TwitterService {
       return { success: false, error: error.message };
     }
   }
+
+  // Fetch engagement insights (public metrics) for a tweet. Returns normalized
+  // metrics, or null if unavailable.
+  async getInsights(platformPostId, opts = {}) {
+    const accessToken = opts.accessToken;
+    if (!accessToken || !platformPostId) return null;
+    try {
+      const resp = await axios.get(`${this.apiUrl}/tweets/${platformPostId}`, {
+        params: { 'tweet.fields': 'public_metrics' },
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      const m = (resp.data && resp.data.data && resp.data.data.public_metrics) || {};
+      return {
+        impressions: m.impression_count || 0, reach: 0, likes: m.like_count || 0,
+        comments: m.reply_count || 0, shares: m.retweet_count || 0, saves: 0, clicks: 0
+      };
+    } catch (error) {
+      console.warn('[TwitterService] getInsights failed:', error.response?.data || error.message);
+      return null;
+    }
+  }
 }
 
 module.exports = new TwitterService();

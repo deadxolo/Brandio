@@ -17,12 +17,10 @@ function filterPostsWithValidImages(posts) {
   });
 }
 
-const DEMO_USER_ID = 'user_demo_001';
-
 // Get dashboard overview for all businesses
 router.get('/overview', async (req, res) => {
   try {
-    const businesses = db.getBusinessesByUser(DEMO_USER_ID);
+    const businesses = db.getBusinessesByUser(req.user.id);
 
     // Aggregate stats across all businesses
     let totalStats = {
@@ -64,7 +62,7 @@ router.get('/overview', async (req, res) => {
 router.get('/stats/:businessId', (req, res) => {
   try {
     const business = db.getBusiness(req.params.businessId);
-    if (!business) {
+    if (!business || business.user_id !== req.user.id) {
       return res.status(404).json({ success: false, error: 'Business not found' });
     }
 
@@ -130,6 +128,9 @@ router.get('/services/health', async (req, res) => {
 // Get activity feed
 router.get('/activity/:businessId', (req, res) => {
   try {
+    if (!db.userOwnsBusiness(req.user.id, req.params.businessId)) {
+      return res.status(404).json({ success: false, error: 'Business not found' });
+    }
     const { limit = 20 } = req.query;
     const allPosts = db.getPostsByBusiness(req.params.businessId, null, parseInt(limit) + 10);
     const posts = filterPostsWithValidImages(allPosts).slice(0, parseInt(limit));

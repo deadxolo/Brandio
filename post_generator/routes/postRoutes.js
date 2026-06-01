@@ -1,9 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../shared/db/database');
+const requireBusinessOwnership = require('../../shared/middleware/ownership');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+
+// Enforce business ownership for authenticated users (lenient: skips service/dev calls)
+router.param('businessId', requireBusinessOwnership.param(db));
+router.use(requireBusinessOwnership(db));
 
 // Configure multer for image uploads
 const storage = multer.diskStorage({

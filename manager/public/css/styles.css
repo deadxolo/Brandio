@@ -603,7 +603,9 @@ body {
   text-align: center;
 }
 
-.empty-state i {
+/* Only the decorative icon that is a DIRECT child becomes the round badge —
+   not icons nested inside buttons/links within the empty state. */
+.empty-state > i {
   display: grid;
   place-items: center;
   width: 72px;
@@ -718,6 +720,32 @@ body {
   height: 34px;
   padding: 0;
   border-radius: var(--radius);
+}
+
+/* ============================================================
+   EVERY (text) button is identical
+   - Size variants (.btn-sm / .btn-lg) and context-specific size
+     overrides (e.g. post-card buttons) are collapsed to one size.
+   - Icon-only .btn-icon (square 34x34) is intentionally excluded.
+   - !important is used deliberately to beat existing variant /
+     contextual / inline sizing so the result is truly uniform.
+   ============================================================ */
+.btn:not(.btn-icon),
+.btn-sm:not(.btn-icon),
+.btn-lg:not(.btn-icon) {
+  padding: 9px 16px !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  gap: 8px !important;
+  min-height: 36px !important;
+  border-radius: var(--radius) !important;
+}
+
+.btn:not(.btn-icon) > i,
+.btn:not(.btn-icon) > svg {
+  font-size: 13px !important;
+  line-height: 1;
+  flex: 0 0 auto;
 }
 
 /* Modal */

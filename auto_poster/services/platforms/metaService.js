@@ -457,6 +457,43 @@ class MetaService {
       return null;
     }
   }
+
+  // Fetch engagement insights for a published post. Best-effort: returns
+  // normalized metrics, or null if unavailable / not permitted.
+  async getInsights(platformPostId, opts = {}) {
+    const accessToken = opts.accessToken;
+    const platform = opts.platform || 'instagram';
+    if (!accessToken || !platformPostId) return null;
+    try {
+      if (platform === 'instagram') {
+        const resp = await axios.get(`${this.graphApiUrl}/${platformPostId}/insights`, {
+          params: { metric: 'impressions,reach,likes,comments,saved,shares', access_token: accessToken }
+        });
+        const v = {};
+        for (const m of (resp.data && resp.data.data) || []) {
+          v[m.name] = (m.values && m.values[0] && m.values[0].value) || 0;
+        }
+        return {
+          impressions: v.impressions || 0, reach: v.reach || 0, likes: v.likes || 0,
+          comments: v.comments || 0, saves: v.saved || 0, shares: v.shares || 0, clicks: 0
+        };
+      }
+      // Facebook page post
+      const resp = await axios.get(`${this.graphApiUrl}/${platformPostId}`, {
+        params: { fields: 'likes.summary(true),comments.summary(true),shares', access_token: accessToken }
+      });
+      const d = resp.data || {};
+      return {
+        impressions: 0, reach: 0,
+        likes: (d.likes && d.likes.summary && d.likes.summary.total_count) || 0,
+        comments: (d.comments && d.comments.summary && d.comments.summary.total_count) || 0,
+        shares: (d.shares && d.shares.count) || 0, saves: 0, clicks: 0
+      };
+    } catch (error) {
+      console.warn('[MetaService] getInsights failed:', (error.response && error.response.data && error.response.data.error && error.response.data.error.message) || error.message);
+      return null;
+    }
+  }
 }
 
 module.exports = new MetaService();

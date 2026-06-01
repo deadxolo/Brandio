@@ -1,12 +1,19 @@
 // Platform-specific configurations for social media publishing
 
+// Base URL of this deployment, used to build OAuth redirect URIs when an
+// explicit *_REDIRECT_URI is not provided. Set PUBLIC_BASE_URL in the
+// environment (e.g. https://app.yourdomain.com). Empty by default so no
+// stale/personal tunnel URL is ever baked in.
+const PUBLIC_BASE_URL = (process.env.PUBLIC_BASE_URL || '').replace(/\/$/, '');
+const redirect = (path) => (PUBLIC_BASE_URL ? `${PUBLIC_BASE_URL}${path}` : '');
+
 module.exports = {
   // Meta (Facebook & Instagram)
   meta: {
     name: 'Meta',
     appId: process.env.META_APP_ID || '',
     appSecret: process.env.META_APP_SECRET || '',
-    redirectUri: process.env.META_REDIRECT_URI || 'https://e16b643fcc41.ngrok-free.app/api/oauth/meta/callback',
+    redirectUri: process.env.META_REDIRECT_URI || redirect('/api/oauth/meta/callback'),
     scopes: [
       'instagram_basic',
       'instagram_content_publish',
@@ -42,7 +49,7 @@ module.exports = {
     name: 'Twitter/X',
     clientId: process.env.TWITTER_CLIENT_ID || '',
     clientSecret: process.env.TWITTER_CLIENT_SECRET || '',
-    redirectUri: process.env.TWITTER_REDIRECT_URI || 'https://e16b643fcc41.ngrok-free.app/api/oauth/twitter/callback',
+    redirectUri: process.env.TWITTER_REDIRECT_URI || redirect('/api/oauth/twitter/callback'),
     scopes: ['tweet.read', 'tweet.write', 'users.read', 'offline.access'],
     authUrl: 'https://twitter.com/i/oauth2/authorize',
     tokenUrl: 'https://api.twitter.com/2/oauth2/token',
@@ -68,7 +75,7 @@ module.exports = {
     name: 'LinkedIn',
     clientId: process.env.LINKEDIN_CLIENT_ID || '',
     clientSecret: process.env.LINKEDIN_CLIENT_SECRET || '',
-    redirectUri: process.env.LINKEDIN_REDIRECT_URI || 'https://e16b643fcc41.ngrok-free.app/api/oauth/linkedin/callback',
+    redirectUri: process.env.LINKEDIN_REDIRECT_URI || redirect('/api/oauth/linkedin/callback'),
     scopes: ['openid', 'profile', 'w_member_social'],
     authUrl: 'https://www.linkedin.com/oauth/v2/authorization',
     tokenUrl: 'https://www.linkedin.com/oauth/v2/accessToken',

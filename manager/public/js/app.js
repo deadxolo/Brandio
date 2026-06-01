@@ -4,7 +4,10 @@ class App {
   constructor() {
     this.currentBusiness = null;
     this.businesses = [];
-    this.currentPage = 'dashboard';
+    // Allow deep-linking from other pages, e.g. /dashboard#posts
+    const validPages = ['dashboard', 'posts', 'templates', 'schedule', 'assets', 'settings'];
+    const fromHash = (window.location.hash || '').replace('#', '');
+    this.currentPage = validPages.includes(fromHash) ? fromHash : 'dashboard';
     this.services = {};
     this.templates = [];
     this.imageCache = new Map();
@@ -143,6 +146,9 @@ class App {
 
   // Navigation
   navigateTo(page) {
+    // Analytics is a standalone page, not an in-dashboard SPA view.
+    if (page === 'analytics') { window.location.href = '/analytics'; return; }
+
     this.currentPage = page;
 
     // Update nav items
@@ -243,7 +249,7 @@ class App {
           </div>
           <div style="display: flex; gap: 12px; margin-bottom: 12px;">
             <textarea id="aiPromptInput" placeholder="Describe your template... e.g., 'A festive Diwali sale post with bold headline and discount text'" rows="2" style="flex: 1; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--gray-50); color: var(--text-primary); font-size: 14px; resize: none; font-family: inherit;"></textarea>
-            <button class="btn btn-primary" onclick="app.generateAITemplate()" style="padding: 12px 20px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 8px;">
+            <button class="btn btn-primary" onclick="app.generateAITemplate()" style="white-space: nowrap;">
               <i class="fas fa-wand-magic-sparkles"></i> Generate
             </button>
           </div>
@@ -1625,8 +1631,8 @@ class App {
       <div class="page-header">
         <h1 class="page-title">Schedule</h1>
         <div class="page-actions">
-          <a href="http://localhost:3003?business=${this.currentBusiness.id}" target="_blank" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 6px;">
-            <i class="fas fa-external-link-alt" style="font-size: 11px;"></i> Open Scheduler
+          <a href="http://localhost:3003?business=${this.currentBusiness.id}" target="_blank" class="btn btn-primary">
+            <i class="fas fa-external-link-alt"></i> Open Scheduler
           </a>
         </div>
       </div>
@@ -1637,8 +1643,8 @@ class App {
             <i class="fas fa-calendar-alt" style="font-size: 64px; color: var(--gray-300); margin-bottom: 20px;"></i>
             <h3 style="margin-bottom: 8px;">Schedule Manager</h3>
             <p style="margin-bottom: 24px; color: var(--text-secondary);">Manage your scheduled posts in the Auto Poster service</p>
-            <a href="http://localhost:3003?business=${this.currentBusiness.id}" target="_blank" class="btn btn-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; font-size: 14px; font-weight: 500;">
-              <i class="fas fa-external-link-alt" style="font-size: 13px;"></i> Open Auto Poster
+            <a href="http://localhost:3003?business=${this.currentBusiness.id}" target="_blank" class="btn btn-primary">
+              <i class="fas fa-external-link-alt"></i> Open Auto Poster
             </a>
           </div>
         </div>

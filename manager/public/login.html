@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign in · Brandio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #f4ecd8; --paper-2: #ede3c6; --ink: #0a0a0a;
+      --pink: #ff3d7f; --cyan: #00d4ff; --yellow: #ffea00; --lime: #c6ff3d;
+      --shadow: 6px 6px 0 0 var(--ink);
+      --shadow-lg: 12px 12px 0 0 var(--ink);
+      --border: 3px solid var(--ink);
+      --border-thick: 4px solid var(--ink);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--paper);
+      background-image: radial-gradient(var(--paper-2) 1.4px, transparent 1.4px);
+      background-size: 18px 18px;
+      color: var(--ink);
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    .black { font-family: 'Archivo Black', sans-serif; letter-spacing: -0.01em; }
+    .serif { font-family: 'DM Serif Display', Georgia, serif; }
+    .mono  { font-family: 'Space Mono', monospace; }
+
+    .mag {
+      width: 100%; max-width: 900px; background: var(--paper);
+      border: var(--border-thick); box-shadow: var(--shadow-lg);
+      display: grid; grid-template-columns: 1.05fr 1fr;
+    }
+
+    /* ---- Left: editorial masthead ---- */
+    .masthead {
+      background: var(--ink); color: var(--paper);
+      padding: 34px 30px; display: flex; flex-direction: column; gap: 18px;
+      border-right: var(--border-thick); position: relative; overflow: hidden;
+    }
+    .kicker { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--yellow); }
+    .rule { height: 3px; background: var(--paper); }
+    .rule.thin { height: 2px; opacity: .5; }
+    .wordmark { font-family: 'Archivo Black', sans-serif; font-size: clamp(44px, 8vw, 72px); line-height: .9; }
+    .wordmark .dot { color: var(--pink); }
+    .lede { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 22px; line-height: 1.25; max-width: 22ch; }
+    .stars { font-size: 20px; letter-spacing: 6px; color: var(--cyan); }
+    .masthead-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .barcode { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: .1em; opacity: .8; }
+    .stamp {
+      background: var(--yellow); color: var(--ink); border: 3px solid var(--paper);
+      transform: rotate(-6deg); padding: 6px 12px; font-family: 'Space Mono', monospace;
+      font-weight: 700; font-size: 12px; text-transform: uppercase; box-shadow: 4px 4px 0 0 var(--pink);
+    }
+
+    /* ---- Right: the form ---- */
+    .panel { padding: 34px 30px; display: flex; flex-direction: column; }
+    .tag {
+      align-self: flex-start; background: var(--cyan); border: var(--border);
+      box-shadow: 4px 4px 0 0 var(--ink); padding: 6px 14px; margin-bottom: 22px;
+      font-family: 'Space Mono', monospace; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; font-size: 13px;
+    }
+    label { display: block; font-family: 'Space Mono', monospace; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; font-size: 12px; margin: 16px 0 7px; }
+    input {
+      width: 100%; padding: 14px; font: inherit; font-size: 16px; background: #fff;
+      border: var(--border); outline: none; transition: box-shadow .08s, transform .08s, background .08s;
+    }
+    input:focus { background: #f0fdff; box-shadow: var(--shadow); transform: translate(-2px, -2px); }
+
+    .btn {
+      width: 100%; margin-top: 26px; padding: 16px; cursor: pointer;
+      background: var(--pink); color: var(--ink); border: var(--border-thick);
+      box-shadow: var(--shadow); font-family: 'Archivo Black', sans-serif; font-size: 17px;
+      text-transform: uppercase; letter-spacing: .04em; transition: transform .08s, box-shadow .08s;
+    }
+    .btn:hover { transform: translate(-2px, -2px); box-shadow: 9px 9px 0 0 var(--ink); }
+    .btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 0 var(--ink); }
+    .btn:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: var(--shadow); }
+
+    .msg { display: none; margin-top: 18px; padding: 12px 14px; border: var(--border); background: var(--pink); color: var(--ink); font-weight: 700; box-shadow: 4px 4px 0 0 var(--ink); }
+    .msg.show { display: block; }
+
+    .foot { margin-top: auto; padding-top: 26px; font-family: 'Space Mono', monospace; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+    .foot a { color: var(--ink); font-weight: 700; text-decoration: none; background: var(--yellow); border: 2px solid var(--ink); padding: 2px 7px; box-shadow: 3px 3px 0 0 var(--ink); display: inline-block; }
+    .foot a:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 0 var(--ink); }
+
+    @media (max-width: 720px) {
+      .mag { grid-template-columns: 1fr; }
+      .masthead { border-right: none; border-bottom: var(--border-thick); }
+      .wordmark { font-size: 56px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mag">
+    <!-- Editorial masthead -->
+    <aside class="masthead">
+      <div class="kicker">Issue Nº 01 — The Social Studio</div>
+      <div class="rule"></div>
+      <h1 class="wordmark">BRAND<span class="dot">·</span>IO</h1>
+      <div class="rule thin"></div>
+      <p class="lede">Design, schedule &amp; publish to every feed — from one desk.</p>
+      <div class="stars">★ ★ ★ ★ ★</div>
+      <div class="masthead-foot">
+        <span class="barcode">||‖|‖‖||‖|‖||‖ 0&nbsp;26&nbsp;2026</span>
+        <span class="stamp">Welcome back</span>
+      </div>
+    </aside>
+
+    <!-- Sign-in form -->
+    <main class="panel">
+      <span class="tag">Sign in</span>
+      <form id="loginForm">
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required placeholder="Your password" />
+
+        <button class="btn" id="submitBtn" type="submit">Sign in →</button>
+        <div class="msg" id="errorMsg"></div>
+      </form>
+      <div class="foot">No account? <a href="/signup">Create one</a></div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var form = document.getElementById('loginForm');
+      var btn = document.getElementById('submitBtn');
+      var errEl = document.getElementById('errorMsg');
+
+      function redirectTarget() {
+        var p = new URLSearchParams(window.location.search).get('redirect');
+        if (p && p.indexOf('/') === 0 && p.indexOf('//') !== 0) return p;
+        return '/';
+      }
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        errEl.classList.remove('show');
+        btn.disabled = true; btn.textContent = 'Signing in…';
+        try {
+          var res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: document.getElementById('email').value.trim(),
+              password: document.getElementById('password').value
+            })
+          });
+          var data = await res.json();
+          if (!res.ok || !data.success) throw new Error(data.error || 'Login failed');
+          localStorage.setItem('brandio_auth_token', data.token);
+          localStorage.setItem('brandio_user', JSON.stringify(data.user));
+          window.location.href = redirectTarget();
+        } catch (err) {
+          errEl.textContent = err.message;
+          errEl.classList.add('show');
+          btn.disabled = false; btn.textContent = 'Sign in →';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

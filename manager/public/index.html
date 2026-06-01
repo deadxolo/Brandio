@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="/shared/service-config.js"></script>
+  <script src="/shared/auth-guard.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Brandio · Dashboard</title>
@@ -104,11 +106,44 @@
             <a href="#" class="dropdown-item" role="menuitem" onclick="event.preventDefault(); window.openCmdK?.();"><i class="fas fa-bolt"></i> Command palette <kbd class="kbd kbd-r">⌘K</kbd></a>
             <div class="dropdown-divider"></div>
             <a href="#" class="dropdown-item" role="menuitem" onclick="event.preventDefault(); window.openCheat?.();"><i class="fas fa-circle-question"></i> Keyboard shortcuts <kbd class="kbd kbd-r">?</kbd></a>
-            <a href="#" class="dropdown-item danger" role="menuitem"><i class="fas fa-right-from-bracket"></i> Sign out</a>
+            <a href="#" class="dropdown-item danger" role="menuitem" id="signOutBtn" onclick="event.preventDefault(); (window.Brandio ? window.Brandio.logout() : (location.href='/login'));"><i class="fas fa-right-from-bracket"></i> Sign out</a>
           </div>
         </div>
       </div>
     </header>
+
+    <!-- Populate the user menu from the logged-in account -->
+    <script>
+      (function () {
+        function paint(u) {
+          if (!u) return;
+          var name = u.name || 'Account';
+          var email = u.email || '';
+          document.querySelectorAll('.user-name').forEach(function (el) { el.textContent = name; });
+          document.querySelectorAll('.user-email').forEach(function (el) { el.textContent = email; });
+          var avatarUrl = u.avatar ||
+            ('https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=3B82F6&color=fff');
+          document.querySelectorAll('.user-avatar, .user-dropdown-head img').forEach(function (img) {
+            img.src = avatarUrl;
+            img.alt = name;
+          });
+        }
+
+        // 1) Paint immediately from the cached session (no flash of "Demo User").
+        paint((window.Brandio && window.Brandio.getUser && window.Brandio.getUser()) || null);
+
+        // 2) Refresh from the server (authoritative) and update the cache.
+        fetch('/api/auth/me')
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (data) {
+            if (data && data.success && data.user) {
+              paint(data.user);
+              try { localStorage.setItem('brandio_user', JSON.stringify(data.user)); } catch (e) {}
+            }
+          })
+          .catch(function () {});
+      })();
+    </script>
 
     <!-- Sticky subheader / breadcrumbs -->
     <div class="subheader" id="subheader" aria-label="Breadcrumb">
@@ -146,6 +181,10 @@
           <li class="nav-item" data-page="schedule">
             <i class="fas fa-calendar-alt"></i>
             <span>Schedule</span>
+          </li>
+          <li class="nav-item" data-page="analytics">
+            <i class="fas fa-chart-pie"></i>
+            <span>Analytics</span>
           </li>
           <li class="nav-item" data-page="assets">
             <i class="fas fa-folder-open"></i>

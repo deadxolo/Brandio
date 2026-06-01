@@ -10,8 +10,15 @@ const businessRoutes = require('./routes/businessRoutes');
 const assetRoutes = require('./routes/assetRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const postRoutes = require('./routes/postRoutes');
+const authRoutes = require('./routes/authRoutes');
 const servicesConfig = require('../shared/config/services');
-const { createAuthMiddleware, createRateLimiter } = require('../shared/middleware/auth');
+const { createAuthMiddleware, createRateLimiter, requireUser } = require('../shared/middleware/auth');
+const { corsOptions } = require('../shared/config/corsOptions');
+const { validateEnv } = require('../shared/config/validateEnv');
+const { initObservability, logError } = require('../shared/observability');
+
+validateEnv();
+initObservability('manager');
 
 // Internal service URLs (for Cloud Run - all services run in same container)
 const BG_ENGINE_URL = `http://127.0.0.1:${servicesConfig.services.background_engine.port}`;
@@ -21,7 +28,7 @@ const AUTO_POSTER_URL = `http://127.0.0.1:${servicesConfig.services.auto_poster.
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions()));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
@@ -38,6 +45,8 @@ app.use('/api/', createAuthMiddleware({
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
+// Shared front-end assets (service-config.js, etc.)
+app.use('/shared', express.static(path.join(__dirname, '..', 'shared', 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Also serve uploads from post_generator (images are stored there)
 app.use('/uploads', express.static(path.join(__dirname, '..', 'post_generator', 'uploads')));
@@ -104,6 +113,15 @@ app.use('/api/platforms', createProxyMiddleware({
   on: { error: onProxyError }
 }));
 
+app.use('/api/analytics', createProxyMiddleware({
+  target: AUTO_POSTER_URL,
+  changeOrigin: true,
+  // Express strips the '/api/analytics' mount prefix; re-add it so the
+  // request reaches auto_poster's /api/analytics router intact.
+  pathRewrite: (p) => `/api/analytics${p}`,
+  on: { error: onProxyError }
+}));
+
 app.use('/poster', createProxyMiddleware({
   target: AUTO_POSTER_URL,
   changeOrigin: true,
@@ -121,10 +139,13 @@ app.use((req, res, next) => {
 });
 
 // API Routes
-app.use('/api/businesses', businessRoutes);
-app.use('/api/assets', assetRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/posts', postRoutes);
+// Authentication (signup/login are reachable without a token; /me is guarded inside)
+app.use('/api/auth', authRoutes);
+// Data routes require an authenticated user (per-user isolation)
+app.use('/api/businesses', requireUser, businessRoutes);
+app.use('/api/assets', requireUser, assetRoutes);
+app.use('/api/dashboard', requireUser, dashboardRoutes);
+app.use('/api/posts', requireUser, postRoutes);
 
 // Health check endpoint for Cloud Run / Docker
 app.get('/api/health', (req, res) => {
@@ -188,14 +209,27 @@ app.get('/landing', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'landing.html'));
 });
 
+// Auth pages
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'signup.html'));
+});
+
 // Human-readable API/tech specs page
 app.get('/specs', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'specs.html'));
 });
 
+// Analytics dashboard
+app.get('/analytics', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'analytics.html'));
+});
+
 // Error handler
 app.use((err, req, res, next) => {
-  console.error('Server error:', err);
+  logError(err, { service: 'manager', method: req.method, path: req.originalUrl });
   res.status(500).json({
     success: false,
     error: 'Internal server error',

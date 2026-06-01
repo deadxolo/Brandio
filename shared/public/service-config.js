@@ -27,7 +27,7 @@
   } else {
     // Local development mode - services on different ports
     services = {
-      manager: `http://${host}:3000`,
+      manager: `http://${host}:3004`,
       background: `http://${host}:3001`,
       generator: `http://${host}:3002`,
       poster: `http://${host}:3003`
@@ -36,7 +36,7 @@
 
   // Port to service mapping
   const portMap = {
-    '3000': 'manager',
+    '3004': 'manager',
     '3001': 'background',
     '3002': 'generator',
     '3003': 'poster'
@@ -47,7 +47,7 @@
     if (!url || typeof url !== 'string') return url;
 
     // Check if URL contains localhost:300X pattern
-    const localhostMatch = url.match(/http:\/\/localhost:(300[0-3])(\/.*)?/);
+    const localhostMatch = url.match(/http:\/\/localhost:(300[1-4])(\/.*)?/);
     if (localhostMatch) {
       const port = localhostMatch[1];
       const path = localhostMatch[2] || '';
@@ -60,10 +60,35 @@
     return url;
   }
 
-  // Wrap fetch to automatically transform URLs
+  // Auth token helpers (shared across the app via localStorage on a single origin)
+  const TOKEN_KEY = 'brandio_auth_token';
+  function getAuthToken() {
+    try { return window.localStorage.getItem(TOKEN_KEY); } catch (e) { return null; }
+  }
+  window.getAuthToken = getAuthToken;
+
+  // Only attach the Authorization header to same-app requests (our services),
+  // never to third-party hosts (Google Fonts, CDNs, etc.).
+  function isInternalUrl(url) {
+    if (!url || typeof url !== 'string') return false;
+    if (url.startsWith('/')) return true;
+    if (url.startsWith(origin)) return true;
+    return /^https?:\/\/localhost:300[0-4]/.test(url) || /^https?:\/\/127\.0\.0\.1:300[0-4]/.test(url);
+  }
+
+  // Wrap fetch to transform URLs and attach the auth token.
   const originalFetch = window.fetch;
   window.fetch = function(url, options) {
     const transformedUrl = transformUrl(url);
+    const token = getAuthToken();
+    if (token && isInternalUrl(typeof url === 'string' ? url : transformedUrl)) {
+      options = options || {};
+      const headers = new Headers(options.headers || {});
+      if (!headers.has('Authorization')) {
+        headers.set('Authorization', 'Bearer ' + token);
+      }
+      options = { ...options, headers };
+    }
     return originalFetch.call(this, transformedUrl, options);
   };
 
@@ -74,11 +99,22 @@
     return originalOpen.call(this, transformedUrl, target, features);
   };
 
-  // Wrap XMLHttpRequest.open to transform URLs
+  // Wrap XMLHttpRequest.open to transform URLs and remember whether to auth.
   const originalXhrOpen = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function(method, url, ...args) {
     const transformedUrl = transformUrl(url);
+    this.__brandioInternal = isInternalUrl(typeof url === 'string' ? url : transformedUrl);
     return originalXhrOpen.call(this, method, transformedUrl, ...args);
+  };
+
+  // Inject the Authorization header on send (after open, before request goes out).
+  const originalXhrSend = XMLHttpRequest.prototype.send;
+  XMLHttpRequest.prototype.send = function(...args) {
+    const token = getAuthToken();
+    if (token && this.__brandioInternal) {
+      try { this.setRequestHeader('Authorization', 'Bearer ' + token); } catch (e) { /* ignore */ }
+    }
+    return originalXhrSend.apply(this, args);
   };
 
   // Export globally
