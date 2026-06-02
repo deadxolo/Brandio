@@ -1,28 +1,35 @@
 // Service configuration for all micro-apps
+// Ports may be overridden by environment variables so the same code runs in
+// local dev (defaults below) and on Cloud Run / Docker (PORT for the manager).
+const MANAGER_PORT = parseInt(process.env.PORT || process.env.MANAGER_PORT || '3004', 10);
+const BG_ENGINE_PORT = parseInt(process.env.BG_ENGINE_PORT || '3001', 10);
+const POST_GEN_PORT = parseInt(process.env.POST_GEN_PORT || '3002', 10);
+const AUTO_POSTER_PORT = parseInt(process.env.AUTO_POSTER_PORT || '3003', 10);
+
 module.exports = {
   services: {
     manager: {
       name: 'Manager',
-      port: 3004,
-      baseUrl: 'http://localhost:3004',
+      port: MANAGER_PORT,
+      baseUrl: `http://localhost:${MANAGER_PORT}`,
       description: 'Business management and dashboard'
     },
     background_engine: {
       name: 'Background Engine',
-      port: 3001,
-      baseUrl: 'http://localhost:3001',
+      port: BG_ENGINE_PORT,
+      baseUrl: `http://localhost:${BG_ENGINE_PORT}`,
       description: 'AI-powered background generator'
     },
     post_generator: {
       name: 'Post Generator',
-      port: 3002,
-      baseUrl: 'http://localhost:3002',
+      port: POST_GEN_PORT,
+      baseUrl: `http://localhost:${POST_GEN_PORT}`,
       description: 'Post template editor and creator'
     },
     auto_poster: {
       name: 'Auto Poster',
-      port: 3003,
-      baseUrl: 'http://localhost:3003',
+      port: AUTO_POSTER_PORT,
+      baseUrl: `http://localhost:${AUTO_POSTER_PORT}`,
       description: 'Social media scheduling and posting'
     }
   },
