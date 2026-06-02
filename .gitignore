@@ -6,3 +6,16 @@ node_modules/
 !*.env.example
 *.log
 .DS_Store
+
+# Archives / backups
+*.zip
+
+# Databases & SQLite runtime files
+*.db
+*.db-shm
+*.db-wal
+shared/db/data.json
+
+# Runtime-generated user data
+manager/uploads/
+background_engine/backgrounds/
