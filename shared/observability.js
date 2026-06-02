@@ -8,6 +8,19 @@
 let sentry = null;
 
 function initObservability(serviceName) {
+  // Capture crashes with a stack (otherwise a hard exit shows only a code).
+  if (!global.__brandioCrashHandlers) {
+    global.__brandioCrashHandlers = true;
+    process.on('uncaughtException', (err) => {
+      logError(err, { service: serviceName, fatal: 'uncaughtException' });
+      process.exit(1); // let the supervisor restart us cleanly
+    });
+    process.on('unhandledRejection', (reason) => {
+      const err = reason instanceof Error ? reason : new Error(String(reason));
+      logError(err, { service: serviceName, fatal: 'unhandledRejection' });
+    });
+  }
+
   const dsn = process.env.SENTRY_DSN;
   if (!dsn) return;
   try {

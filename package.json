@@ -6,7 +6,7 @@
   "bin": "main.js",
   "scripts": {
     "test": "node --test \"tests/**/*.test.js\"",
-    "start": "concurrently --kill-others-on-fail \"npm:start:*\"",
+    "start": "concurrently --restart-tries -1 --restart-after 2000 \"npm:start:*\"",
     "start:manager": "cd manager && node --no-deprecation server.js",
     "start:background": "cd background_engine && node --no-deprecation server.js",
     "start:post-generator": "cd post_generator && node --no-deprecation server.js",

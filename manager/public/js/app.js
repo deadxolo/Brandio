@@ -295,7 +295,7 @@ class App {
           </div>
         </div>
 
-        <div class="dashboard-grid">
+        <div class="dashboard-grid${data.socialAccounts.length > 0 ? '' : ' single'}">
           <div class="card">
             <div class="card-header">
               <h3>Recent Posts</h3>
@@ -332,38 +332,38 @@ class App {
             </div>
           </div>
 
+          ${data.socialAccounts.length > 0 ? `
           <div class="card">
             <div class="card-header">
               <h3>Connected Accounts</h3>
               <button class="btn btn-outline btn-sm" onclick="app.navigateTo('settings')">Manage</button>
             </div>
             <div class="card-body">
-              ${data.socialAccounts.length > 0 ? `
-                <ul class="activity-list">
-                  ${data.socialAccounts.map(account => `
-                    <li class="activity-item">
-                      <div class="activity-icon post">
-                        <i class="fab fa-${account.platform}"></i>
-                      </div>
-                      <div class="activity-content">
-                        <div class="activity-title">${account.account_name || account.platform}</div>
-                        <div class="activity-meta">Connected</div>
-                      </div>
-                    </li>
-                  `).join('')}
-                </ul>
-              ` : `
-                <div class="empty-state" style="padding: 40px;">
-                  <i class="fas fa-link"></i>
-                  <p>No accounts connected</p>
-                  <button class="btn btn-outline btn-sm" onclick="app.navigateTo('settings')">
-                    Connect Account
-                  </button>
-                </div>
-              `}
+              <ul class="activity-list">
+                ${data.socialAccounts.map(account => `
+                  <li class="activity-item">
+                    <div class="activity-icon post">
+                      <i class="fab fa-${account.platform}"></i>
+                    </div>
+                    <div class="activity-content">
+                      <div class="activity-title">${account.account_name || account.platform}</div>
+                      <div class="activity-meta">Connected</div>
+                    </div>
+                  </li>
+                `).join('')}
+              </ul>
             </div>
           </div>
+          ` : ''}
         </div>
+
+        ${data.socialAccounts.length > 0 ? '' : `
+          <a class="connect-hint" onclick="app.navigateTo('settings')">
+            <i class="fas fa-link"></i>
+            <span>No social accounts connected — connect one to publish and track analytics</span>
+            <i class="fas fa-arrow-right"></i>
+          </a>
+        `}
       `;
     } catch (error) {
       console.error('Failed to load dashboard:', error);
