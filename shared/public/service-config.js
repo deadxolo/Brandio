@@ -5,9 +5,15 @@
 (function() {
   'use strict';
 
-  // Detect if running in unified mode (Cloud Run)
-  const pathPrefix = window.location.pathname.split('/')[1];
-  const isUnifiedMode = ['manager', 'background', 'generator', 'poster'].includes(pathPrefix);
+  // Detect if running in unified mode (single origin behind one port).
+  // Unified mode covers Cloud Run AND the Docker container on :8080, which
+  // proxies /generator, /poster, /backgrounds and serves /uploads itself.
+  // The ONLY non-unified case is local `npm run dev`, where each micro-service
+  // runs on its own 300x port and pages are loaded directly from that port.
+  // Detecting by port (not by path prefix) means the manager's own top-level
+  // pages (/dashboard, /landing) are correctly treated as unified too.
+  const DEV_PORTS = ['3001', '3002', '3003', '3004'];
+  const isUnifiedMode = !DEV_PORTS.includes(window.location.port);
 
   // Base URL detection
   const origin = window.location.origin;

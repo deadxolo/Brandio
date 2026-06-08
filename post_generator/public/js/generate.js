@@ -1511,6 +1511,11 @@ class PostGenerator {
   async updatePreview() {
     if (this.dataRows.length === 0) {
       document.getElementById('previewStatus').textContent = 'Add data to see preview';
+      // Still draw the static template design (background, text, shapes) so the
+      // canvas isn't blank — important for templates with no placeholders, where
+      // there are never any data rows to trigger a render below.
+      this.render();
+      document.getElementById('previewIndex').textContent = '1 / 1';
       return;
     }
 

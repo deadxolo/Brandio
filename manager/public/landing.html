@@ -799,6 +799,96 @@
       .footer-top { grid-template-columns: 1fr; }
       .section-head { flex-direction: column; align-items: flex-start; gap: 12px; }
     }
+
+    /* ============= AUTH MODAL (pop-up) ============= */
+    .auth-overlay {
+      position: fixed; inset: 0;
+      background: rgba(10, 10, 10, 0.55);
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center; justify-content: center;
+      padding: 24px; z-index: 200;
+    }
+    .auth-overlay.open { display: flex; animation: authFade 0.15s ease; }
+    @keyframes authFade { from { opacity: 0; } to { opacity: 1; } }
+
+    .auth-modal {
+      width: 100%; max-width: 440px;
+      background: var(--paper);
+      border: var(--border-thick);
+      box-shadow: var(--shadow-xl);
+      padding: 32px;
+      position: relative;
+      animation: authPop 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.4);
+    }
+    @keyframes authPop {
+      from { transform: translateY(14px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    .auth-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 38px; height: 38px;
+      background: var(--pink); color: var(--paper);
+      border: var(--border); box-shadow: 3px 3px 0 0 var(--ink);
+      font-family: 'Archivo Black', sans-serif; font-size: 20px; line-height: 1;
+      cursor: pointer;
+    }
+    .auth-close:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 0 var(--ink); }
+    .auth-close:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 0 var(--ink); }
+
+    .auth-head { margin-bottom: 22px; padding-right: 44px; }
+    .auth-kicker {
+      font-family: 'Space Mono', monospace; font-size: 11px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+    }
+    .auth-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 34px; line-height: 1; margin-top: 6px;
+    }
+    .auth-title .dot { color: var(--pink); }
+
+    .auth-tabs { display: flex; margin-bottom: 22px; border: var(--border); box-shadow: var(--shadow); }
+    .auth-tab {
+      flex: 1; padding: 12px; background: var(--paper);
+      border: 0; border-right: 3px solid var(--ink); cursor: pointer;
+      font-family: 'Archivo Black', sans-serif; font-size: 13px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .auth-tab:last-child { border-right: 0; }
+    .auth-tab.is-active { background: var(--ink); color: var(--paper); }
+
+    .auth-form { display: none; flex-direction: column; }
+    .auth-form.is-active { display: flex; }
+    .auth-form label {
+      font-family: 'Space Mono', monospace; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em; font-size: 12px;
+      margin: 14px 0 7px;
+    }
+    .auth-form label:first-of-type { margin-top: 0; }
+    .auth-form input {
+      width: 100%; padding: 13px 14px; font: inherit; font-size: 16px;
+      background: #fff; border: var(--border); outline: none;
+      transition: box-shadow 0.08s, transform 0.08s, background 0.08s;
+    }
+    .auth-form input:focus { background: #f0fdff; box-shadow: var(--shadow); transform: translate(-2px, -2px); }
+
+    .auth-btn {
+      width: 100%; margin-top: 24px; padding: 15px; cursor: pointer;
+      background: var(--pink); color: var(--paper); border: var(--border-thick);
+      box-shadow: var(--shadow); font-family: 'Archivo Black', sans-serif;
+      font-size: 16px; text-transform: uppercase; letter-spacing: 0.04em;
+      transition: transform 0.08s, box-shadow 0.08s;
+    }
+    .auth-btn:hover { transform: translate(-2px, -2px); box-shadow: 9px 9px 0 0 var(--ink); }
+    .auth-btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 0 var(--ink); }
+    .auth-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: var(--shadow); }
+
+    .auth-msg {
+      display: none; margin-top: 16px; padding: 12px 14px;
+      border: var(--border); background: var(--pink); color: var(--paper);
+      font-weight: 700; box-shadow: 4px 4px 0 0 var(--ink);
+    }
+    .auth-msg.show { display: block; }
   </style>
 </head>
 <body>
@@ -1256,6 +1346,134 @@
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     document.getElementById('dateline').textContent =
       months[d.getMonth()] + ' ' + String(d.getDate()).padStart(2,'0') + ', ' + d.getFullYear();
+  </script>
+
+  <!-- ============= AUTH MODAL ============= -->
+  <div class="auth-overlay" id="authOverlay" aria-hidden="true">
+    <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button class="auth-close" id="authClose" aria-label="Close">&times;</button>
+
+      <div class="auth-head">
+        <div class="auth-kicker">Issue Nº 01 · Members Only</div>
+        <h2 class="auth-title" id="authTitle">Open the Dashboard<span class="dot">.</span></h2>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab is-active" type="button" data-tab="login">Sign In</button>
+        <button class="auth-tab" type="button" data-tab="signup">Create Account</button>
+      </div>
+
+      <!-- Sign in -->
+      <form class="auth-form is-active" id="amLoginForm" data-form="login">
+        <label for="amLoginEmail">Email</label>
+        <input id="amLoginEmail" type="email" autocomplete="email" required placeholder="you@example.com" />
+        <label for="amLoginPassword">Password</label>
+        <input id="amLoginPassword" type="password" autocomplete="current-password" required placeholder="Your password" />
+        <button class="auth-btn" type="submit">Sign in →</button>
+      </form>
+
+      <!-- Create account -->
+      <form class="auth-form" id="amSignupForm" data-form="signup">
+        <label for="amName">Name</label>
+        <input id="amName" type="text" autocomplete="name" required placeholder="Your name" />
+        <label for="amSignupEmail">Email</label>
+        <input id="amSignupEmail" type="email" autocomplete="email" required placeholder="you@example.com" />
+        <label for="amSignupPassword">Password</label>
+        <input id="amSignupPassword" type="password" autocomplete="new-password" required placeholder="At least 8 characters" />
+        <button class="auth-btn" type="submit">Create account →</button>
+      </form>
+
+      <div class="auth-msg" id="authMsg"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var overlay  = document.getElementById('authOverlay');
+      var closeBtn = document.getElementById('authClose');
+      var tabs     = document.querySelectorAll('.auth-tab');
+      var forms    = document.querySelectorAll('.auth-form');
+      var msg      = document.getElementById('authMsg');
+      var TOKEN_KEY = 'brandio_auth_token';
+
+      function showMsg(t) { msg.textContent = t; msg.classList.add('show'); }
+      function hideMsg()  { msg.classList.remove('show'); msg.textContent = ''; }
+
+      function showTab(name) {
+        tabs.forEach(function (t) { t.classList.toggle('is-active', t.dataset.tab === name); });
+        forms.forEach(function (f) { f.classList.toggle('is-active', f.dataset.form === name); });
+        hideMsg();
+      }
+
+      function openModal(tab) {
+        showTab(tab || 'login');
+        overlay.classList.add('open');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        var first = document.querySelector('.auth-form.is-active input');
+        if (first) setTimeout(function () { first.focus(); }, 60);
+      }
+      function closeModal() {
+        overlay.classList.remove('open');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        hideMsg();
+      }
+
+      // Any "Dashboard" link opens the modal — unless already signed in
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[href="/dashboard"]');
+        if (!a) return;
+        e.preventDefault();
+        if (localStorage.getItem(TOKEN_KEY)) { window.location.href = '/dashboard'; return; }
+        openModal('login');
+      });
+
+      closeBtn.addEventListener('click', closeModal);
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+      });
+      tabs.forEach(function (t) { t.addEventListener('click', function () { showTab(t.dataset.tab); }); });
+
+      async function submitAuth(url, payload, btn, busyText, idleText) {
+        hideMsg();
+        btn.disabled = true; btn.textContent = busyText;
+        try {
+          var res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          var data = await res.json();
+          if (!res.ok || !data.success) throw new Error(data.error || 'Something went wrong');
+          localStorage.setItem('brandio_auth_token', data.token);
+          localStorage.setItem('brandio_user', JSON.stringify(data.user));
+          btn.textContent = 'Success →';
+          window.location.href = '/dashboard';
+        } catch (err) {
+          showMsg(err.message);
+          btn.disabled = false; btn.textContent = idleText;
+        }
+      }
+
+      document.getElementById('amLoginForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        submitAuth('/api/auth/login', {
+          email: document.getElementById('amLoginEmail').value.trim(),
+          password: document.getElementById('amLoginPassword').value
+        }, e.target.querySelector('.auth-btn'), 'Signing in…', 'Sign in →');
+      });
+
+      document.getElementById('amSignupForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        submitAuth('/api/auth/signup', {
+          name: document.getElementById('amName').value.trim(),
+          email: document.getElementById('amSignupEmail').value.trim(),
+          password: document.getElementById('amSignupPassword').value
+        }, e.target.querySelector('.auth-btn'), 'Creating…', 'Create account →');
+      });
+    })();
   </script>
 </body>
 </html>

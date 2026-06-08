@@ -14,7 +14,10 @@ const AUTH_CONFIG = {
     '/api',
     '/api/docs',
     '/health',
-    '/api/health'
+    '/api/health',
+    // Auth entry points must be reachable before a user has any token
+    '/api/auth/login',
+    '/api/auth/signup'
   ],
   // Skip auth for these methods on root
   publicMethods: ['GET']
